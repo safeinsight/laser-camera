@@ -295,24 +295,6 @@ clearInterval(timer);
 
 }
 
-recorder?.onstop=()=>{
-
-const blob=
-
-new Blob(chunks,{
-
-type:"video/mp4"
-
-});
-
-let url=
-
-URL.createObjectURL(blob);
-
-window.open(url);
-
-}
-
 </script>
 
 </body>
