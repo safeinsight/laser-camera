@@ -1,98 +1,561 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
 <title>Laser Camera</title>
+
 <style>
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:black;font-family:Arial,sans-serif;}
-#preview{position:absolute;top:0;left:0;width:100vw;height:100vh;object-fit:cover;background:black;}
-#timer{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:52px;font-weight:bold;color:white;z-index:10;text-shadow:0 0 10px black;}
-#countdown{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:130px;font-weight:bold;color:red;z-index:10;text-shadow:0 0 20px black;}
-#recording{position:absolute;top:90px;left:50%;transform:translateX(-50%);color:red;font-size:28px;font-weight:bold;display:none;z-index:10;}
-button{position:absolute;left:50%;transform:translateX(-50%);padding:18px 35px;font-size:28px;border:none;border-radius:40px;z-index:10;opacity:.92}
-#record{bottom:110px;}
-#stop{bottom:30px;display:none;}
-#recordCanvas{display:none;}
+
+html,body{
+
+margin:0;
+
+padding:0;
+
+width:100%;
+
+height:100%;
+
+overflow:hidden;
+
+background:black;
+
+font-family:Arial,sans-serif;
+
+}
+
+#preview{
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+width:100vw;
+
+height:100vh;
+
+object-fit:cover;
+
+background:black;
+
+}
+
+#timer{
+
+position:absolute;
+
+top:20px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+font-size:52px;
+
+font-weight:bold;
+
+color:white;
+
+z-index:10;
+
+text-shadow:0 0 10px black;
+
+}
+
+#countdown{
+
+position:absolute;
+
+top:50%;
+
+left:50%;
+
+transform:translate(-50%,-50%);
+
+font-size:130px;
+
+font-weight:bold;
+
+color:red;
+
+z-index:10;
+
+text-shadow:0 0 20px black;
+
+}
+
+#recording{
+
+position:absolute;
+
+top:90px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+color:red;
+
+font-size:28px;
+
+font-weight:bold;
+
+display:none;
+
+z-index:10;
+
+}
+
+button{
+
+position:absolute;
+
+left:50%;
+
+transform:translateX(-50%);
+
+padding:18px 35px;
+
+font-size:28px;
+
+border:none;
+
+border-radius:40px;
+
+z-index:10;
+
+}
+
+#record{
+
+bottom:110px;
+
+}
+
+#stop{
+
+bottom:30px;
+
+display:none;
+
+}
+
 </style>
+
 </head>
+
 <body>
-<div id="timer">00:00</div>
-<div id="recording">🔴 RECORDING</div>
-<div id="countdown"></div>
-<video id="preview" autoplay playsinline muted></video>
-<canvas id="recordCanvas" width="1920" height="1080"></canvas>
-<button id="record">● RECORD</button>
-<button id="stop">STOP</button>
+
+<div id="timer">
+
+00:00
+
+</div>
+
+<div id="recording">
+
+🔴 RECORDING
+
+</div>
+
+<div id="countdown">
+
+</div>
+
+<video
+
+id="preview"
+
+autoplay
+
+playsinline
+
+muted>
+
+</video>
+
+<button id="record">
+
+● RECORD
+
+</button>
+
+<button id="stop">
+
+STOP
+
+</button>
+
+
 <script>
-const preview=document.getElementById('preview');
-const timerDiv=document.getElementById('timer');
-const countdownDiv=document.getElementById('countdown');
-const recordBtn=document.getElementById('record');
-const stopBtn=document.getElementById('stop');
-const recordingDiv=document.getElementById('recording');
-const canvas=document.getElementById('recordCanvas');
-const ctx=canvas.getContext('2d');
-let stream,recorder,chunks=[],seconds=0,timerInterval,drawInterval;
+
+const preview=
+
+document.getElementById("preview");
+
+const timerDiv=
+
+document.getElementById("timer");
+
+const countdownDiv=
+
+document.getElementById("countdown");
+
+const recordBtn=
+
+document.getElementById("record");
+
+const stopBtn=
+
+document.getElementById("stop");
+
+const recordingDiv=
+
+document.getElementById("recording");
+
+
+let stream;
+
+let recorder;
+
+let chunks=[];
+
+let seconds=0;
+
+let timerInterval;
+
+
+
 async function startCamera(){
- try{
-  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:true});
-  preview.srcObject=stream;
- }catch(err){alert('Unable to access camera:
-'+err);console.log(err)}
+
+
+try{
+
+
+stream=
+
+await navigator
+
+.mediaDevices
+
+.getUserMedia({
+
+video:{
+
+facingMode:
+
+{
+
+ideal:"environment"
+
+},
+
+width:
+
+{
+
+ideal:1920
+
+},
+
+height:
+
+{
+
+ideal:1080
+
 }
+
+},
+
+audio:true
+
+});
+
+
+preview.srcObject=
+
+stream;
+
+
+}
+
+catch(err){
+
+alert(
+
+"Unable to access camera:\n"
+
++err
+
+);
+
+console.log(err);
+
+}
+
+
+}
+
+
 startCamera();
+
+
+
 function updateTimer(){
- let mins=String(Math.floor(seconds/60)).padStart(2,'0');
- let secs=String(seconds%60).padStart(2,'0');
- timerDiv.innerHTML=mins+':'+secs;
+
+
+let mins=
+
+String(
+
+Math.floor(seconds/60)
+
+)
+
+.padStart(2,"0");
+
+
+let secs=
+
+String(
+
+seconds%60
+
+)
+
+.padStart(2,"0");
+
+
+timerDiv.innerHTML=
+
+mins+
+
+":"+
+
+secs;
+
+
 }
-function drawFrame(){
- ctx.drawImage(preview,0,0,canvas.width,canvas.height);
- ctx.font='bold 80px Arial';
- ctx.fillStyle='white';
- ctx.textAlign='center';
- ctx.strokeStyle='black';
- ctx.lineWidth=8;
- ctx.strokeText(timerDiv.innerHTML,canvas.width/2,100);
- ctx.fillText(timerDiv.innerHTML,canvas.width/2,100);
- ctx.font='bold 50px Arial';
- ctx.fillStyle='red';
- ctx.strokeText('RECORDING',canvas.width/2,170);
- ctx.fillText('RECORDING',canvas.width/2,170);
-}
+
+
 function startCountdown(){
- let c=3; countdownDiv.innerHTML=c;
- const interval=setInterval(()=>{
-  c--;
-  if(c>0){countdownDiv.innerHTML=c;}
-  else if(c===0){countdownDiv.innerHTML='GO';}
-  else{clearInterval(interval);countdownDiv.innerHTML='';startRecording();}
- },1000);
+
+
+let c=3;
+
+
+countdownDiv.innerHTML=c;
+
+
+const interval=
+
+setInterval(()=>{
+
+
+c--;
+
+
+if(c>0){
+
+countdownDiv.innerHTML=c;
+
 }
+
+
+else if(c===0){
+
+countdownDiv.innerHTML="GO";
+
+}
+
+
+else{
+
+
+clearInterval(interval);
+
+
+countdownDiv.innerHTML="";
+
+
+startRecording();
+
+
+}
+
+
+},1000);
+
+
+}
+
+
+
 function startRecording(){
- chunks=[]; seconds=0; updateTimer();
- recordingDiv.style.display='block'; recordBtn.style.display='none'; stopBtn.style.display='block';
- timerInterval=setInterval(()=>{seconds++;updateTimer();},1000);
- drawInterval=setInterval(drawFrame,33);
- const canvasStream=canvas.captureStream(30);
- recorder=new MediaRecorder(canvasStream,{mimeType:'video/webm'});
- recorder.ondataavailable=e=>{if(e.data.size>0){chunks.push(e.data)}};
- recorder.onstop=()=>{
-  const blob=new Blob(chunks,{type:'video/webm'});
-  const videoURL=URL.createObjectURL(blob);
-  window.open(videoURL,'_blank');
- };
- recorder.start();
+
+
+chunks=[];
+
+
+seconds=0;
+
+
+updateTimer();
+
+
+recordingDiv.style.display="block";
+
+
+recordBtn.style.display="none";
+
+
+stopBtn.style.display="block";
+
+
+timerInterval=
+
+setInterval(()=>{
+
+
+seconds++;
+
+
+updateTimer();
+
+
+},1000);
+
+
+
+recorder=
+
+new MediaRecorder(stream);
+
+
+
+recorder.ondataavailable=
+
+e=>{
+
+
+if(e.data.size>0){
+
+chunks.push(e.data);
+
 }
+
+
+};
+
+
+
+recorder.onstop=()=>{
+
+
+const blob=
+
+new Blob(chunks,{
+
+type:"video/webm"
+
+});
+
+
+const videoURL=
+
+URL.createObjectURL(blob);
+
+
+window.open(
+
+videoURL,
+
+"_blank"
+
+);
+
+
+};
+
+
+
+recorder.start();
+
+
+}
+
+
+
 function stopRecording(){
- clearInterval(timerInterval); clearInterval(drawInterval);
- recordingDiv.style.display='none'; recordBtn.style.display='block'; stopBtn.style.display='none';
- if(recorder && recorder.state!=='inactive'){recorder.stop();}
+
+
+clearInterval(
+
+timerInterval
+
+);
+
+
+recordingDiv
+
+.style.display=
+
+"none";
+
+
+recordBtn
+
+.style.display=
+
+"block";
+
+
+stopBtn
+
+.style.display=
+
+"none";
+
+
+recorder.stop();
+
+
 }
-recordBtn.addEventListener('click',startCountdown);
-stopBtn.addEventListener('click',stopRecording);
+
+
+
+recordBtn
+
+.addEventListener(
+
+"click",
+
+startCountdown
+
+);
+
+
+stopBtn
+
+.addEventListener(
+
+"click",
+
+stopRecording
+
+);
+
 </script>
+
 </body>
+
 </html>
