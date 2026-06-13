@@ -246,6 +246,23 @@ recorder.ondataavailable=
 
 e=>chunks.push(e.data);
 
+recorder.ondataavailable =
+e => chunks.push(e.data);
+
+recorder.onstop = () => {
+
+const blob = new Blob(chunks, {
+
+type: 'video/webm'
+
+});
+
+const url = URL.createObjectURL(blob);
+
+window.open(url);
+
+};
+
 recorder.start();
 
 }
