@@ -1,26 +1,36 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
 
+<meta charset="UTF-8">
+
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1">
+content="width=device-width, initial-scale=1">
+
+<title>Laser Camera</title>
 
 <style>
 
-body{
+html,body{
 
 margin:0;
 
-background:black;
+padding:0;
+
+width:100%;
+
+height:100%;
 
 overflow:hidden;
 
+background:black;
+
+font-family:Arial,sans-serif;
+
 }
 
-video{
+#preview{
 
 position:absolute;
 
@@ -34,6 +44,8 @@ height:100vh;
 
 object-fit:cover;
 
+background:black;
+
 }
 
 #timer{
@@ -46,13 +58,15 @@ left:50%;
 
 transform:translateX(-50%);
 
-font-size:60px;
+font-size:52px;
 
 font-weight:bold;
 
 color:white;
 
-z-index:2;
+z-index:10;
+
+text-shadow:0 0 10px black;
 
 }
 
@@ -66,51 +80,71 @@ left:50%;
 
 transform:translate(-50%,-50%);
 
-font-size:120px;
+font-size:130px;
+
+font-weight:bold;
 
 color:red;
 
-z-index:2;
+z-index:10;
+
+text-shadow:0 0 20px black;
+
+}
+
+#recording{
+
+position:absolute;
+
+top:90px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+color:red;
+
+font-size:28px;
+
+font-weight:bold;
+
+display:none;
+
+z-index:10;
+
+}
+
+button{
+
+position:absolute;
+
+left:50%;
+
+transform:translateX(-50%);
+
+padding:18px 35px;
+
+font-size:28px;
+
+border:none;
+
+border-radius:40px;
+
+z-index:10;
 
 }
 
 #record{
 
-position:absolute;
-
-bottom:100px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-padding:20px;
-
-font-size:30px;
-
-border-radius:50px;
-
-z-index:2;
+bottom:110px;
 
 }
 
 #stop{
 
-position:absolute;
+bottom:30px;
 
-bottom:20px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-padding:20px;
-
-font-size:30px;
-
-border-radius:50px;
-
-z-index:2;
+display:none;
 
 }
 
@@ -126,12 +160,24 @@ z-index:2;
 
 </div>
 
-<div id="countdown"></div>
+<div id="recording">
+
+🔴 RECORDING
+
+</div>
+
+<div id="countdown">
+
+</div>
 
 <video
+
 id="preview"
+
 autoplay
+
 playsinline
+
 muted>
 
 </video>
@@ -148,7 +194,33 @@ STOP
 
 </button>
 
+
 <script>
+
+const preview=
+
+document.getElementById("preview");
+
+const timerDiv=
+
+document.getElementById("timer");
+
+const countdownDiv=
+
+document.getElementById("countdown");
+
+const recordBtn=
+
+document.getElementById("record");
+
+const stopBtn=
+
+document.getElementById("stop");
+
+const recordingDiv=
+
+document.getElementById("recording");
+
 
 let stream;
 
@@ -158,142 +230,329 @@ let chunks=[];
 
 let seconds=0;
 
-let timer;
+let timerInterval;
 
-navigator.mediaDevices
+
+
+async function startCamera(){
+
+
+try{
+
+
+stream=
+
+await navigator
+
+.mediaDevices
 
 .getUserMedia({
 
-video:true,
+video:{
+
+facingMode:
+
+{
+
+ideal:"environment"
+
+},
+
+width:
+
+{
+
+ideal:1920
+
+},
+
+height:
+
+{
+
+ideal:1080
+
+}
+
+},
 
 audio:true
 
-})
-
-.then(s=>{
-
-stream=s;
-
-preview.srcObject=s;
-
 });
+
+
+preview.srcObject=
+
+stream;
+
+
+}
+
+catch(err){
+
+alert(
+
+"Unable to access camera:\n"
+
++err
+
+);
+
+console.log(err);
+
+}
+
+
+}
+
+
+startCamera();
+
+
+
+function updateTimer(){
+
+
+let mins=
+
+String(
+
+Math.floor(seconds/60)
+
+)
+
+.padStart(2,"0");
+
+
+let secs=
+
+String(
+
+seconds%60
+
+)
+
+.padStart(2,"0");
+
+
+timerDiv.innerHTML=
+
+mins+
+
+":"+
+
+secs;
+
+
+}
+
 
 function startCountdown(){
 
+
 let c=3;
 
-countdown.innerHTML=c;
 
-let i=setInterval(()=>{
+countdownDiv.innerHTML=c;
+
+
+const interval=
+
+setInterval(()=>{
+
 
 c--;
 
+
 if(c>0){
 
-countdown.innerHTML=c;
+countdownDiv.innerHTML=c;
 
 }
 
-else if(c==0){
 
-countdown.innerHTML="GO";
+else if(c===0){
+
+countdownDiv.innerHTML="GO";
 
 }
+
 
 else{
 
-countdown.innerHTML="";
 
-clearInterval(i);
+clearInterval(interval);
+
+
+countdownDiv.innerHTML="";
+
 
 startRecording();
 
+
 }
+
 
 },1000);
 
-}
-
-record.onclick=()=>{
-
-startCountdown();
 
 }
+
+
 
 function startRecording(){
 
+
 chunks=[];
+
 
 seconds=0;
 
-timer=setInterval(()=>{
+
+updateTimer();
+
+
+recordingDiv.style.display="block";
+
+
+recordBtn.style.display="none";
+
+
+stopBtn.style.display="block";
+
+
+timerInterval=
+
+setInterval(()=>{
+
 
 seconds++;
 
-let m=Math.floor(seconds/60);
 
-let s=seconds%60;
+updateTimer();
 
-timerDisplay();
 
 },1000);
+
+
 
 recorder=
 
 new MediaRecorder(stream);
 
+
+
 recorder.ondataavailable=
 
-e=>chunks.push(e.data);
+e=>{
 
-recorder.ondataavailable =
-e => chunks.push(e.data);
 
-recorder.onstop = () => {
+if(e.data.size>0){
 
-const blob = new Blob(chunks, {
+chunks.push(e.data);
 
-type: 'video/webm'
+}
 
-});
-
-const url = URL.createObjectURL(blob);
-
-window.open(url);
 
 };
 
+
+
+recorder.onstop=()=>{
+
+
+const blob=
+
+new Blob(chunks,{
+
+type:"video/webm"
+
+});
+
+
+const videoURL=
+
+URL.createObjectURL(blob);
+
+
+window.open(
+
+videoURL,
+
+"_blank"
+
+);
+
+
+};
+
+
+
 recorder.start();
 
-}
-
-function timerDisplay(){
-
-let m=
-
-String(Math.floor(seconds/60))
-
-.padStart(2,"0");
-
-let s=
-
-String(seconds%60)
-
-.padStart(2,"0");
-
-timer.innerHTML=
-
-m+":"+s;
 
 }
 
-stop.onclick=()=>{
+
+
+function stopRecording(){
+
+
+clearInterval(
+
+timerInterval
+
+);
+
+
+recordingDiv
+
+.style.display=
+
+"none";
+
+
+recordBtn
+
+.style.display=
+
+"block";
+
+
+stopBtn
+
+.style.display=
+
+"none";
+
 
 recorder.stop();
 
-clearInterval(timer);
 
 }
+
+
+
+recordBtn
+
+.addEventListener(
+
+"click",
+
+startCountdown
+
+);
+
+
+stopBtn
+
+.addEventListener(
+
+"click",
+
+stopRecording
+
+);
 
 </script>
 
