@@ -351,17 +351,17 @@ function drawOverlay(){
     // TIMER - TOP CENTER
     //------------------------
 
-    ctx.font="bold 34px Arial";
+    ctx.font="bold 20px Arial";
 
     let timerWidth=ctx.measureText(timerText).width;
 
     let timerX=(canvas.width/2)-(timerWidth/2);
 
     ctx.fillStyle="rgba(0,0,0,.5)";
-    ctx.fillRect(timerX-15,10,timerWidth+30,45);
+    ctx.fillRect(timerX-10,10,timerWidth+20,35);
 
     ctx.fillStyle="white";
-    ctx.fillText(timerText,timerX,42);
+    ctx.fillText(timerText,timerX,33);
 
 
 
@@ -371,22 +371,22 @@ function drawOverlay(){
 
     let shotsText=`Shots: ${shots}`;
 
-    ctx.font="bold 30px Arial";
+    ctx.font="bold 20px Arial";
 
     ctx.fillStyle="rgba(0,0,0,.5)";
     ctx.fillRect(
         15,
-        canvas.height-60,
-        150,
-        45
+        canvas.height-45,
+        110,
+        30
     );
 
     ctx.fillStyle="white";
 
     ctx.fillText(
         shotsText,
-        25,
-        canvas.height-28
+        22,
+        canvas.height-22
     );
 
 
@@ -403,21 +403,23 @@ function drawOverlay(){
 
     let scoreX=canvas.width-scoreBoxWidth-15;
 
+    ctx.font="bold 20px Arial";
+    
     ctx.fillStyle="rgba(0,0,0,.5)";
 
     ctx.fillRect(
         scoreX,
-        canvas.height-60,
+        canvas.height-45,
         scoreBoxWidth,
-        45
+        30
     );
 
     ctx.fillStyle="white";
 
     ctx.fillText(
         scoreText,
-        scoreX+15,
-        canvas.height-28
+        scoreX+10,
+        canvas.height-22
     );
 
 
