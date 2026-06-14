@@ -37,6 +37,82 @@ canvas{
     pointer-events:none;
 }
 
+#timerOverlay{
+
+position:absolute;
+
+top:15px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+background:rgba(0,0,0,.5);
+
+padding:6px 14px;
+
+border-radius:8px;
+
+font-size:22px;
+
+font-weight:bold;
+
+color:white;
+
+z-index:10;
+
+}
+
+#shotsOverlay{
+
+position:absolute;
+
+bottom:15px;
+
+left:15px;
+
+background:rgba(0,0,0,.5);
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-size:18px;
+
+font-weight:bold;
+
+color:white;
+
+z-index:10;
+
+}
+
+#scoreOverlay{
+
+position:absolute;
+
+bottom:15px;
+
+right:15px;
+
+background:rgba(0,0,0,.5);
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-size:18px;
+
+font-weight:bold;
+
+color:white;
+
+z-index:10;
+
+}
+
+
+    
 button{
     padding:12px 22px;
     margin:10px;
@@ -84,6 +160,27 @@ button{
 
     <canvas id="overlay"></canvas>
 
+
+    <div id="timerOverlay">
+
+        00:00
+
+    </div>
+
+
+    <div id="shotsOverlay">
+
+        Shots: 0
+
+    </div>
+
+
+    <div id="scoreOverlay">
+
+        Score: 0
+
+    </div>
+
 </div>
 
 <div id="recordTimer">00:00</div>
@@ -98,6 +195,12 @@ const playback=document.getElementById("playback");
 
 const canvas=document.getElementById("overlay");
 const ctx=canvas.getContext("2d");
+
+const timerOverlay=document.getElementById("timerOverlay");
+
+const shotsOverlay=document.getElementById("shotsOverlay");
+
+const scoreOverlay=document.getElementById("scoreOverlay");
 
 const countdown=document.getElementById("countdown");
 
@@ -338,14 +441,20 @@ function drawOverlay(){
         .toString()
         .padStart(2,"0");
 
-    let timerText=`${mins}:${secs}`;
+   timerOverlay.innerHTML=`${mins}:${secs}`;
 
-    // Example values
-    if(elapsed>0){
-        shots=Math.floor(elapsed/2);
-        score=shots*10;
-    }
 
+shotsOverlay.innerHTML=`Shots: ${shots}`;
+
+
+scoreOverlay.innerHTML=`Score: ${score}`;
+
+
+
+requestAnimationFrame(drawOverlay);
+
+}
+    
 
     //------------------------
     // TIMER - TOP CENTER
