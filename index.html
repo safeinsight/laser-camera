@@ -449,6 +449,13 @@ shotsOverlay.innerHTML=`Shots: ${shots}`;
 
 scoreOverlay.innerHTML=`Score: ${score}`;
 
+   let timerText=`${mins}:${secs}`;
+
+    // Example values
+    if(elapsed>0){
+        shots=Math.floor(elapsed/2);
+        score=shots*10;
+    }
 
 
 requestAnimationFrame(drawOverlay);
