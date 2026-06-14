@@ -322,93 +322,108 @@ window.addEventListener("resize",resizeCanvas);
 
 function drawOverlay(){
 
-if(playback.paused || playback.ended){
+    if(playback.paused || playback.ended){
+        return;
+    }
 
-return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    let elapsed=Math.floor((Date.now()-playbackStart)/1000);
+
+    let mins=Math.floor(elapsed/60)
+        .toString()
+        .padStart(2,"0");
+
+    let secs=(elapsed%60)
+        .toString()
+        .padStart(2,"0");
+
+    let timerText=`${mins}:${secs}`;
+
+    // Example values
+    if(elapsed>0){
+        shots=Math.floor(elapsed/2);
+        score=shots*10;
+    }
+
+
+    //------------------------
+    // TIMER - TOP CENTER
+    //------------------------
+
+    ctx.font="bold 34px Arial";
+
+    let timerWidth=ctx.measureText(timerText).width;
+
+    let timerX=(canvas.width/2)-(timerWidth/2);
+
+    ctx.fillStyle="rgba(0,0,0,.5)";
+    ctx.fillRect(timerX-15,10,timerWidth+30,45);
+
+    ctx.fillStyle="white";
+    ctx.fillText(timerText,timerX,42);
+
+
+
+    //------------------------
+    // SHOTS - LOWER LEFT
+    //------------------------
+
+    let shotsText=`Shots: ${shots}`;
+
+    ctx.font="bold 30px Arial";
+
+    ctx.fillStyle="rgba(0,0,0,.5)";
+    ctx.fillRect(
+        15,
+        canvas.height-60,
+        150,
+        45
+    );
+
+    ctx.fillStyle="white";
+
+    ctx.fillText(
+        shotsText,
+        25,
+        canvas.height-28
+    );
+
+
+
+    //------------------------
+    // SCORE - LOWER RIGHT
+    //------------------------
+
+    let scoreText=`Score: ${score}`;
+
+    let scoreWidth=ctx.measureText(scoreText).width;
+
+    let scoreBoxWidth=scoreWidth+35;
+
+    let scoreX=canvas.width-scoreBoxWidth-15;
+
+    ctx.fillStyle="rgba(0,0,0,.5)";
+
+    ctx.fillRect(
+        scoreX,
+        canvas.height-60,
+        scoreBoxWidth,
+        45
+    );
+
+    ctx.fillStyle="white";
+
+    ctx.fillText(
+        scoreText,
+        scoreX+15,
+        canvas.height-28
+    );
+
+
+    requestAnimationFrame(drawOverlay);
 
 }
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-
-// background
-
-ctx.fillStyle="rgba(0,0,0,.4)";
-
-ctx.fillRect(10,10,220,110);
-
-
-// timer
-
-let elapsed=Math.floor((Date.now()-playbackStart)/1000);
-
-let mins=Math.floor(elapsed/60)
-.toString()
-.padStart(2,"0");
-
-let secs=(elapsed%60)
-.toString()
-.padStart(2,"0");
-
-ctx.fillStyle="white";
-
-ctx.font="28px Arial";
-
-ctx.fillText(
-
-`Timer: ${mins}:${secs}`,
-
-20,
-
-45
-
-);
-
-
-// shots
-
-ctx.font="26px Arial";
-
-ctx.fillText(
-
-`Shots: ${shots}`,
-
-20,
-
-80
-
-);
-
-
-// score
-
-ctx.fillText(
-
-`Score: ${score}`,
-
-20,
-
-115
-
-);
-
-
-// EXAMPLE DATA
-
-// Remove later and replace with actual hit detection
-
-if(elapsed>0){
-
-shots=Math.floor(elapsed/2);
-
-score=shots*10;
-
-}
-
-requestAnimationFrame(drawOverlay);
-
-}
-
 
 //--------------------------
 // BUTTONS
