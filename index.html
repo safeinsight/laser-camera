@@ -419,6 +419,8 @@ canvas.height=playback.clientHeight;
 window.addEventListener("resize",resizeCanvas);
 
 
+}
+
 //--------------------------
 // DRAW OVERLAY
 //--------------------------
@@ -429,8 +431,6 @@ function drawOverlay(){
         return;
     }
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
     let elapsed=Math.floor((Date.now()-playbackStart)/1000);
 
     let mins=Math.floor(elapsed/60)
@@ -440,8 +440,8 @@ function drawOverlay(){
     let secs=(elapsed%60)
         .toString()
         .padStart(2,"0");
-
-   timerOverlay.innerHTML=`${mins}:${secs}`;
+ 
+timerOverlay.innerHTML=`${mins}:${secs}`;
 
 
 shotsOverlay.innerHTML=`Shots: ${shots}`;
@@ -453,87 +453,7 @@ scoreOverlay.innerHTML=`Score: ${score}`;
 requestAnimationFrame(drawOverlay);
 
 }
-    
 
-    //------------------------
-    // TIMER - TOP CENTER
-    //------------------------
-
-    ctx.font="bold 20px Arial";
-
-    let timerWidth=ctx.measureText(timerText).width;
-
-    let timerX=(canvas.width/2)-(timerWidth/2);
-
-    ctx.fillStyle="rgba(0,0,0,.5)";
-    ctx.fillRect(timerX-10,10,timerWidth+20,35);
-
-    ctx.fillStyle="white";
-    ctx.fillText(timerText,timerX,33);
-
-
-
-    //------------------------
-    // SHOTS - LOWER LEFT
-    //------------------------
-
-    let shotsText=`Shots: ${shots}`;
-
-    ctx.font="bold 20px Arial";
-
-    ctx.fillStyle="rgba(0,0,0,.5)";
-    ctx.fillRect(
-        15,
-        canvas.height-45,
-        110,
-        30
-    );
-
-    ctx.fillStyle="white";
-
-    ctx.fillText(
-        shotsText,
-        22,
-        canvas.height-22
-    );
-
-
-
-    //------------------------
-    // SCORE - LOWER RIGHT
-    //------------------------
-
-    let scoreText=`Score: ${score}`;
-
-    let scoreWidth=ctx.measureText(scoreText).width;
-
-    let scoreBoxWidth=scoreWidth+35;
-
-    let scoreX=canvas.width-scoreBoxWidth-15;
-
-    ctx.font="bold 20px Arial";
-    
-    ctx.fillStyle="rgba(0,0,0,.5)";
-
-    ctx.fillRect(
-        scoreX,
-        canvas.height-45,
-        scoreBoxWidth,
-        30
-    );
-
-    ctx.fillStyle="white";
-
-    ctx.fillText(
-        scoreText,
-        scoreX+10,
-        canvas.height-22
-    );
-
-
-    requestAnimationFrame(drawOverlay);
-
-}
 
 //--------------------------
 // BUTTONS
