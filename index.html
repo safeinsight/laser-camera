@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Rear Camera Video Recorder</title>
@@ -9,23 +12,41 @@
 <style>
 
 body{
-    font-family:Arial,sans-serif;
-    text-align:center;
-    background:#111;
-    color:white;
+
+margin:0;
+
+font-family:Arial,sans-serif;
+
+background:#111;
+
+color:white;
+
+text-align:center;
+
 }
 
 .container{
-    position:relative;
-    width:95%;
-    max-width:700px;
-    margin:auto;
+
+position:relative;
+
+width:95%;
+
+max-width:700px;
+
+margin:20px auto;
+
 }
 
 video{
-    width:100%;
-    border-radius:10px;
-    background:black;
+
+width:100%;
+
+border-radius:12px;
+
+background:black;
+
+display:block;
+
 }
 
 canvas{
@@ -38,7 +59,11 @@ left:0;
 
 pointer-events:none;
 
+z-index:5;
+
 }
+
+
 
 #timerOverlay{
 
@@ -52,7 +77,7 @@ transform:translateX(-50%);
 
 background:rgba(0,0,0,.5);
 
-padding:6px 14px;
+padding:5px 14px;
 
 border-radius:8px;
 
@@ -62,11 +87,13 @@ font-weight:bold;
 
 color:white;
 
-z-index:10;
+z-index:20;
 
 pointer-events:none;
 
 }
+
+
 
 #shotsOverlay{
 
@@ -78,7 +105,7 @@ left:15px;
 
 background:rgba(0,0,0,.5);
 
-padding:6px 12px;
+padding:5px 12px;
 
 border-radius:8px;
 
@@ -88,11 +115,13 @@ font-weight:bold;
 
 color:white;
 
-z-index:10;
+z-index:20;
 
 pointer-events:none;
 
 }
+
+
 
 #scoreOverlay{
 
@@ -104,7 +133,7 @@ right:15px;
 
 background:rgba(0,0,0,.5);
 
-padding:6px 12px;
+padding:5px 12px;
 
 border-radius:8px;
 
@@ -114,103 +143,189 @@ font-weight:bold;
 
 color:white;
 
-z-index:10;
+z-index:20;
 
 pointer-events:none;
 
 }
 
 
-    
+
 button{
-    padding:12px 22px;
-    margin:10px;
-    font-size:18px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+
+padding:12px 22px;
+
+margin:10px;
+
+font-size:18px;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
 }
+
+
 
 #startBtn{
-    background:#00a651;
-    color:white;
+
+background:#00a651;
+
+color:white;
+
 }
+
+
 
 #stopBtn{
-    background:#d62828;
-    color:white;
+
+background:#d62828;
+
+color:white;
+
 }
+
+
 
 #countdown{
-    font-size:72px;
-    font-weight:bold;
-    color:#ffcc00;
+
+font-size:72px;
+
+font-weight:bold;
+
+color:#ffcc00;
+
+height:90px;
+
 }
 
+
+
 #recordTimer{
-    font-size:24px;
-    margin-top:10px;
+
+font-size:24px;
+
+margin-top:10px;
+
 }
 
 </style>
+
 </head>
 
 <body>
 
+
+
 <h2>Rear Camera Video Recorder</h2>
+
+
 
 <div id="countdown"></div>
 
+
+
 <div class="container">
 
-    <video id="preview" autoplay playsinline muted></video>
-
-    <video id="playback" playsinline style="display:none;"></video>
-
-    <canvas id="overlay"></canvas>
 
 
-    <div id="timerOverlay">
+<video
 
-        00:00
+id="preview"
 
-    </div>
+autoplay
+
+playsinline
+
+muted>
+
+</video>
 
 
-    <div id="shotsOverlay">
 
-        Shots: 0
+<video
 
-    </div>
+id="playback"
+
+playsinline
+
+style="display:none;">
+
+</video>
 
 
-    <div id="scoreOverlay">
 
-        Score: 0
+<canvas id="overlay"></canvas>
 
-    </div>
+
+
+<div id="timerOverlay">
+
+00:00
 
 </div>
 
-<div id="recordTimer">00:00</div>
 
-<button id="startBtn">Start Recording</button>
-<button id="stopBtn" disabled>Stop Recording</button>
+
+<div id="shotsOverlay">
+
+Shots: 0
+
+</div>
+
+
+
+<div id="scoreOverlay">
+
+Score: 0
+
+</div>
+
+
+
+</div>
+
+
+
+<div id="recordTimer">
+
+00:00
+
+</div>
+
+
+
+<button id="startBtn">
+
+Start Recording
+
+</button>
+
+
+
+<button id="stopBtn" disabled>
+
+Stop Recording
+
+</button>
+
+
 
 <script>
 
+
+
 const preview=document.getElementById("preview");
+
 const playback=document.getElementById("playback");
 
 const canvas=document.getElementById("overlay");
+
 const ctx=canvas.getContext("2d");
 
-const countdown=document.getElementById("countdown");
 
-const recordTimer=document.getElementById("recordTimer");
-
-const startBtn=document.getElementById("startBtn");
-const stopBtn=document.getElementById("stopBtn");
 
 const timerOverlay=document.getElementById("timerOverlay");
 
@@ -218,273 +333,602 @@ const shotsOverlay=document.getElementById("shotsOverlay");
 
 const scoreOverlay=document.getElementById("scoreOverlay");
 
+
+
+const countdown=document.getElementById("countdown");
+
+const recordTimer=document.getElementById("recordTimer");
+
+
+
+const startBtn=document.getElementById("startBtn");
+
+const stopBtn=document.getElementById("stopBtn");
+
+
+
 let stream;
+
 let mediaRecorder;
+
 let recordedChunks=[];
 
-let recordInterval;
+
+
 let recordingSeconds=0;
 
-let playbackStart;
+let timerInterval;
+
+
 
 let shots=0;
+
 let score=0;
 
 
-//--------------------------
-// OPEN REAR CAMERA
-//--------------------------
+
+// OPEN CAMERA
+
+
 
 async function startCamera(){
 
+
+
 try{
+
+
 
 stream=await navigator.mediaDevices.getUserMedia({
 
+
+
 video:{
+
+
+
 facingMode:{ideal:"environment"},
+
+
+
 width:{ideal:1280},
+
+
+
 height:{ideal:720}
+
+
+
 },
+
+
 
 audio:true
 
+
+
 });
+
+
 
 preview.srcObject=stream;
 
-}catch(e){
 
-alert("Unable to access camera");
 
-console.log(e);
+}catch(err){
+
+
+
+alert("Unable to access camera.");
+
+
+
+console.log(err);
+
+
 
 }
 
+
+
 }
+
+
 
 startCamera();
 
 
-//--------------------------
-// COUNTDOWN
-//--------------------------
 
-async function beginCountdown(){
+
+
+// COUNTDOWN
+
+
+
+function beginCountdown(){
+
+
 
 let count=3;
 
+
+
 countdown.innerHTML=count;
+
+
 
 const interval=setInterval(()=>{
 
+
+
 count--;
+
+
 
 if(count>0){
 
+
+
 countdown.innerHTML=count;
+
+
 
 }else{
 
+
+
 clearInterval(interval);
+
+
 
 countdown.innerHTML="";
 
+
+
 startRecording();
 
+
+
 }
+
+
 
 },1000);
 
+
+
 }
 
 
-//--------------------------
+
+
+
 // START RECORDING
-//--------------------------
+
+
 
 function startRecording(){
 
+
+
 recordedChunks=[];
 
-mediaRecorder=new MediaRecorder(stream,{
 
-mimeType:"video/webm"
-
-});
-
-mediaRecorder.ondataavailable=e=>{
-
-if(e.data.size>0){
-
-recordedChunks.push(e.data);
-
-}
-
-};
-
-mediaRecorder.onstop=showPlayback;
-
-mediaRecorder.start();
 
 recordingSeconds=0;
 
-updateRecordTimer();
 
-recordInterval=setInterval(()=>{
+
+shots=0;
+
+
+
+score=0;
+
+
+
+mediaRecorder=new MediaRecorder(stream);
+
+
+
+mediaRecorder.ondataavailable=e=>{
+
+
+
+if(e.data.size>0){
+
+
+
+recordedChunks.push(e.data);
+
+
+
+}
+
+
+
+};
+
+
+
+mediaRecorder.onstop=showPlayback;
+
+
+
+mediaRecorder.start();
+
+
+
+timerInterval=setInterval(()=>{
+
+
 
 recordingSeconds++;
 
-updateRecordTimer();
+
+
+updateDisplays();
+
+
 
 },1000);
 
+
+
 startBtn.disabled=true;
+
+
 
 stopBtn.disabled=false;
 
+
+
 }
 
 
-//--------------------------
+
+
+
 // STOP RECORDING
-//--------------------------
+
+
 
 function stopRecording(){
 
+
+
 mediaRecorder.stop();
 
-clearInterval(recordInterval);
+
+
+clearInterval(timerInterval);
+
+
 
 startBtn.disabled=false;
 
+
+
 stopBtn.disabled=true;
 
+
+
 }
 
 
-//--------------------------
-// TIMER DISPLAY
-//--------------------------
 
-function updateRecordTimer(){
+
+
+// UPDATE OVERLAYS
+
+
+
+function updateDisplays(){
+
+
 
 let mins=Math.floor(recordingSeconds/60)
+
 .toString()
+
 .padStart(2,"0");
+
+
 
 let secs=(recordingSeconds%60)
+
 .toString()
+
 .padStart(2,"0");
 
-recordTimer.innerHTML=`${mins}:${secs}`;
-
-}
 
 
-//--------------------------
-// PLAYBACK
-//--------------------------
-
-function showPlayback(){
-
-const blob=new Blob(recordedChunks,{
-
-type:"video/webm"
-
-});
-
-const url=URL.createObjectURL(blob);
-
-preview.style.display="none";
-
-playback.style.display="block";
-
-playback.src=url;
-
-playback.play();
-
-playbackStart=Date.now();
-
-resizeCanvas();
-
-requestAnimationFrame(drawOverlay);
-
-}
+let time=`${mins}:${secs}`;
 
 
-//--------------------------
-// CANVAS SIZE
-//--------------------------
 
-function resizeCanvas(){
-
-canvas.width=playback.clientWidth;
-
-canvas.height=playback.clientHeight;
-
-}
-
-window.addEventListener("resize",resizeCanvas);
+timerOverlay.innerHTML=time;
 
 
-}
 
-//--------------------------
-// DRAW OVERLAY
-//--------------------------
+recordTimer.innerHTML=time;
 
-function drawOverlay(){
 
-    if(playback.paused || playback.ended){
-        return;
-    }
 
-    let elapsed=Math.floor((Date.now()-playbackStart)/1000);
+// SAMPLE DATA
 
-    let mins=Math.floor(elapsed/60)
-        .toString()
-        .padStart(2,"0");
+// Replace with laser detection later
 
-    let secs=(elapsed%60)
-        .toString()
-        .padStart(2,"0");
- 
-timerOverlay.innerHTML=`${mins}:${secs}`;
+
+
+shots=Math.floor(recordingSeconds/2);
+
+
+
+score=shots*10;
+
 
 
 shotsOverlay.innerHTML=`Shots: ${shots}`;
 
 
+
 scoreOverlay.innerHTML=`Score: ${score}`;
 
 
-requestAnimationFrame(drawOverlay);
 
 }
 
 
-//--------------------------
+
+
+
+// PLAYBACK
+
+
+
+function showPlayback(){
+
+
+
+const blob=new Blob(
+
+
+
+recordedChunks,
+
+
+
+{type:"video/webm"}
+
+
+
+);
+
+
+
+const url=URL.createObjectURL(blob);
+
+
+
+preview.style.display="none";
+
+
+
+playback.style.display="block";
+
+
+
+playback.src=url;
+
+
+
+playback.onloadedmetadata=()=>{
+
+
+
+resizeCanvas();
+
+
+
+playback.play();
+
+
+
+requestAnimationFrame(syncPlayback);
+
+
+
+};
+
+
+
+}
+
+
+
+
+
+// PLAYBACK TIMER
+
+
+
+function syncPlayback(){
+
+
+
+if(playback.paused || playback.ended){
+
+
+
+return;
+
+
+
+}
+
+
+
+let t=Math.floor(playback.currentTime);
+
+
+
+let mins=Math.floor(t/60)
+
+.toString()
+
+.padStart(2,"0");
+
+
+
+let secs=(t%60)
+
+.toString()
+
+.padStart(2,"0");
+
+
+
+timerOverlay.innerHTML=`${mins}:${secs}`;
+
+
+
+shotsOverlay.innerHTML=`Shots: ${Math.floor(t/2)}`;
+
+
+
+scoreOverlay.innerHTML=`Score: ${Math.floor(t/2)*10}`;
+
+
+
+ctx.clearRect(
+
+
+
+0,
+
+
+
+0,
+
+
+
+canvas.width,
+
+
+
+canvas.height
+
+
+
+);
+
+
+
+// draw shot markers here later
+
+
+
+requestAnimationFrame(syncPlayback);
+
+
+
+}
+
+
+
+
+
+// CANVAS SIZE
+
+
+
+function resizeCanvas(){
+
+
+
+const rect=playback.getBoundingClientRect();
+
+
+
+canvas.width=rect.width;
+
+
+
+canvas.height=rect.height;
+
+
+
+canvas.style.width=rect.width+"px";
+
+
+
+canvas.style.height=rect.height+"px";
+
+
+
+}
+
+
+
+window.addEventListener(
+
+
+
+"resize",
+
+
+
+resizeCanvas
+
+
+
+);
+
+
+
+
+
 // BUTTONS
-//--------------------------
+
+
 
 startBtn.onclick=()=>{
 
+
+
 preview.style.display="block";
+
+
 
 playback.style.display="none";
 
+
+
 beginCountdown();
 
+
+
 };
+
+
 
 stopBtn.onclick=()=>{
 
+
+
 stopRecording();
+
+
 
 };
 
+
+
 </script>
 
+
+
 </body>
+
 </html>
