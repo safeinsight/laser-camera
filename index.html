@@ -63,7 +63,23 @@ z-index:5;
 
 }
 
+#settingsBar{
 
+margin-bottom:15px;
+
+font-size:18px;
+
+}
+
+#distanceSelect{
+
+font-size:18px;
+
+padding:5px;
+
+border-radius:6px;
+
+}
 
 #timerOverlay{
 
@@ -123,51 +139,6 @@ pointer-events:none;
 
 
 
-#scoreOverlay{
-
-position:absolute;
-
-bottom:15px;
-
-right:15px;
-
-background:rgba(0,0,0,.5);
-
-padding:5px 12px;
-
-border-radius:8px;
-
-font-size:18px;
-
-font-weight:bold;
-
-color:white;
-
-z-index:20;
-
-pointer-events:none;
-
-}
-
-
-
-button{
-
-padding:12px 22px;
-
-margin:10px;
-
-font-size:18px;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
 
 #startBtn{
 
@@ -225,7 +196,31 @@ margin-top:10px;
 
 <div id="countdown"></div>
 
+<div id="settingsBar">
 
+<label>
+
+Distance:
+
+<select id="distanceSelect">
+
+<option value="3">3 yards</option>
+
+<option value="5">5 yards</option>
+
+<option value="7" selected>7 yards</option>
+
+<option value="10">10 yards</option>
+
+<option value="15">15 yards</option>
+
+<option value="25">25 yards</option>
+
+</select>
+
+</label>
+
+</div>
 
 <div class="container">
 
@@ -277,14 +272,6 @@ Shots: 0
 
 
 
-<div id="scoreOverlay">
-
-Score: 0
-
-</div>
-
-
-
 </div>
 
 
@@ -326,12 +313,11 @@ const canvas=document.getElementById("overlay");
 const ctx=canvas.getContext("2d");
 
 
-
+const distanceSelect=document.getElementById("distanceSelect");
+  
 const timerOverlay=document.getElementById("timerOverlay");
 
 const shotsOverlay=document.getElementById("shotsOverlay");
-
-const scoreOverlay=document.getElementById("scoreOverlay");
 
 
 
@@ -362,8 +348,6 @@ let timerInterval;
 
 
 let shots=0;
-
-let score=0;
 
 
 
@@ -523,10 +507,6 @@ shots=0;
 
 
 
-score=0;
-
-
-
 mediaRecorder=new MediaRecorder(stream);
 
 
@@ -665,17 +645,9 @@ shots=Math.floor(recordingSeconds/2);
 
 
 
-score=shots*10;
-
-
-
 shotsOverlay.innerHTML=`Shots: ${shots}`;
 
-
-
-scoreOverlay.innerHTML=`Score: ${score}`;
-
-
+  
 
 }
 
@@ -794,10 +766,6 @@ timerOverlay.innerHTML=`${mins}:${secs}`;
 
 
 shotsOverlay.innerHTML=`Shots: ${Math.floor(t/2)}`;
-
-
-
-scoreOverlay.innerHTML=`Score: ${Math.floor(t/2)*10}`;
 
 
 
