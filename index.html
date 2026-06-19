@@ -147,6 +147,66 @@ pointer-events:none;
 
 }
 
+#distancePopup{
+
+display:none;
+
+position:absolute;
+
+bottom:60px;
+
+right:15px;
+
+background:#222;
+
+border-radius:12px;
+
+overflow:hidden;
+
+box-shadow:0 0 20px rgba(0,0,0,.6);
+
+z-index:50;
+
+}
+
+
+
+.distanceOption{
+
+padding:14px 25px;
+
+font-size:20px;
+
+cursor:pointer;
+
+border-bottom:1px solid #444;
+
+}
+
+
+
+.distanceOption:last-child{
+
+border-bottom:none;
+
+}
+
+
+
+.distanceOption:hover{
+
+background:#333;
+
+}
+
+
+
+.selected{
+
+background:#00a651;
+
+}
+
 button{
 
 padding:16px 30px;
@@ -283,8 +343,21 @@ Distance: 7y
 
 </div>
 
-</div>
+<div id="distancePopup">
 
+<div class="distanceOption">3</div>
+
+<div class="distanceOption">5</div>
+
+<div class="distanceOption selected">7</div>
+
+<div class="distanceOption">10</div>
+
+<div class="distanceOption">15</div>
+
+<div class="distanceOption">25</div>
+
+</div>
 
 
 <div id="recordTimer">
@@ -327,6 +400,12 @@ const timerOverlay=document.getElementById("timerOverlay");
 
 const shotsOverlay=document.getElementById("shotsOverlay");
 
+const distanceOverlay=document.getElementById("distanceOverlay");
+
+const distancePopup=document.getElementById("distancePopup");
+
+const distanceOptions=document.querySelectorAll(".distanceOption");
+
 
 
 const countdown=document.getElementById("countdown");
@@ -353,7 +432,7 @@ let recordingSeconds=0;
 
 let timerInterval;
 
-
+let targetDistance=7;
 
 let shots=0;
 
@@ -913,8 +992,101 @@ stopRecording();
 
 };
 
+distanceOverlay.onclick=(e)=>{
+
+e.stopPropagation();
 
 
+if(
+
+distancePopup.style.display=="block"
+
+){
+
+distancePopup.style.display="none";
+
+}
+
+else{
+
+distancePopup.style.display="block";
+
+}
+
+};
+
+
+
+distanceOptions.forEach(option=>{
+
+
+option.onclick=(e)=>{
+
+
+e.stopPropagation();
+
+
+
+targetDistance=
+
+parseInt(
+
+option.innerText
+
+);
+
+
+
+distanceOverlay.innerHTML=
+
+`Distance: ${targetDistance}y`;
+
+
+
+distanceOptions.forEach(o=>{
+
+o.classList.remove(
+
+"selected"
+
+);
+
+});
+
+
+
+option.classList.add(
+
+"selected"
+
+);
+
+
+
+distancePopup.style.display=
+
+"none";
+
+
+
+};
+
+
+});
+  
+
+
+
+document.onclick=()=>{
+
+
+distancePopup.style.display=
+
+"none";
+
+
+};
+  
 </script>
 
 
