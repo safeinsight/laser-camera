@@ -63,23 +63,6 @@ z-index:5;
 
 }
 
-#settingsBar{
-
-margin-bottom:15px;
-
-font-size:18px;
-
-}
-
-#distanceSelect{
-
-font-size:18px;
-
-padding:5px;
-
-border-radius:6px;
-
-}
 
 #timerOverlay{
 
@@ -138,6 +121,31 @@ pointer-events:none;
 }
 
 
+#distanceOverlay{
+
+position:absolute;
+
+bottom:15px;
+
+right:15px;
+
+background:rgba(0,0,0,.5);
+
+padding:5px 12px;
+
+border-radius:8px;
+
+font-size:18px;
+
+font-weight:bold;
+
+color:white;
+
+z-index:20;
+
+pointer-events:none;
+
+}
 
 
 #startBtn{
@@ -196,31 +204,7 @@ margin-top:10px;
 
 <div id="countdown"></div>
 
-<div id="settingsBar">
 
-<label>
-
-Distance:
-
-<select id="distanceSelect">
-
-<option value="3">3 yards</option>
-
-<option value="5">5 yards</option>
-
-<option value="7" selected>7 yards</option>
-
-<option value="10">10 yards</option>
-
-<option value="15">15 yards</option>
-
-<option value="25">25 yards</option>
-
-</select>
-
-</label>
-
-</div>
 
 <div class="container">
 
@@ -271,6 +255,12 @@ Shots: 0
 </div>
 
 
+  
+<div id="distanceOverlay">
+
+Distance: 7y
+
+</div>
 
 </div>
 
@@ -645,7 +635,14 @@ shots=Math.floor(recordingSeconds/2);
 
 
 
-shotsOverlay.innerHTML=`Shots: ${shots}`;
+shotsOverlay.innerHTML=
+
+`Shots: ${shots}`;
+
+
+distanceOverlay.innerHTML=
+
+`Distance: ${targetDistance}y`;
 
   
 
@@ -765,7 +762,14 @@ timerOverlay.innerHTML=`${mins}:${secs}`;
 
 
 
-shotsOverlay.innerHTML=`Shots: ${Math.floor(t/2)}`;
+shotsOverlay.innerHTML=
+
+`Shots: ${shots}`;
+
+
+distanceOverlay.innerHTML=
+
+`Distance: ${targetDistance}y`;
 
 
 
