@@ -335,15 +335,17 @@ style="display:none;">
 
 
 
+<canvas id="overlay"></canvas>
+
 <canvas
 
-id="overlay"
+id="detectCanvas"
 
 style="display:none;">
 
 </canvas>
 
-
+  
 
 <div id="timerOverlay">
 
@@ -457,6 +459,32 @@ const canvas=document.getElementById("overlay");
 
 const ctx=canvas.getContext("2d");
 
+const detectCanvas=
+
+document.getElementById(
+
+"detectCanvas"
+
+);
+
+
+
+const detectCtx=
+
+detectCanvas.getContext(
+
+"2d",
+
+{
+
+willReadFrequently:true
+
+}
+
+);
+
+
+
 const timerOverlay=document.getElementById("timerOverlay");
 
 const shotsOverlay=document.getElementById("shotsOverlay");
@@ -490,6 +518,12 @@ let timerInterval;
 let shots=0;
 
 let targetDistance=7;
+
+let hits=[];
+
+let laserVisible=false;
+
+let lastShotTime=0;
 
 
 
@@ -609,6 +643,15 @@ mediaRecorder.onstop=showPlayback;
 
 mediaRecorder.start();
 
+hits=[];
+
+laserVisible=false;
+
+requestAnimationFrame(
+
+detectLaser
+
+);
 
 
 timerInterval=setInterval(()=>{
@@ -813,6 +856,80 @@ distanceOverlay.innerHTML=
 
 
 
+ctx.clearRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+
+
+ctx.strokeStyle="yellow";
+
+ctx.lineWidth=3;
+
+
+
+hits.forEach(hit=>{
+
+
+
+ctx.beginPath();
+
+
+
+ctx.arc(
+
+
+
+(hit.x/
+
+preview.videoWidth)
+
+*
+
+canvas.width,
+
+
+
+(hit.y/
+
+preview.videoHeight)
+
+*
+
+canvas.height,
+
+
+
+12,
+
+
+
+0,
+
+
+
+Math.PI*2
+
+
+
+);
+
+
+
+ctx.stroke();
+
+
+
+});
+
 requestAnimationFrame(
 
 syncPlayback
@@ -821,7 +938,231 @@ syncPlayback
 
 }
 
+function detectLaser(){
 
+if(
+
+!mediaRecorder ||
+
+mediaRecorder.state!="recording"
+
+){
+
+return;
+
+}
+
+
+
+detectCanvas.width=
+
+preview.videoWidth;
+
+
+
+detectCanvas.height=
+
+preview.videoHeight;
+
+
+
+detectCtx.drawImage(
+
+preview,
+
+0,
+
+0
+
+);
+
+
+
+const frame=
+
+detectCtx.getImageData(
+
+0,
+
+0,
+
+detectCanvas.width,
+
+detectCanvas.height
+
+);
+
+
+
+const pixels=
+
+frame.data;
+
+
+
+let count=0;
+
+let totalX=0;
+
+let totalY=0;
+
+
+
+for(
+
+let y=75;
+
+y<detectCanvas.height-75;
+
+y++
+
+){
+
+for(
+
+let x=75;
+
+x<detectCanvas.width-75;
+
+x++
+
+){
+
+const i=
+
+(y*detectCanvas.width+x)*4;
+
+
+
+const r=pixels[i];
+
+const g=pixels[i+1];
+
+const b=pixels[i+2];
+
+
+
+if(
+
+r>220 &&
+
+g<90 &&
+
+b<90 &&
+
+r>(g*2) &&
+
+r>(b*2)
+
+){
+
+count++;
+
+
+
+totalX+=x;
+
+totalY+=y;
+
+}
+
+}
+
+}
+
+
+
+if(
+
+count>10 &&
+
+count<300
+
+){
+
+const centerX=
+
+totalX/count;
+
+
+
+const centerY=
+
+totalY/count;
+
+
+
+const now=
+
+Date.now();
+
+
+
+if(
+
+!laserVisible &&
+
+(now-lastShotTime)>250
+
+){
+
+shots++;
+
+
+
+hits.push({
+
+x:centerX,
+
+y:centerY,
+
+time:recordingSeconds
+
+});
+
+
+
+lastShotTime=now;
+
+
+
+laserVisible=true;
+
+
+
+console.log(
+
+"SHOT",
+
+shots,
+
+centerX,
+
+centerY
+
+);
+
+}
+
+
+
+}
+
+else{
+
+laserVisible=false;
+
+}
+
+
+
+requestAnimationFrame(
+
+detectLaser
+
+);
+
+}
 
 /* BUTTONS */
 
