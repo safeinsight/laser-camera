@@ -1227,7 +1227,11 @@ showPlayback;
 
 mediaRecorder.start();
 
+requestAnimationFrame(
 
+detectLaser
+
+);
 
 
 
@@ -1238,11 +1242,7 @@ timerInterval=
 setInterval(()=>{
 
 
-
 recordingSeconds++;
-
-
-
 
 
 updateDisplays();
@@ -1252,19 +1252,7 @@ updateDisplays();
 },1000);
 
 
-
-
-
-requestAnimationFrame(
-
-detectLaser
-
-);
-
-
-
-
-
+    
 startBtn.disabled=true;
 
 
