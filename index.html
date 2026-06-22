@@ -2073,8 +2073,6 @@ drawHits();
 
 updateDisplays();
 
-
-
 console.log(
 
 "SHOT",
@@ -2087,19 +2085,21 @@ centerY
 
 );
 
+}
 
+}
+
+requestAnimationFrame(
+
+detectLaser
+
+);
 
 }
 
 
 
 }
-
-
-
-// draw live hit markers
-
-drawHits();
 
 
 
@@ -2152,37 +2152,25 @@ hits.forEach(hit=>{
 
 const x=
 
-
-
 (hit.x/
 
 preview.videoWidth)
 
-
-
 *
 
-
-
-overlay.width;
+ctx.canvas.width;
 
 
 
 const y=
 
-
-
 (hit.y/
 
 preview.videoHeight)
 
-
-
 *
 
-
-
-overlay.height;
+ctx.canvas.height;
 
 
 
