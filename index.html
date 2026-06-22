@@ -937,101 +937,71 @@ handleCalibrationTap
 
 function resizeEverything(){
 
-
-
 const video=
 
-
-
-preview.style.display
-
-!="none"
-
-
+preview.style.display!="none"
 
 ?
 
-
-
 preview
 
-
-
 :
-
-
 
 playback;
 
 
 
+if(
+
+!video.videoWidth ||
+
+!video.videoHeight
+
+){
+
+return;
+
+}
+
 
 
 const rect=
 
-
-
-video
-
-.getBoundingClientRect();
-
-
+video.getBoundingClientRect();
 
 
 
 overlay.width=
 
-
-
 video.videoWidth;
-
-
 
 
 
 overlay.height=
 
-
-
 video.videoHeight;
-
-
 
 
 
 overlay.style.width=
 
-
-
 rect.width+"px";
-
-
 
 
 
 overlay.style.height=
 
-
-
 rect.height+"px";
-
-
 
 
 
 detectCanvas.width=
 
-
-
 video.videoWidth;
 
 
 
-
-
 detectCanvas.height=
-
-
 
 video.videoHeight;
 
