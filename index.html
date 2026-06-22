@@ -1974,47 +1974,25 @@ pixels[i+2];
 
 if(
 
+r>150 &&
 
+r>g+20 &&
 
-r>170 &&
+r>b+20 &&
 
+)
 
-
-r>g+50 &&
-
-
-
-r>b+50 &&
-
-
-
-r+g+b>320
-
-
-
-){
-
-
-
-totalX+=x;
-
-
-
-totalY+=y;
-
-
+{
 
 count++;
 
+totalX+=x;
 
-
-}
-
-
+totalY+=y;
 
 }
 
-
+}
 
 }
 
@@ -2024,15 +2002,15 @@ count++;
 
 if(
 
-count>20
+count>5
 
 &&
 
-count<250
+count<400
 
-){
+)
 
-
+{
 
 const centerX=
 
@@ -2081,30 +2059,17 @@ lastShotTime=
 now;
 
 
-
 hits.push({
-
-
 
 x:centerX,
 
-
-
 y:centerY,
 
-
-
-time:
-
-
-
-recordingSeconds
-
-
+time:recordingSeconds
 
 });
 
-
+drawHits();
 
 updateDisplays();
 
