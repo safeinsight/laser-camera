@@ -810,6 +810,9 @@ calibrated:false
 
 };
 
+let calibrationStep=0;
+
+
 
 
 
@@ -919,7 +922,13 @@ console.log(err);
 
 startCamera();
 
+preview.addEventListener(
 
+"click",
+
+handleCalibrationTap
+
+);
 
 
 //--------------------------
@@ -1471,153 +1480,162 @@ distanceOverlay.innerHTML=
 // CALIBRATE TARGET
 //--------------------------
 
-async function calibrateTarget(){
+function calibrateTarget(){
 
+alert(
 
-
-detectCanvas.width=
-
-preview.videoWidth;
-
-
-
-detectCanvas.height=
-
-preview.videoHeight;
-
-
-
-detectCtx.drawImage(
-
-preview,
-
-0,
-
-0
+"Tap the TOP LEFT corner of your target"
 
 );
 
+calibrationStep=1;
 
+}
 
-const img=
-
-detectCtx.getImageData(
-
-0,
-
-0,
-
-detectCanvas.width,
-
-detectCanvas.height
-
-);
-
-
-
-const data=
-
-img.data;
-
-
-
-let minX=999999;
-
-let maxX=0;
-
-let minY=999999;
-
-let maxY=0;
-
-
-
-for(
-
-let y=0;
-
-y<detectCanvas.height;
-
-y+=3
-
-){
-
-
-
-for(
-
-let x=0;
-
-x<detectCanvas.width;
-
-x+=3
-
-){
-
-
-
-const i=
-
-(
-
-y*
-
-detectCanvas.width
-
-+x
-
-)*4;
-
-
-
-const r=data[i];
-
-const g=data[i+1];
-
-const b=data[i+2];
-
-
+function handleCalibrationTap(e){
 
 if(
 
-r>180 &&
-
-g>180 &&
-
-b>180
+calibrationStep===0
 
 ){
 
-
-
-if(x<minX)
-
-minX=x;
-
-
-
-if(x>maxX)
-
-maxX=x;
-
-
-
-if(y<minY)
-
-minY=y;
-
-
-
-if(y>maxY)
-
-maxY=y;
-
-
+return;
 
 }
 
 
 
+const rect=
+
+preview.getBoundingClientRect();
+
+
+
+const scaleX=
+
+preview.videoWidth/
+
+rect.width;
+
+
+
+const scaleY=
+
+preview.videoHeight/
+
+rect.height;
+
+
+
+const x=
+
+(
+
+e.clientX
+
+-
+
+rect.left
+
+)
+
+*
+
+scaleX;
+
+
+
+const y=
+
+(
+
+e.clientY
+
+-
+
+rect.top
+
+)
+
+*
+
+scaleY;
+
+
+
+// FIRST TAP
+
+if(
+
+calibrationStep===1
+
+){
+
+target.left=x;
+
+target.top=y;
+
+
+
+calibrationStep=2;
+
+
+
+alert(
+
+"Now tap the BOTTOM RIGHT corner"
+
+);
+
+
+
+return;
+
 }
+
+
+
+// SECOND TAP
+
+if(
+
+calibrationStep===2
+
+){
+
+target.right=x;
+
+target.bottom=y;
+
+
+
+target.calibrated=true;
+
+
+
+calibrationStep=0;
+
+
+
+drawGreenBox();
+
+
+
+alert(
+
+"Target Calibrated"
+
+);
+
+
+
+console.log(target);
+
+}
+
+}
+
 
 
 
@@ -1683,96 +1701,68 @@ target
 
 function drawGreenBox(){
 
+    if(!target.calibrated){
+
+        return;
+
+    }
+
+    const scaleX =
+        preview.clientWidth /
+        preview.videoWidth;
+
+    const scaleY =
+        preview.clientHeight /
+        preview.videoHeight;
 
 
-if(
-
-!target.calibrated
-
-){
-
-return;
-
-}
+    greenBox.style.display = "block";
 
 
+    greenBox.style.left =
 
-const scaleX=
+        (target.left * scaleX)
 
-preview.clientWidth/
-
-preview.videoWidth;
-
+        + "px";
 
 
-const scaleY=
+    greenBox.style.top =
 
-preview.clientHeight/
+        (target.top * scaleY)
 
-preview.videoHeight;
-
-
-
-greenBox.style.display=
-
-"block";
+        + "px";
 
 
+greenBox.style.width =
 
-greenBox.style.left=
+Math.abs(
 
-(target.left*scaleX)
+target.right -
 
-+"px";
-
-
-
-greenBox.style.top=
-
-(target.top*scaleY)
-
-+"px";
-
-
-
-greenBox.style.width=
-
-(
-
-(target.right-
-
-target.left)
-
-*
-
-scaleX
+target.left
 
 )
 
-+"px";
+* scaleX
+
++ "px";
 
 
+greenBox.style.height =
 
-greenBox.style.height=
+Math.abs(
 
-(
+target.bottom -
 
-(target.bottom-
-
-target.top)
-
-*
-
-scaleY
+target.top
 
 )
 
-+"px";
+* scaleY
 
-
++ "px";
 
 }
-
 
 
 //--------------------------
