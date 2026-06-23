@@ -994,10 +994,14 @@ overlay.style.height=
 rect.height+"px";
 
 
+detectCanvas.width=
 
-detectCanvas.width = 640;
+video.videoWidth;
 
-detectCanvas.height = 360;
+detectCanvas.height=
+
+video.videoHeight;
+
     
 
 console.log(
@@ -1884,38 +1888,82 @@ let totalY=0;
 let count=0;
 
 
+ctx.clearRect(
+
+0,
+
+0,
+
+overlay.width,
+
+overlay.height
+
+);
+
+
+const left =
+
+Math.min(
+
+target.left,
+
+target.right
+
+);
+
+
+const right =
+
+Math.max(
+
+target.left,
+
+target.right
+
+);
+
+
+const top =
+
+Math.min(
+
+target.top,
+
+target.bottom
+
+);
+
+
+const bottom =
+
+Math.max(
+
+target.top,
+
+target.bottom
+
+);
+
 
 for(
 
-let y=
+let y=top;
 
-target.top;
-
-y<
-
-target.bottom;
+y<bottom;
 
 y++
 
 ){
 
-
-
 for(
 
-let x=
+let x=left;
 
-target.left;
-
-x<
-
-target.right;
+x<right;
 
 x++
 
 ){
-
-
 
 const i=
 
@@ -1930,11 +1978,9 @@ detectCanvas.width
 )*4;
 
 
-
 const r=
 
 pixels[i];
-
 
 
 const g=
@@ -1942,11 +1988,9 @@ const g=
 pixels[i+1];
 
 
-
 const b=
 
 pixels[i+2];
-
 
 
 const brightness =
@@ -1983,6 +2027,40 @@ count++;
 totalX += x;
 
 totalY += y;
+
+
+const drawX =
+
+(x / detectCanvas.width)
+
+*
+
+overlay.width;
+
+
+const drawY =
+
+(y / detectCanvas.height)
+
+*
+
+overlay.height;
+
+
+ctx.fillStyle="red";
+
+
+ctx.fillRect(
+
+drawX,
+
+drawY,
+
+4,
+
+4
+
+);
 
 }
 
