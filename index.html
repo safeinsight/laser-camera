@@ -2019,14 +2019,57 @@ const b=
 pixels[i+2];
 
 
+    
+if(
+
+r>200 ||
+
+g>200 ||
+
+b>200
+
+){
+
+console.log(
+
+"Bright:",
+
+r,
+
+g,
+
+b
+
+);
+
+}
+
+    
+
 const brightness =
 
-(r + g + b)/3;
+(r + g + b) / 3;
+
+
+const isRed =
+
+r > 160 &&
+
+r > g * 1.2 &&
+
+r > b * 1.2;
+
+
+const isWhite =
+
+brightness > 220;
 
 
 if(
 
-brightness > 150
+isRed ||
+
+isWhite
 
 )
 
@@ -2034,11 +2077,31 @@ brightness > 150
 
 count++;
 
-totalX+=x;
+totalX += x;
 
-totalY+=y;
+totalY += y;
+
+
+const drawX =
+
+(x / detectCanvas.width)
+
+*
+
+overlay.width;
+
+
+const drawY =
+
+(y / detectCanvas.height)
+
+*
+
+overlay.height;
+
 
 ctx.fillStyle="red";
+
 
 ctx.fillRect(
 
@@ -2053,10 +2116,11 @@ drawY,
 );
 
 }
-    
+
 }
 
 }
+
 
 console.log(
 
