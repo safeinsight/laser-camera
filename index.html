@@ -1954,13 +1954,30 @@ pixels[i+2];
 
 
 
+const brightness =
+
+(r + g + b) / 3;
+
+
+const isRed =
+
+r > 160 &&
+
+r > g * 1.2 &&
+
+r > b * 1.2;
+
+
+const isWhite =
+
+brightness > 220;
+
+
 if(
 
-r>150 &&
+isRed ||
 
-r>g+20 &&
-
-r>b+20
+isWhite
 
 )
 
@@ -1968,9 +1985,9 @@ r>b+20
 
 count++;
 
-totalX+=x;
+totalX += x;
 
-totalY+=y;
+totalY += y;
 
 }
 
@@ -1984,11 +2001,11 @@ totalY+=y;
 
 if(
 
-count>5
+count>10
 
 &&
 
-count<400
+count<2000
 
 )
 
