@@ -2021,28 +2021,12 @@ pixels[i+2];
 
 const brightness =
 
-(r + g + b) / 3;
-
-
-const isRed =
-
-r > 160 &&
-
-r > g * 1.2 &&
-
-r > b * 1.2;
-
-
-const isWhite =
-
-brightness > 220;
+(r + g + b)/3;
 
 
 if(
 
-isRed ||
-
-isWhite
+brightness > 150
 
 )
 
@@ -2050,31 +2034,11 @@ isWhite
 
 count++;
 
-totalX += x;
+totalX+=x;
 
-totalY += y;
-
-
-const drawX =
-
-(x / detectCanvas.width)
-
-*
-
-overlay.width;
-
-
-const drawY =
-
-(y / detectCanvas.height)
-
-*
-
-overlay.height;
-
+totalY+=y;
 
 ctx.fillStyle="red";
-
 
 ctx.fillRect(
 
@@ -2089,7 +2053,7 @@ drawY,
 );
 
 }
-
+    
 }
 
 }
