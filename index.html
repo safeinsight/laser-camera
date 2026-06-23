@@ -2083,43 +2083,29 @@ const brightness =
 
 const isRed =
 
-r > 160 &&
+r > 220 &&
 
-r > g * 1.2 &&
+g < 120 &&
 
-r > b * 1.2;
+b < 120;
 
 
 const isWhite =
 
-brightness > 220;
+brightness > 245 &&
+
+Math.abs(r-g) < 20 &&
+
+Math.abs(r-b) < 20;
 
 
 if(
 
-r > 100 ||
+isRed ||
 
-g > 100 ||
-
-b > 100
+isWhite
 
 )
-
-{
-
-console.log(
-
-"RGB:",
-
-r,
-
-g,
-
-b
-
-);
-
-}
 
 {
 
@@ -2149,7 +2135,6 @@ overlay.height;
 
 
 ctx.fillStyle="red";
-
 
 ctx.fillRect(
 
