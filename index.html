@@ -2052,7 +2052,17 @@ const b=
 
 pixels[i+2];
 
-
+if (
+    x === Math.floor((left + right)/2) &&
+    y === Math.floor((top + bottom)/2)
+){
+    console.log(
+        "Center RGB:",
+        r,
+        g,
+        b
+    );
+}
     
 if(
 
