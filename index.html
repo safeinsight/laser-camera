@@ -1843,7 +1843,20 @@ detectCanvas.height
 
 );
 
+const testPixel =
+    detectCtx.getImageData(
+        100,
+        100,
+        1,
+        1
+    ).data;
 
+console.log(
+    "Pixel:",
+    testPixel[0],
+    testPixel[1],
+    testPixel[2]
+);
 
 const frame=
 
