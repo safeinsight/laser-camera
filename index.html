@@ -1206,11 +1206,13 @@ showPlayback;
 
 mediaRecorder.start();
 
+console.log("BEFORE requestAnimationFrame");
+
 requestAnimationFrame(
-
-detectLaser
-
+    detectLaser
 );
+
+console.log("AFTER requestAnimationFrame");
 
 
 
