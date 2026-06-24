@@ -1035,82 +1035,36 @@ resizeEverything
 
 function beginCountdown(){
 
+    console.log("COUNTDOWN STARTED");
 
+    let count=3;
 
-let count=3;
+    countdown.innerHTML=count;
 
+    const interval=setInterval(()=>{
 
+        console.log("COUNT:", count);
 
-countdown.innerHTML=
+        count--;
 
-count;
+        if(count>0){
 
+            countdown.innerHTML=count;
 
+        } else {
 
+            clearInterval(interval);
 
+            console.log("CALLING startRecording");
 
-const interval=
+            countdown.innerHTML="";
 
+            startRecording();
 
+        }
 
-setInterval(()=>{
-
-
-
-count--;
-
-
-
-
-
-if(count>0){
-
-
-
-countdown.innerHTML=
-
-count;
-
-
-
+    },1000);
 }
-
-
-
-else{
-
-
-
-clearInterval(
-
-interval
-
-);
-
-
-
-
-
-countdown.innerHTML="";
-
-
-
-
-
-startRecording();
-
-
-
-}
-
-
-
-},1000);
-
-
-
-}
-
 
 
 
