@@ -850,7 +850,7 @@ ideal:"environment"
 
 width:{
 
-ideal:1920
+ideal:1280
 
 },
 
@@ -858,7 +858,7 @@ ideal:1920
 
 height:{
 
-ideal:1080
+ideal:720
 
 }
 
@@ -1789,439 +1789,152 @@ distancePopup.style.display=
 };
 
 
-//--------------------------
-// LASER DETECTION
-//--------------------------
+//------------------------------------------------
+// LASER DETECTION V3
+//------------------------------------------------
 
 function detectLaser(){
 
-console.log("detectLaser running");
-
-if(
-
-!mediaRecorder ||
-
-mediaRecorder.state!="recording"
-
-){
-
-return;
-
-}
-
-
-
-if(
-
-!target.calibrated
-
-){
-
-requestAnimationFrame(
-
-detectLaser
-
-);
-
-return;
-
-}
-
-
-
-detectCtx.drawImage(
-
-preview,
-
-0,
-
-0,
-
-detectCanvas.width,
-
-detectCanvas.height
-
-);
-
-const testPixel =
-    detectCtx.getImageData(
-        100,
-        100,
-        1,
-        1
-    ).data;
-
-console.log(
-    "Pixel:",
-    testPixel[0],
-    testPixel[1],
-    testPixel[2]
-);
-
-const frame=
-
-detectCtx.getImageData(
-
-0,
-
-0,
-
-detectCanvas.width,
-
-detectCanvas.height
-
-);
-
-
-
-const pixels=
-
-frame.data;
-
-
-
-let totalX=0;
-
-let totalY=0;
-
-let count=0;
-
-
-ctx.clearRect(
-
-0,
-
-0,
-
-overlay.width,
-
-overlay.height
-
-);
-
-
-const left = 0;
-const top = 0;
-const right = detectCanvas.width;
-const bottom = detectCanvas.height;
-
-
-for(
-
-let y=top;
-
-y<bottom;
-
-y++
-
-){
-
-for(
-
-let x=left;
-
-x<right;
-
-x++
-
-){
-
-if(
-
-x===Math.floor(
-
-(left+right)/2
-
-)
-
-&&
-
-y===Math.floor(
-
-(top+bottom)/2
-
-)
-
-){
-
-console.log(
-
-"Scanning center",
-
-x,
-
-y
-
-);
-
-}
-    
-const i=
-
-(
-
-y*
-
-detectCanvas.width
-
-+x
-
-)*4;
-
-
-const r=
-
-pixels[i];
-
-
-const g=
-
-pixels[i+1];
-
-
-const b=
-
-pixels[i+2];
-
-if (
-    r > 180 ||
-    g > 180 ||
-    b > 180
-){
-    console.log(
-        "Bright Pixel:",
-        r,
-        g,
-        b
+    if(
+        !mediaRecorder ||
+        mediaRecorder.state !== "recording"
+    ){
+        return;
+    }
+
+    if(!target.calibrated){
+        requestAnimationFrame(detectLaser);
+        return;
+    }
+
+    detectCtx.drawImage(
+        preview,
+        0,
+        0,
+        detectCanvas.width,
+        detectCanvas.height
     );
-}
 
-if (
-    x === Math.floor((left + right)/2) &&
-    y === Math.floor((top + bottom)/2)
-){
-    console.log(
-        "Center RGB:",
-        r,
-        g,
-        b
+    const frame = detectCtx.getImageData(
+        0,
+        0,
+        detectCanvas.width,
+        detectCanvas.height
     );
-}
-    
-if(
 
-r>200 ||
+    const pixels = frame.data;
 
-g>200 ||
+    const left   = Math.max(0,Math.floor(Math.min(target.left,target.right)));
+    const right  = Math.min(detectCanvas.width,Math.floor(Math.max(target.left,target.right)));
+    const top    = Math.max(0,Math.floor(Math.min(target.top,target.bottom)));
+    const bottom = Math.min(detectCanvas.height,Math.floor(Math.max(target.top,target.bottom)));
 
-b>200
+    let totalX = 0;
+    let totalY = 0;
+    let totalWeight = 0;
+    let brightPixels = 0;
 
-){
+    for(let y=top;y<bottom;y+=2){
 
-console.log(
+        for(let x=left;x<right;x+=2){
 
-"Bright:",
+            const i=((y*detectCanvas.width)+x)*4;
 
-r,
+            const r=pixels[i];
+            const g=pixels[i+1];
+            const b=pixels[i+2];
 
-g,
+            const brightness=(r+g+b)/3;
 
-b
+            const laser =
 
-);
+                (
+                    r>150 &&
+                    r>g*1.15 &&
+                    r>b*1.15
+                )
 
-}
+                ||
 
-    
+                (
+                    brightness>235
+                );
 
-const brightness = (r + g + b) / 3;
+            if(!laser) continue;
 
-const isRed =
-    r > 140 &&
-    r > g * 1.25 &&
-    r > b * 1.25;
+            brightPixels++;
 
-const isWhite =
-    brightness > 180;
+            const weight=Math.max(r,brightness);
 
-    if(brightness > 180){
-    console.log(
-        "BRIGHT FOUND",
-        x,
-        y,
-        r,
-        g,
-        b
+            totalWeight+=weight;
+            totalX+=x*weight;
+            totalY+=y*weight;
+
+        }
+
+    }
+
+    if(brightPixels<4){
+
+        requestAnimationFrame(detectLaser);
+        return;
+
+    }
+
+    const hitX=Math.round(totalX/totalWeight);
+    const hitY=Math.round(totalY/totalWeight);
+
+    const overlayX=
+        hitX/detectCanvas.width*overlay.width;
+
+    const overlayY=
+        hitY/detectCanvas.height*overlay.height;
+
+    drawHits();
+
+    ctx.beginPath();
+    ctx.arc(
+        overlayX,
+        overlayY,
+        8,
+        0,
+        Math.PI*2
     );
-}
 
-if(
+    ctx.lineWidth=3;
+    ctx.strokeStyle="red";
+    ctx.stroke();
 
-isRed ||
+    const now=performance.now();
 
-isWhite
+    if(now-lastShotTime>250){
 
-)
+        lastShotTime=now;
 
-{
+        shots++;
 
-count++;
+        hits.push({
 
-totalX += x;
+            x:hitX,
+            y:hitY,
+            time:recordingSeconds
 
-totalY += y;
+        });
 
+        updateDisplays();
 
-const drawX =
+        console.log(
+            "SHOT",
+            shots,
+            hitX,
+            hitY
+        );
 
-(x / detectCanvas.width)
+    }
 
-*
-
-overlay.width;
-
-
-const drawY =
-
-(y / detectCanvas.height)
-
-*
-
-overlay.height;
-
-
-ctx.fillStyle="red";
-
-ctx.fillRect(
-
-drawX,
-
-drawY,
-
-4,
-
-4
-
-);
-
-}
-
-}
-
-}
-
-    if(count>0){
-    console.log(
-        "FOUND PIXELS:",
-        count
+    requestAnimationFrame(
+        detectLaser
     );
-}
-
-console.log(
-
-"Laser Pixels:",
-
-count
-
-);
-    
-
-// Require a minimum blob size
-
-if(
-
-count>3
-
-&&
-
-count<5000
-
-)
-
-{
-
-const centerX=
-
-Math.floor(
-
-totalX/count
-
-);
-
-
-
-const centerY=
-
-Math.floor(
-
-totalY/count
-
-);
-
-
-
-const now=
-
-Date.now();
-
-
-
-// debounce
-
-if(
-
-now-lastShotTime
-
->350
-
-){
-
-
-
-shots++;
-
-
-
-lastShotTime=
-
-now;
-
-
-hits.push({
-
-x:centerX,
-
-y:centerY,
-
-time:recordingSeconds
-
-});
-
-drawHits();
-
-updateDisplays();
-
-console.log(
-
-"SHOT",
-
-shots,
-
-centerX,
-
-centerY
-
-);
-
-}
-
-}
-
-requestAnimationFrame(
-
-detectLaser
-
-);
 
 }
 
