@@ -2059,27 +2059,15 @@ b
 
     
 
-const brightness =
-
-(r + g + b) / 3;
-
+const brightness = (r + g + b) / 3;
 
 const isRed =
-
-r > 220 &&
-
-g < 120 &&
-
-b < 120;
-
+    r > 140 &&
+    r > g * 1.25 &&
+    r > b * 1.25;
 
 const isWhite =
-
-brightness > 245 &&
-
-Math.abs(r-g) < 20 &&
-
-Math.abs(r-b) < 20;
+    brightness > 180;
 
 
 if(
@@ -2151,11 +2139,11 @@ count
 
 if(
 
-count>10
+count>3
 
 &&
 
-count<2000
+count<5000
 
 )
 
