@@ -2022,6 +2022,19 @@ const b=
 pixels[i+2];
 
 if (
+    r > 180 ||
+    g > 180 ||
+    b > 180
+){
+    console.log(
+        "Bright Pixel:",
+        r,
+        g,
+        b
+    );
+}
+
+if (
     x === Math.floor((left + right)/2) &&
     y === Math.floor((top + bottom)/2)
 ){
