@@ -990,100 +990,71 @@ handleCalibrationTap
 );
 
 
-//--------------------------
-// RESIZE
-//--------------------------
+//------------------------------------------------
+// RESIZE EVERYTHING (VERSION 4)
+//------------------------------------------------
 
 function resizeEverything(){
 
-const video=
+    const video =
+        preview.style.display != "none"
+            ? preview
+            : playback;
 
-preview.style.display!="none"
+    if(
+        !video.videoWidth ||
+        !video.videoHeight
+    ){
+        return;
+    }
 
-?
+    //----------------------------------------
+    // Store camera size
+    //----------------------------------------
 
-preview
+    cameraWidth = video.videoWidth;
+    cameraHeight = video.videoHeight;
 
-:
+    //----------------------------------------
+    // Store displayed size
+    //----------------------------------------
 
-playback;
+    const rect =
+        video.getBoundingClientRect();
 
+    displayWidth = rect.width;
+    displayHeight = rect.height;
 
+    //----------------------------------------
+    // Overlay matches camera pixels
+    //----------------------------------------
 
-if(
+    overlay.width = cameraWidth;
+    overlay.height = cameraHeight;
 
-!video.videoWidth ||
+    //----------------------------------------
+    // Conversion factors
+    //----------------------------------------
 
-!video.videoHeight
+    scaleX =
+        overlay.width /
+        cameraWidth;
 
-){
+    scaleY =
+        overlay.height /
+        cameraHeight;
 
-return;
+    console.log(
+        "Overlay:",
+        overlay.width,
+        overlay.height
+    );
+
+    drawGreenBox();
+
+    drawHits();
 
 }
-
-
-
-const rect=
-
-video.getBoundingClientRect();
-
-
-
-overlay.width=
-
-video.videoWidth;
-
-
-
-overlay.height=
-
-video.videoHeight;
-
-
-
-overlay.style.width=
-
-rect.width+"px";
-
-
-
-overlay.style.height=
-
-rect.height+"px";
-
-
-detectCanvas.width=
-
-video.videoWidth;
-
-detectCanvas.height=
-
-video.videoHeight;
-
-    
-
-console.log(
-
-"Overlay:",
-
-overlay.width,
-
-overlay.height
-
-);
-    
-}
-
-
-
-window.addEventListener(
-
-"resize",
-
-resizeEverything
-
-);
 
 
 
@@ -1562,75 +1533,87 @@ function handleCalibrationTap(e){
 
 }
 
-//--------------------------
-// DRAW GREEN BOX
-//--------------------------
+//------------------------------------------------
+// TARGET PIXELS
+//------------------------------------------------
+
+function getTargetPixels(){
+
+    return{
+
+        left:
+            target.left *
+            detectCanvas.width,
+
+        right:
+            target.right *
+            detectCanvas.width,
+
+        top:
+            target.top *
+            detectCanvas.height,
+
+        bottom:
+            target.bottom *
+            detectCanvas.height
+
+    };
+
+}
+
+//------------------------------------------------
+// DRAW GREEN BOX (VERSION 4)
+//------------------------------------------------
 
 function drawGreenBox(){
 
     if(!target.calibrated){
-
         return;
-
     }
 
-    const scaleX =
-        preview.clientWidth /
-        preview.videoWidth;
+    const p =
+        getTargetPixels();
 
-    const scaleY =
-        preview.clientHeight /
-        preview.videoHeight;
+    ctx.save();
 
+    ctx.strokeStyle = "#00FF00";
 
-    greenBox.style.display = "block";
+    ctx.lineWidth = 4;
 
+    ctx.strokeRect(
 
-    greenBox.style.left =
+        p.left,
 
-        (target.left * scaleX)
+        p.top,
 
-        + "px";
+        p.right - p.left,
 
+        p.bottom - p.top
 
-    greenBox.style.top =
+    );
 
-        (target.top * scaleY)
-
-        + "px";
-
-
-greenBox.style.width =
-
-Math.abs(
-
-target.right -
-
-target.left
-
-)
-
-* scaleX
-
-+ "px";
-
-
-greenBox.style.height =
-
-Math.abs(
-
-target.bottom -
-
-target.top
-
-)
-
-* scaleY
-
-+ "px";
+    ctx.restore();
 
 }
 
+    //------------------------------------------------
+// CLEAR OVERLAY
+//------------------------------------------------
+
+function clearOverlay(){
+
+    ctx.clearRect(
+        0,
+        0,
+        overlay.width,
+        overlay.height
+    );
+
+    if(target.calibrated){
+        drawGreenBox();
+    }
+
+}
 
 //--------------------------
 // DISTANCE POPUP
