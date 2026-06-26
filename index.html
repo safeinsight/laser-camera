@@ -759,61 +759,120 @@ document.getElementById(
 );
 
 //--------------------------
-// VARIABLES
+// VARIABLES (VERSION 4)
 //--------------------------
 
-let stream;
+let stream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
 
-let mediaRecorder;
+let recordingSeconds = 0;
+let timerInterval = null;
 
-let recordedChunks=[];
+let targetDistance = 7;
 
+let shots = 0;
+let hits = [];
 
+//-------------------------------------
+// LASER STATE
+//-------------------------------------
 
-let recordingSeconds=0;
+// TRUE while a laser blob is visible.
+// Prevents repeated shots while the
+// laser is held on the target.
 
-let timerInterval;
+let laserVisible = false;
 
+// Minimum time between shots
+// (extra safety)
 
+let lastShotTime = 0;
 
-let targetDistance=7;
+//-------------------------------------
+// NORMALIZED TARGET
+//-------------------------------------
 
+// IMPORTANT:
+//
+// These values are stored from
+// 0.0 to 1.0 instead of pixels.
+//
+// They never depend on camera
+// resolution or browser size.
+//
+// Example:
+//
+// left = 0.22
+//
+// means:
+//
+// 22% across the image.
+//
 
+let target = {
 
-let shots=0;
+    left:0,
 
+    right:0,
 
+    top:0,
 
-let hits=[];
+    bottom:0,
 
-
-
-let laserVisible=false;
-
-
-
-let lastShotTime=0;
-
-
-
-let target={
-
-left:0,
-
-right:0,
-
-top:0,
-
-bottom:0,
-
-calibrated:false
+    calibrated:false
 
 };
 
-let calibrationStep=0;
+// Used only during calibration
 
+let calibrationStep = 0;
 
+//-------------------------------------
+// CURRENT CAMERA SIZE
+//-------------------------------------
 
+// Updated every resize()
+
+let cameraWidth = 0;
+let cameraHeight = 0;
+
+//-------------------------------------
+// DISPLAY SIZE
+//-------------------------------------
+
+// Size of displayed video element
+
+let displayWidth = 0;
+let displayHeight = 0;
+
+//-------------------------------------
+// OVERLAY SCALE
+//-------------------------------------
+
+// Converts camera coordinates
+// to overlay coordinates.
+
+let scaleX = 1;
+let scaleY = 1;
+
+//-------------------------------------
+// DETECTOR SETTINGS
+//-------------------------------------
+
+const DETECTOR = {
+
+    pixelStep:2,
+
+    redThreshold:150,
+
+    whiteThreshold:235,
+
+    minBlobPixels:4,
+
+    shotDelay:250
+
+};
 
 
 //--------------------------
@@ -1399,198 +1458,109 @@ distanceOverlay.innerHTML=
 
 
 
-//--------------------------
-// CALIBRATE TARGET
-//--------------------------
+//------------------------------------------------
+// CALIBRATE TARGET (VERSION 4)
+//------------------------------------------------
 
 function calibrateTarget(){
 
-alert(
+    alert(
+        "Tap the TOP LEFT corner of your target."
+    );
 
-"Tap the TOP LEFT corner of your target"
-
-);
-
-calibrationStep=1;
+    calibrationStep = 1;
 
 }
+
 
 function handleCalibrationTap(e){
 
-if(
+    if(calibrationStep===0){
+        return;
+    }
 
-calibrationStep===0
+    //--------------------------------------
+    // Get displayed video size
+    //--------------------------------------
 
-){
+    const rect = preview.getBoundingClientRect();
 
-return;
+    //--------------------------------------
+    // NORMALIZED coordinates (0-1)
+    //--------------------------------------
 
-}
+    const nx =
+        (e.clientX - rect.left) /
+        rect.width;
 
+    const ny =
+        (e.clientY - rect.top) /
+        rect.height;
 
+    //--------------------------------------
+    // FIRST TAP
+    //--------------------------------------
 
-const rect=
+    if(calibrationStep===1){
 
-preview.getBoundingClientRect();
+        target.left = nx;
+        target.top = ny;
 
+        calibrationStep = 2;
 
+        alert(
+            "Now tap the BOTTOM RIGHT corner."
+        );
 
-const scaleX=
+        return;
 
-preview.videoWidth/
+    }
 
-rect.width;
+    //--------------------------------------
+    // SECOND TAP
+    //--------------------------------------
 
+    target.right = nx;
+    target.bottom = ny;
 
+    //--------------------------------------
+    // Ensure correct ordering
+    //--------------------------------------
 
-const scaleY=
+    if(target.left > target.right){
 
-preview.videoHeight/
+        let t = target.left;
+        target.left = target.right;
+        target.right = t;
 
-rect.height;
+    }
 
+    if(target.top > target.bottom){
 
+        let t = target.top;
+        target.top = target.bottom;
+        target.bottom = t;
 
-const x=
+    }
 
-(
+    target.calibrated = true;
 
-e.clientX
+    calibrationStep = 0;
 
--
+    drawGreenBox();
 
-rect.left
+    drawHits();
 
-)
+    console.log(
+        "Normalized Target:",
+        target
+    );
 
-*
-
-scaleX;
-
-
-
-const y=
-
-(
-
-e.clientY
-
--
-
-rect.top
-
-)
-
-*
-
-scaleY;
-
-
-
-// FIRST TAP
-
-if(
-
-calibrationStep===1
-
-){
-
-target.left=x;
-
-target.top=y;
-
-
-
-calibrationStep=2;
-
-
-
-alert(
-
-"Now tap the BOTTOM RIGHT corner"
-
-);
-
-
-
-return;
+    alert(
+        "Target Calibrated"
+    );
 
 }
-
-
-
-// SECOND TAP
-
-if(
-
-calibrationStep===2
-
-){
-
-target.right=x;
-
-target.bottom=y;
-
-
-
-target.calibrated=true;
-
-console.log(
-
-"Preview:",
-
-preview.videoWidth,
-
-preview.videoHeight
-
-);
-
-console.log(
-
-"Detect:",
-
-detectCanvas.width,
-
-detectCanvas.height
-
-);
-
-console.log(target);
-
-
-console.log(
-    "Target Size:",
-    target.right - target.left,
-    target.bottom - target.top
-);
-
-
-
-    
-calibrationStep=0;
-
-
-
-drawGreenBox();
-
-resizeEverything();
-
-drawHits();
-
-alert(
-
-"Target Calibrated"
-
-);
-
-
-
-console.log(target);
-
-}
-
-}
-
 
 //--------------------------
 // DRAW GREEN BOX
