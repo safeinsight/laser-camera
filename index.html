@@ -1743,7 +1743,7 @@ distancePopup.style.display=
 
 
 //------------------------------------------------
-// LASER DETECTION V3
+// LASER DETECTION (VERSION 4)
 //------------------------------------------------
 
 function detectLaser(){
@@ -1756,143 +1756,287 @@ function detectLaser(){
     }
 
     if(!target.calibrated){
+
         requestAnimationFrame(detectLaser);
         return;
+
     }
 
+    //---------------------------------------
+    // Copy current frame
+    //---------------------------------------
+
     detectCtx.drawImage(
+
         preview,
+
         0,
         0,
+
         detectCanvas.width,
         detectCanvas.height
+
     );
 
     const frame = detectCtx.getImageData(
+
         0,
         0,
+
         detectCanvas.width,
         detectCanvas.height
+
     );
 
     const pixels = frame.data;
 
-    const left   = Math.max(0,Math.floor(Math.min(target.left,target.right)));
-    const right  = Math.min(detectCanvas.width,Math.floor(Math.max(target.left,target.right)));
-    const top    = Math.max(0,Math.floor(Math.min(target.top,target.bottom)));
-    const bottom = Math.min(detectCanvas.height,Math.floor(Math.max(target.top,target.bottom)));
+    //---------------------------------------
+    // Current calibrated target
+    //---------------------------------------
 
+    const box = getTargetPixels();
+
+    let totalWeight = 0;
     let totalX = 0;
     let totalY = 0;
-    let totalWeight = 0;
+
     let brightPixels = 0;
 
-    for(let y=top;y<bottom;y+=2){
+    //---------------------------------------
+    // Scan target
+    //---------------------------------------
 
-        for(let x=left;x<right;x+=2){
+    for(
 
-            const i=((y*detectCanvas.width)+x)*4;
+        let y=Math.floor(box.top);
+
+        y<Math.floor(box.bottom);
+
+        y+=DETECTOR.pixelStep
+
+    ){
+
+        for(
+
+            let x=Math.floor(box.left);
+
+            x<Math.floor(box.right);
+
+            x+=DETECTOR.pixelStep
+
+        ){
+
+            const i=
+
+                (
+                    y*detectCanvas.width+x
+                )*4;
 
             const r=pixels[i];
             const g=pixels[i+1];
             const b=pixels[i+2];
 
-            const brightness=(r+g+b)/3;
+            const brightness=
+
+                (r+g+b)/3;
+
+            //---------------------------------
+            // Laser colour test
+            //---------------------------------
 
             const laser =
 
                 (
-                    r>150 &&
-                    r>g*1.15 &&
-                    r>b*1.15
+
+                    r>
+
+                    DETECTOR.redThreshold
+
+                    &&
+
+                    r>
+
+                    g*1.15
+
+                    &&
+
+                    r>
+
+                    b*1.15
+
                 )
 
                 ||
 
                 (
-                    brightness>235
+
+                    brightness>
+
+                    DETECTOR.whiteThreshold
+
                 );
 
-            if(!laser) continue;
+            if(!laser){
+
+                continue;
+
+            }
 
             brightPixels++;
 
-            const weight=Math.max(r,brightness);
+            const weight=
+
+                Math.max(
+
+                    brightness,
+
+                    r
+
+                );
 
             totalWeight+=weight;
+
             totalX+=x*weight;
+
             totalY+=y*weight;
 
         }
 
     }
 
-    if(brightPixels<4){
+    //---------------------------------------
+    // No laser
+    //---------------------------------------
 
-        requestAnimationFrame(detectLaser);
+    if(
+
+        brightPixels<
+
+        DETECTOR.minBlobPixels
+
+    ){
+
+        laserVisible=false;
+
+        clearOverlay();
+
+        requestAnimationFrame(
+
+            detectLaser
+
+        );
+
         return;
 
     }
 
-    const hitX=Math.round(totalX/totalWeight);
-    const hitY=Math.round(totalY/totalWeight);
+    //---------------------------------------
+    // Find centre
+    //---------------------------------------
 
-    const overlayX=
-        hitX/detectCanvas.width*overlay.width;
+    const hitX=
 
-    const overlayY=
-        hitY/detectCanvas.height*overlay.height;
+        totalX/
 
-    drawHits();
+        totalWeight;
+
+    const hitY=
+
+        totalY/
+
+        totalWeight;
+
+    //---------------------------------------
+    // Draw current laser
+    //---------------------------------------
+
+    clearOverlay();
 
     ctx.beginPath();
+
     ctx.arc(
-        overlayX,
-        overlayY,
+
+        hitX,
+
+        hitY,
+
         8,
+
         0,
+
         Math.PI*2
+
     );
 
-    ctx.lineWidth=3;
     ctx.strokeStyle="red";
+
+    ctx.lineWidth=3;
+
     ctx.stroke();
 
-    const now=performance.now();
+    //---------------------------------------
+    // Already visible?
+    //---------------------------------------
 
-    if(now-lastShotTime>250){
+    if(!laserVisible){
 
-        lastShotTime=now;
+        laserVisible=true;
 
-        shots++;
+        const now=
 
-        hits.push({
+            performance.now();
 
-            x:hitX,
-            y:hitY,
-            time:recordingSeconds
+        if(
 
-        });
+            now-
 
-        updateDisplays();
+            lastShotTime>
 
-        console.log(
-            "SHOT",
-            shots,
-            hitX,
-            hitY
-        );
+            DETECTOR.shotDelay
+
+        ){
+
+            lastShotTime=now;
+
+            shots++;
+
+            hits.push({
+
+                x:hitX,
+
+                y:hitY,
+
+                time:recordingSeconds
+
+            });
+
+            updateDisplays();
+
+            drawHits();
+
+            console.log(
+
+                "SHOT",
+
+                shots,
+
+                Math.round(hitX),
+
+                Math.round(hitY)
+
+            );
+
+        }
 
     }
 
     requestAnimationFrame(
+
         detectLaser
+
     );
 
 }
-
-
-
 
 //--------------------------
 // DRAW HITS
