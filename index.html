@@ -994,10 +994,14 @@ handleCalibrationTap
 // RESIZE EVERYTHING (VERSION 4)
 //------------------------------------------------
 
+//------------------------------------------------
+// RESIZE EVERYTHING (VERSION 5)
+//------------------------------------------------
+
 function resizeEverything(){
 
     const video =
-        preview.style.display != "none"
+        preview.style.display !== "none"
             ? preview
             : playback;
 
@@ -1007,6 +1011,77 @@ function resizeEverything(){
     ){
         return;
     }
+
+    //------------------------------------------------
+    // Camera resolution
+    //------------------------------------------------
+
+    cameraWidth  = video.videoWidth;
+    cameraHeight = video.videoHeight;
+
+    //------------------------------------------------
+    // Actual displayed size
+    //------------------------------------------------
+
+    const rect =
+        video.getBoundingClientRect();
+
+    displayWidth  = rect.width;
+    displayHeight = rect.height;
+
+    //------------------------------------------------
+    // Make the overlay EXACTLY match
+    // the displayed video.
+    //------------------------------------------------
+
+    overlay.width  = rect.width;
+    overlay.height = rect.height;
+
+    overlay.style.width  = rect.width + "px";
+    overlay.style.height = rect.height + "px";
+
+    //------------------------------------------------
+    // Detection canvas always stays
+    // camera resolution.
+    //------------------------------------------------
+
+    detectCanvas.width  = cameraWidth;
+    detectCanvas.height = cameraHeight;
+
+    //------------------------------------------------
+    // Camera → Overlay conversion
+    //------------------------------------------------
+
+    scaleX =
+        overlay.width /
+        cameraWidth;
+
+    scaleY =
+        overlay.height /
+        cameraHeight;
+
+    console.log(
+        "Camera:",
+        cameraWidth,
+        cameraHeight
+    );
+
+    console.log(
+        "Overlay:",
+        overlay.width,
+        overlay.height
+    );
+
+    console.log(
+        "Scale:",
+        scaleX.toFixed(3),
+        scaleY.toFixed(3)
+    );
+
+    drawGreenBox();
+    drawHits();
+
+}
 
     //----------------------------------------
     // Store camera size
