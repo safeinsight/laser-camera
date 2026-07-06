@@ -1083,55 +1083,7 @@ function resizeEverything(){
 
 }
 
-    //----------------------------------------
-    // Store camera size
-    //----------------------------------------
-
-    cameraWidth = video.videoWidth;
-    cameraHeight = video.videoHeight;
-
-    //----------------------------------------
-    // Store displayed size
-    //----------------------------------------
-
-    const rect =
-        video.getBoundingClientRect();
-
-    displayWidth = rect.width;
-    displayHeight = rect.height;
-
-    //----------------------------------------
-    // Overlay matches camera pixels
-    //----------------------------------------
-
-    overlay.width = cameraWidth;
-    overlay.height = cameraHeight;
-
-    //----------------------------------------
-    // Conversion factors
-    //----------------------------------------
-
-    scaleX =
-        overlay.width /
-        cameraWidth;
-
-    scaleY =
-        overlay.height /
-        cameraHeight;
-
-    console.log(
-        "Overlay:",
-        overlay.width,
-        overlay.height
-    );
-
-    drawGreenBox();
-
-    drawHits();
-
-}
-
-
+  
 
 
 //--------------------------
