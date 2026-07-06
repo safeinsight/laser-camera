@@ -1946,16 +1946,33 @@ function detectLaser(){
 
         totalWeight;
 
-//---------------------------------------
-// Draw current laser
-//---------------------------------------
+    //---------------------------------------
+    // Draw current laser
+    //---------------------------------------
 
-drawCurrentLaser(
-    hitX,
-    hitY
-);
+    clearOverlay();
 
-    
+    ctx.beginPath();
+
+    ctx.arc(
+
+        hitX,
+
+        hitY,
+
+        8,
+
+        0,
+
+        Math.PI*2
+
+    );
+
+    ctx.strokeStyle="red";
+
+    ctx.lineWidth=3;
+
+    ctx.stroke();
 
     //---------------------------------------
     // Already visible?
@@ -2021,83 +2038,107 @@ drawCurrentLaser(
 
 }
 
-//------------------------------------------------
-// DRAW HITS (VERSION 4)
-//------------------------------------------------
-
+//--------------------------
+// DRAW HITS
+//--------------------------
 
 function drawHits(){
 
-    clearOverlay();
 
-    for(const hit of hits){
 
-        ctx.beginPath();
+ctx.clearRect(
 
-        ctx.arc(
+0,
 
-            hit.x,
+0,
 
-            hit.y,
+overlay.width,
 
-            10,
+overlay.height
 
-            0,
+);
 
-            Math.PI*2
 
-        );
 
-        ctx.fillStyle="yellow";
+ctx.strokeStyle=
 
-        ctx.fill();
+"yellow";
 
-        ctx.lineWidth=2;
 
-        ctx.strokeStyle="black";
 
-        ctx.stroke();
+ctx.lineWidth=4;
 
-    }
+
+
+hits.forEach(hit=>{
+
+
+
+const x=
+
+(hit.x/
+
+preview.videoWidth)
+
+*
+
+ctx.canvas.width;
+
+
+
+const y=
+
+(hit.y/
+
+preview.videoHeight)
+
+*
+
+ctx.canvas.height;
+
+
+
+ctx.beginPath();
+
+
+
+ctx.arc(
+
+
+
+x,
+
+
+
+y,
+
+
+
+16,
+
+
+
+0,
+
+
+
+Math.PI*2
+
+
+
+);
+
+
+
+ctx.stroke();
+
+
+
+});
+
+
 
 }
-
-
-
-//------------------------------------------------
-// DRAW CURRENT LASER
-//------------------------------------------------
-
-function drawCurrentLaser(x,y){
-
-    drawHits();
-
-    ctx.beginPath();
-
-    ctx.arc(
-
-        x,
-
-        y,
-
-        8,
-
-        0,
-
-        Math.PI*2
-
-    );
-
-    ctx.lineWidth=3;
-
-    ctx.strokeStyle="red";
-
-    ctx.stroke();
-
-}
-
-
-    
 
 calibrateBtn.onclick=()=>{
 
@@ -2143,39 +2184,73 @@ ctx.lineWidth=4;
 
 
 
-for(const hit of hits){
+hits.forEach(hit=>{
 
-    if(hit.time > playback.currentTime){
-        continue;
-    }
 
-    ctx.beginPath();
 
-    ctx.arc(
+if(
 
-        hit.x,
+hit.time<=
 
-        hit.y,
+playback.currentTime
 
-        10,
+){
 
-        0,
 
-        Math.PI*2
 
-    );
+const x=
 
-    ctx.fillStyle="yellow";
+(hit.x/
 
-    ctx.fill();
+preview.videoWidth)
 
-    ctx.lineWidth=2;
+*
 
-    ctx.strokeStyle="black";
+overlay.width;
 
-    ctx.stroke();
+
+
+const y=
+
+(hit.y/
+
+preview.videoHeight)
+
+*
+
+overlay.height;
+
+
+
+ctx.beginPath();
+
+
+
+ctx.arc(
+
+x,
+
+y,
+
+16,
+
+0,
+
+Math.PI*2
+
+);
+
+
+
+ctx.stroke();
+
+
 
 }
+
+
+
+});
 
 
 
@@ -2237,8 +2312,12 @@ shotsOverlay.innerHTML=
 
 
 
-requestAnimationFrame(syncPlayback);
-    
+requestAnimationFrame(
+
+syncPlayback
+
+);
+
 }
 
 
