@@ -2043,105 +2043,59 @@ function detectLaser(){
 
 }
 
-//--------------------------
-// DRAW HITS
-//--------------------------
+//------------------------------------------------
+// DRAW HITS (VERSION 5)
+//------------------------------------------------
 
 function drawHits(){
 
+    //----------------------------------------
+    // Clear overlay
+    //----------------------------------------
 
+    clearOverlay();
 
-ctx.clearRect(
+    //----------------------------------------
+    // Draw every saved hit
+    //----------------------------------------
 
-0,
+    for(const hit of hits){
 
-0,
+        const drawX =
+            (hit.x / detectCanvas.width) *
+            overlay.width;
 
-overlay.width,
+        const drawY =
+            (hit.y / detectCanvas.height) *
+            overlay.height;
 
-overlay.height
+        ctx.beginPath();
 
-);
+        ctx.arc(
 
+            drawX,
 
+            drawY,
 
-ctx.strokeStyle=
+            10,
 
-"yellow";
+            0,
 
+            Math.PI * 2
 
+        );
 
-ctx.lineWidth=4;
+        ctx.fillStyle = "yellow";
 
+        ctx.fill();
 
+        ctx.lineWidth = 2;
 
-hits.forEach(hit=>{
+        ctx.strokeStyle = "black";
 
+        ctx.stroke();
 
-
-const x=
-
-(hit.x/
-
-preview.videoWidth)
-
-*
-
-ctx.canvas.width;
-
-
-
-const y=
-
-(hit.y/
-
-preview.videoHeight)
-
-*
-
-ctx.canvas.height;
-
-
-
-ctx.beginPath();
-
-
-
-ctx.arc(
-
-
-
-x,
-
-
-
-y,
-
-
-
-16,
-
-
-
-0,
-
-
-
-Math.PI*2
-
-
-
-);
-
-
-
-ctx.stroke();
-
-
-
-});
-
-
+    }
 
 }
 
