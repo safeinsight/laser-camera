@@ -2005,15 +2005,17 @@ function detectLaser(){
 
             shots++;
 
-            hits.push({
+hits.push({
 
-                x:hitX,
+    x: hitX / detectCanvas.width,
 
-                y:hitY,
+    y: hitY / detectCanvas.height,
 
-                time:recordingSeconds
+    time: recordingSeconds
 
-            });
+});
+
+            console.log("HITS ARRAY", hits);
 
             updateDisplays();
 
@@ -2061,13 +2063,11 @@ function drawHits(){
 
     for(const hit of hits){
 
-        const drawX =
-            (hit.x / detectCanvas.width) *
-            overlay.width;
+  const drawX =
+    hit.x * overlay.width;
 
-        const drawY =
-            (hit.y / detectCanvas.height) *
-            overlay.height;
+const drawY =
+    hit.y * overlay.height;
 
         ctx.beginPath();
 
