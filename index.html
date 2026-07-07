@@ -2088,6 +2088,39 @@ const drawY =
 
 }
 
+//------------------------------------------------
+// DRAW CURRENT LASER
+//------------------------------------------------
+
+function drawCurrentLaser(hitX, hitY){
+
+    drawHits();
+
+    const drawX =
+        (hitX / detectCanvas.width) *
+        overlay.width;
+
+    const drawY =
+        (hitY / detectCanvas.height) *
+        overlay.height;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        drawX,
+        drawY,
+        8,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+}
+
+
 calibrateBtn.onclick=()=>{
 
 calibrateTarget();
