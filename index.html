@@ -1562,7 +1562,7 @@ function getTargetPixels(){
 }
 
 //------------------------------------------------
-// DRAW GREEN BOX (VERSION 4)
+// DRAW GREEN BOX (VERSION 5)
 //------------------------------------------------
 
 function drawGreenBox(){
@@ -1571,32 +1571,37 @@ function drawGreenBox(){
         return;
     }
 
-    const p =
-        getTargetPixels();
+    const left =
+        target.left * overlay.width;
+
+    const top =
+        target.top * overlay.height;
+
+    const width =
+        (target.right - target.left) *
+        overlay.width;
+
+    const height =
+        (target.bottom - target.top) *
+        overlay.height;
 
     ctx.save();
 
     ctx.strokeStyle = "#00FF00";
-
     ctx.lineWidth = 4;
 
     ctx.strokeRect(
-
-        p.left,
-
-        p.top,
-
-        p.right - p.left,
-
-        p.bottom - p.top
-
+        left,
+        top,
+        width,
+        height
     );
 
     ctx.restore();
 
 }
 
-    //------------------------------------------------
+//------------------------------------------------
 // CLEAR OVERLAY
 //------------------------------------------------
 
