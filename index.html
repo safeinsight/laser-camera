@@ -1951,33 +1951,17 @@ function detectLaser(){
 
         totalWeight;
 
-    //---------------------------------------
-    // Draw current laser
-    //---------------------------------------
+//---------------------------------------
+// Draw current laser
+//---------------------------------------
 
-    clearOverlay();
+drawCurrentLaser(
 
-    ctx.beginPath();
+    hitX,
 
-    ctx.arc(
+    hitY
 
-        hitX,
-
-        hitY,
-
-        8,
-
-        0,
-
-        Math.PI*2
-
-    );
-
-    ctx.strokeStyle="red";
-
-    ctx.lineWidth=3;
-
-    ctx.stroke();
+);
 
     //---------------------------------------
     // Already visible?
