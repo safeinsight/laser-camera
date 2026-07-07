@@ -2015,7 +2015,12 @@ hits.push({
 
 });
 
-            console.log("HITS ARRAY", hits);
+            console.log(
+    "LAST HIT JSON",
+    JSON.stringify(
+        hits[hits.length - 1]
+    )
+);
 
             updateDisplays();
 
