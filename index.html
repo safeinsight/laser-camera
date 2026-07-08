@@ -857,22 +857,41 @@ let scaleX = 1;
 let scaleY = 1;
 
 //-------------------------------------
-// DETECTOR SETTINGS
+// DETECTOR SETTINGS (VERSION 5)
 //-------------------------------------
 
 const DETECTOR = {
 
+    // Scan every other pixel
     pixelStep:2,
 
-    redThreshold:150,
+    // Minimum change from background
+    deltaThreshold:45,
 
-    whiteThreshold:235,
+    // Minimum brightness
+    minBrightness:170,
 
-    minBlobPixels:4,
+    // Ignore tiny noise blobs
+    minBlobPixels:6,
 
+    // Ignore huge reflections
+    maxBlobPixels:350,
+
+    // Minimum time between shots
     shotDelay:250
 
 };
+
+//-------------------------------------
+// BACKGROUND FRAME
+//-------------------------------------
+
+let backgroundFrame = null;
+
+// Wait one frame before learning
+// the background after recording starts.
+
+let learnBackground = true;
 
 
 //--------------------------
@@ -1108,17 +1127,23 @@ function startRecording(){
 
 recordedChunks=[];
 
-
-
 hits=[];
-
-
 
 shots=0;
 
-
-
 recordingSeconds=0;
+
+//-------------------------------------
+// Reset detector state
+//-------------------------------------
+
+laserVisible = false;
+
+backgroundFrame = null;
+
+learnBackground = true;
+
+lastShotTime = 0;
 
 
 
@@ -1190,13 +1215,17 @@ showPlayback;
 
 mediaRecorder.start();
 
-console.log("BEFORE requestAnimationFrame");
+//-------------------------------------
+// Give camera one frame to stabilize
+//-------------------------------------
 
-requestAnimationFrame(
-    detectLaser
-);
+setTimeout(()=>{
 
-console.log("AFTER requestAnimationFrame");
+    requestAnimationFrame(
+        detectLaser
+    );
+
+},100);
 
 
 
