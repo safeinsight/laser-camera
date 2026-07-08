@@ -775,20 +775,24 @@ let shots = 0;
 let hits = [];
 
 //-------------------------------------
-// LASER STATE
+// LASER STATE (VERSION 6)
 //-------------------------------------
 
-// TRUE while a laser blob is visible.
-// Prevents repeated shots while the
-// laser is held on the target.
+// True while a laser is currently visible.
+// Used so one trigger pull = one recorded shot.
 
 let laserVisible = false;
-let laserLostFrames = 0;
 
-// Minimum time between shots
-// (extra safety)
+// Current live laser position.
+// Null means no laser is currently visible.
+
+let currentLaser = null;
+
+// Time the last shot was recorded.
+// Prevents accidental double-counting.
 
 let lastShotTime = 0;
+
 
 //-------------------------------------
 // NORMALIZED TARGET
@@ -2108,16 +2112,11 @@ hits.push({
 }
 
 //------------------------------------------------
-// DRAW HITS (VERSION 5)
+// DRAW HITS (VERSION 6)
 //------------------------------------------------
 
 function drawHits(){
 
-    //----------------------------------------
-    // Clear overlay
-    //----------------------------------------
-
-    clearOverlay();
 
     //----------------------------------------
     // Draw every saved hit
