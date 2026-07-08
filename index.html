@@ -783,6 +783,7 @@ let hits = [];
 // laser is held on the target.
 
 let laserVisible = false;
+let laserLostFrames = 0;
 
 // Minimum time between shots
 // (extra safety)
@@ -1983,22 +1984,27 @@ if(
 
     brightPixels > DETECTOR.maxBlobPixels
 
-)
-    {
+){
+
+    laserLostFrames++;
+
+    if(laserLostFrames>=3){
 
         laserVisible=false;
 
-        clearOverlay();
-
-        requestAnimationFrame(
-
-            detectLaser
-
-        );
-
-        return;
-
     }
+
+    clearOverlay();
+
+    requestAnimationFrame(
+
+        detectLaser
+
+    );
+
+    return;
+
+}
 
     //---------------------------------------
     // Find centre
@@ -2019,6 +2025,8 @@ if(
 //---------------------------------------
 // Draw current laser
 //---------------------------------------
+
+laserLostFrames = 0;
 
 drawCurrentLaser(
 
