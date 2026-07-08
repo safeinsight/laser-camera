@@ -1824,6 +1824,32 @@ function detectLaser(){
 
     const pixels = frame.data;
 
+//---------------------------------------
+// Learn background frame
+//---------------------------------------
+
+if(learnBackground){
+
+    backgroundFrame = new Uint8ClampedArray(pixels);
+
+    learnBackground = false;
+
+    console.log("Background learned");
+
+    requestAnimationFrame(detectLaser);
+
+    return;
+
+}
+
+if(!backgroundFrame){
+
+    requestAnimationFrame(detectLaser);
+
+    return;
+
+}
+
     //---------------------------------------
     // Current calibrated target
     //---------------------------------------
@@ -1878,45 +1904,52 @@ function detectLaser(){
             // Laser colour test
             //---------------------------------
 
-            const laser =
+//---------------------------------
+// Background subtraction
+//---------------------------------
 
-                (
+const bgR = backgroundFrame[i];
+const bgG = backgroundFrame[i+1];
+const bgB = backgroundFrame[i+2];
 
-                    r>
+const delta =
 
-                    DETECTOR.redThreshold
+    Math.max(
 
-                    &&
+        Math.abs(r-bgR),
 
-                    r>
+        Math.abs(g-bgG),
 
-                    g*1.15
+        Math.abs(b-bgB)
 
-                    &&
+    );
 
-                    r>
+const laser =
 
-                    b*1.15
+    brightness >
 
-                )
+        DETECTOR.minBrightness
 
-                ||
+    &&
 
-                (
+    delta >
 
-                    brightness>
+        DETECTOR.deltaThreshold;
 
-                    DETECTOR.whiteThreshold
-
-                );
-
-            if(!laser){
-
-                continue;
-
-            }
+if(!laser){
+    continue;
+}
 
             brightPixels++;
+
+            backgroundFrame[i] =
+    (backgroundFrame[i] * 7 + r) / 8;
+
+backgroundFrame[i+1] =
+    (backgroundFrame[i+1] * 7 + g) / 8;
+
+backgroundFrame[i+2] =
+    (backgroundFrame[i+2] * 7 + b) / 8;
 
             const weight=
 
@@ -1944,13 +1977,14 @@ console.log("brightPixels =", brightPixels);
     // No laser
     //---------------------------------------
 
-    if(
+if(
 
-        brightPixels<
+    brightPixels < DETECTOR.minBlobPixels ||
 
-        DETECTOR.minBlobPixels
+    brightPixels > DETECTOR.maxBlobPixels
 
-    ){
+)
+    {
 
         laserVisible=false;
 
