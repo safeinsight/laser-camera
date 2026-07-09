@@ -2039,6 +2039,8 @@ if(
 // Draw current laser
 //---------------------------------------
 
+// Laser is currently visible
+    
 laserLostFrames = 0;
 
 drawCurrentLaser(
@@ -2053,64 +2055,55 @@ drawCurrentLaser(
     // Already visible?
     //---------------------------------------
 
-    if(!laserVisible){
+//----------------------------------------
+// NEW LASER PULSE
+//----------------------------------------
 
-        laserVisible=true;
+if(!laserVisible){
 
-        const now=
+    // Laser has just appeared
 
-            performance.now();
+    laserVisible = true;
 
-        if(
+    const now = performance.now();
 
-            now-
+    // Safety timer
 
-            lastShotTime>
+    if(now - lastShotTime >= DETECTOR.shotDelay){
 
-            DETECTOR.shotDelay
+        lastShotTime = now;
 
-        ){
+        shots++;
 
-            lastShotTime=now;
+        hits.push({
 
-            shots++;
+            x: hitX / detectCanvas.width,
 
-hits.push({
+            y: hitY / detectCanvas.height,
 
-    x: hitX / detectCanvas.width,
+            time: recordingSeconds
 
-    y: hitY / detectCanvas.height,
+        });
 
-    time: recordingSeconds
+        updateDisplays();
 
-});
+        drawHits();
 
-            console.log(
-    "LAST HIT JSON",
-    JSON.stringify(
-        hits[hits.length - 1]
-    )
-);
+        console.log(
 
-            updateDisplays();
+            "SHOT",
 
-            drawHits();
+            shots,
 
-            console.log(
+            Math.round(hitX),
 
-                "SHOT",
+            Math.round(hitY)
 
-                shots,
-
-                Math.round(hitX),
-
-                Math.round(hitY)
-
-            );
-
-        }
+        );
 
     }
+
+}
 
     requestAnimationFrame(
 
