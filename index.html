@@ -1997,9 +1997,13 @@ if(
 
     laserLostFrames++;
 
-    if(laserLostFrames>=3){
+    // Don't allow another shot until the
+    // laser has completely disappeared for
+    // several consecutive frames.
 
-        laserVisible=false;
+    if(laserLostFrames >= LASER_RELEASE_FRAMES){
+
+        laserVisible = false;
 
     }
 
