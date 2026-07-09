@@ -2163,12 +2163,23 @@ const drawY =
 }
 
 //------------------------------------------------
-// DRAW CURRENT LASER
+// DRAW CURRENT LASER (VERSION 6.2)
 //------------------------------------------------
 
 function drawCurrentLaser(hitX, hitY){
 
+    //----------------------------------------
+    // Redraw everything in the proper order
+    //----------------------------------------
+
+    clearOverlay();
+
     drawHits();
+
+    //----------------------------------------
+    // Convert detector coordinates
+    // to overlay coordinates
+    //----------------------------------------
 
     const drawX =
         (hitX / detectCanvas.width) *
@@ -2177,6 +2188,10 @@ function drawCurrentLaser(hitX, hitY){
     const drawY =
         (hitY / detectCanvas.height) *
         overlay.height;
+
+    //----------------------------------------
+    // Draw the live laser
+    //----------------------------------------
 
     ctx.beginPath();
 
