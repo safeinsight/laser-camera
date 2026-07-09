@@ -1981,7 +1981,7 @@ backgroundFrame[i+2] =
 
     }
 
-console.log("brightPixels =", brightPixels);
+
     
     //---------------------------------------
     // No laser
@@ -1995,17 +1995,15 @@ if(
 
 ){
 
-    laserLostFrames++;
+laserLostFrames++;
 
-    // Don't allow another shot until the
-    // laser has completely disappeared for
-    // several consecutive frames.
+if(laserLostFrames >= LASER_RELEASE_FRAMES){
 
-    if(laserLostFrames >= LASER_RELEASE_FRAMES){
+    laserVisible = false;
 
-        laserVisible = false;
+    laserLostFrames = LASER_RELEASE_FRAMES;
 
-    }
+}
 
     clearOverlay();
 
@@ -2036,38 +2034,24 @@ if(
         totalWeight;
 
 //---------------------------------------
-// Draw current laser
+// Laser is currently visible
 //---------------------------------------
 
-// Laser is currently visible
-    
 laserLostFrames = 0;
 
-drawCurrentLaser(
+// Draw the live laser every frame
 
-    hitX,
+drawCurrentLaser(hitX, hitY);
 
-    hitY
-
-);
-
-    //---------------------------------------
-    // Already visible?
-    //---------------------------------------
-
-//----------------------------------------
-// NEW LASER PULSE
-//----------------------------------------
+//---------------------------------------
+// Record ONE shot per laser appearance
+//---------------------------------------
 
 if(!laserVisible){
-
-    // Laser has just appeared
 
     laserVisible = true;
 
     const now = performance.now();
-
-    // Safety timer
 
     if(now - lastShotTime >= DETECTOR.shotDelay){
 
@@ -2086,8 +2070,6 @@ if(!laserVisible){
         });
 
         updateDisplays();
-
-        drawHits();
 
         console.log(
 
