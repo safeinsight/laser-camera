@@ -775,21 +775,26 @@ let shots = 0;
 let hits = [];
 
 //-------------------------------------
-// LASER STATE (VERSION 6)
+// LASER STATE (VERSION 6.1)
 //-------------------------------------
 
-// True while a laser is currently visible.
-// Used so one trigger pull = one recorded shot.
+// True while the current laser pulse
+// is considered active.
 
 let laserVisible = false;
 
-// Current live laser position.
-// Null means no laser is currently visible.
+// Number of consecutive frames that
+// NO laser has been seen.
 
-let currentLaser = null;
+let laserLostFrames = 0;
 
-// Time the last shot was recorded.
-// Prevents accidental double-counting.
+// Require several completely dark
+// frames before allowing another shot.
+
+const LASER_RELEASE_FRAMES = 8;
+
+// Prevent double-shots from timer
+// glitches.
 
 let lastShotTime = 0;
 
