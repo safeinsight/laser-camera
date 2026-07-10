@@ -874,24 +874,16 @@ let scaleY = 1;
 
 const DETECTOR = {
 
-    // Scan every other pixel
     pixelStep:2,
 
-    // Minimum change from background
     deltaThreshold:28,
 
-    // Lower so bright white target areas
-    // still register a laser.
-    minBrightness:110,
+    minBrightness:145,
 
-    // Require a slightly larger blob.
-    // This filters random bright pixels.
-    minBlobPixels:2,
+    minBlobPixels:1,
 
-    // Ignore huge reflections.
     maxBlobPixels:80,
 
-    // Minimum time between shots.
     shotDelay:250
 
 };
