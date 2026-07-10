@@ -1913,40 +1913,32 @@ if(!backgroundFrame){
             //---------------------------------
 
 //---------------------------------
-// Background subtraction
+// COLOR DIFFERENCE DETECTOR
 //---------------------------------
 
 const bgR = backgroundFrame[i];
 const bgG = backgroundFrame[i+1];
 const bgB = backgroundFrame[i+2];
 
-const delta =
+// How much each channel increased
+const redRise   = r - bgR;
+const greenRise = g - bgG;
+const blueRise  = b - bgB;
 
-    Math.max(
-
-        Math.abs(r-bgR),
-
-        Math.abs(g-bgG),
-
-        Math.abs(b-bgB)
-
-    );
-
+// Detect a true red laser pulse
 const laser =
 
-    brightness >
+    redRise > 45 &&
 
-        DETECTOR.minBrightness
+    redRise > (greenRise + 20) &&
 
-    &&
-
-    delta >
-
-        DETECTOR.deltaThreshold;
+    redRise > (blueRise + 20);
 
 if(!laser){
     continue;
 }
+
+            
 
             brightPixels++;
 
