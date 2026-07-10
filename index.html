@@ -880,16 +880,18 @@ const DETECTOR = {
     // Minimum change from background
     deltaThreshold:28,
 
-    // Minimum brightness
-    minBrightness:145,
+    // Lower so bright white target areas
+    // still register a laser.
+    minBrightness:110,
 
-    // Ignore tiny noise blobs
-    minBlobPixels:1,
+    // Require a slightly larger blob.
+    // This filters random bright pixels.
+    minBlobPixels:2,
 
-    // Ignore huge reflections
+    // Ignore huge reflections.
     maxBlobPixels:80,
 
-    // Minimum time between shots
+    // Minimum time between shots.
     shotDelay:250
 
 };
