@@ -775,21 +775,23 @@ let shots = 0;
 let hits = [];
 
 //-------------------------------------
-// LASER STATE (VERSION 6.1)
+// LASER STATE MACHINE (VERSION 7)
 //-------------------------------------
 
-// True while the current laser pulse
-// is considered active.
+const LASER_WAITING = 0;
+const LASER_TRACKING = 1;
 
-let laserVisible = false;
+// Current detector state
 
-// Number of consecutive frames that
-// NO laser has been seen.
+let laserState = LASER_WAITING;
 
-let laserLostFrames = 0;
+// Number of consecutive frames with
+// no laser detected.
 
-// Require several completely dark
-// frames before allowing another shot.
+let laserMissingFrames = 0;
+
+// Laser must disappear this many
+// frames before another shot is allowed.
 
 const LASER_RELEASE_FRAMES = 8;
 
@@ -1147,7 +1149,9 @@ recordingSeconds=0;
 // Reset detector state
 //-------------------------------------
 
-laserVisible = false;
+laserState = LASER_WAITING;
+
+laserMissingFrames = 0;
 
 backgroundFrame = null;
 
@@ -1983,9 +1987,9 @@ backgroundFrame[i+2] =
 
 
     
-    //---------------------------------------
-    // No laser
-    //---------------------------------------
+//---------------------------------------
+// NO LASER DETECTED
+//---------------------------------------
 
 if(
 
@@ -1995,17 +1999,36 @@ if(
 
 ){
 
-laserLostFrames++;
+    laserMissingFrames++;
 
-if(laserLostFrames >= LASER_RELEASE_FRAMES){
+    //------------------------------------
+    // Return to WAITING only after the
+    // laser has been gone several frames.
+    //------------------------------------
 
-    laserVisible = false;
+    if(
 
-    laserLostFrames = LASER_RELEASE_FRAMES;
+        laserMissingFrames >=
 
-}
+        LASER_RELEASE_FRAMES
+
+    ){
+
+        laserState = LASER_WAITING;
+
+        laserMissingFrames =
+
+            LASER_RELEASE_FRAMES;
+
+    }
+
+    //------------------------------------
+    // Keep previously recorded hits visible
+    //------------------------------------
 
     clearOverlay();
+
+    drawHits();
 
     requestAnimationFrame(
 
@@ -2016,7 +2039,7 @@ if(laserLostFrames >= LASER_RELEASE_FRAMES){
     return;
 
 }
-
+    
     //---------------------------------------
     // Find centre
     //---------------------------------------
@@ -2044,12 +2067,14 @@ laserLostFrames = 0;
 drawCurrentLaser(hitX, hitY);
 
 //---------------------------------------
-// Record ONE shot per laser appearance
+// VERSION 7 STATE MACHINE
 //---------------------------------------
 
-if(!laserVisible){
+if(laserState === LASER_WAITING){
 
-    laserVisible = true;
+    laserState = LASER_TRACKING;
+
+    laserMissingFrames = 0;
 
     const now = performance.now();
 
@@ -2084,6 +2109,13 @@ if(!laserVisible){
         );
 
     }
+
+}else{
+
+    // Laser is already being tracked.
+    // Do not record another shot.
+
+    laserMissingFrames = 0;
 
 }
 
