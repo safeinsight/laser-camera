@@ -1926,13 +1926,14 @@ const greenRise = g - bgG;
 const blueRise  = b - bgB;
 
 // Detect a true red laser pulse
+const laser =
+
     redRise > 28 &&
 
     redRise > (greenRise + 20) &&
 
     redRise > (blueRise + 20);
 
-            
 if(!laser){
     continue;
 }
@@ -1949,7 +1950,6 @@ backgroundFrame[i+1] =
 
 backgroundFrame[i+2] =
     (backgroundFrame[i+2] * 7 + b) / 8;
-
 
             const weight=
 
@@ -2421,3 +2421,5 @@ stopRecording();
 </body>
 
 </html>
+
+
