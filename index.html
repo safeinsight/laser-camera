@@ -1942,15 +1942,21 @@ for(let gy=0; gy<GRID_ROWS; gy++){
 
     ){
 
-        const gridY = Math.min(
+const gridY = Math.max(
 
-    GRID_ROWS - 1,
+    0,
 
-    Math.floor(
+    Math.min(
 
-        (y - box.top) /
+        GRID_ROWS - 1,
 
-        ((box.bottom - box.top) / GRID_ROWS)
+        Math.floor(
+
+            ((y - box.top) * GRID_ROWS) /
+
+            (box.bottom - box.top)
+
+        )
 
     )
 
@@ -1980,15 +1986,21 @@ for(let gy=0; gy<GRID_ROWS; gy++){
 
                 (r+g+b)/3;
 
-            const gridX = Math.min(
+const gridX = Math.max(
 
-    GRID_COLS - 1,
+    0,
 
-    Math.floor(
+    Math.min(
 
-        (x - box.left) /
+        GRID_COLS - 1,
 
-        ((box.right - box.left) / GRID_COLS)
+        Math.floor(
+
+            ((x - box.left) * GRID_COLS) /
+
+            (box.right - box.left)
+
+        )
 
     )
 
@@ -2020,7 +2032,8 @@ const blueRise  = b - bgB;
 //------------------------------------------------
 
 const localBrightness =
-    gridBrightness[gridY][gridX];
+
+    gridBrightness[gridY]?.[gridX] ?? 150;
 
 // Darker regions get a slightly lower threshold.
 // Brighter regions get a slightly higher threshold.
