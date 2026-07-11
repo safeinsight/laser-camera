@@ -2163,16 +2163,49 @@ const drawY =
 }
 
 //------------------------------------------------
-// DRAW CURRENT LASER
+// DRAW CURRENT LASER (VERSION 6.2)
 //------------------------------------------------
 
 function drawCurrentLaser(hitX, hitY){
 
-    // Version 9
-    // Debug laser removed.
-    // We now only redraw the saved hit markers.
+    //----------------------------------------
+    // Redraw everything in the proper order
+    //----------------------------------------
+
+    clearOverlay();
 
     drawHits();
+
+    //----------------------------------------
+    // Convert detector coordinates
+    // to overlay coordinates
+    //----------------------------------------
+
+    const drawX =
+        (hitX / detectCanvas.width) *
+        overlay.width;
+
+    const drawY =
+        (hitY / detectCanvas.height) *
+        overlay.height;
+
+    //----------------------------------------
+    // Draw the live laser
+    //----------------------------------------
+
+    ctx.beginPath();
+
+    ctx.arc(
+        drawX,
+        drawY,
+        8,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 3;
+    ctx.stroke();
 
 }
 
