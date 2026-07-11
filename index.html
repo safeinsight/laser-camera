@@ -1907,6 +1907,27 @@ if(!backgroundFrame){
 
     let brightPixels = 0;
 
+    //------------------------------------------------
+// Reset grid brightness sums
+//------------------------------------------------
+
+let gridTotal = [];
+let gridCount = [];
+
+for(let gy=0; gy<GRID_ROWS; gy++){
+
+    gridTotal[gy] = [];
+    gridCount[gy] = [];
+
+    for(let gx=0; gx<GRID_COLS; gx++){
+
+        gridTotal[gy][gx] = 0;
+        gridCount[gy][gx] = 0;
+
+    }
+
+}
+
     //---------------------------------------
     // Scan target
     //---------------------------------------
@@ -1920,6 +1941,20 @@ if(!backgroundFrame){
         y+=DETECTOR.pixelStep
 
     ){
+
+        const gridY = Math.min(
+
+    GRID_ROWS - 1,
+
+    Math.floor(
+
+        (y - box.top) /
+
+        ((box.bottom - box.top) / GRID_ROWS)
+
+    )
+
+);
 
         for(
 
@@ -1944,6 +1979,24 @@ if(!backgroundFrame){
             const brightness=
 
                 (r+g+b)/3;
+
+            const gridX = Math.min(
+
+    GRID_COLS - 1,
+
+    Math.floor(
+
+        (x - box.left) /
+
+        ((box.right - box.left) / GRID_COLS)
+
+    )
+
+);
+
+// Learn average brightness
+gridTotal[gridY][gridX] += brightness;
+gridCount[gridY][gridX]++;
 
             //---------------------------------
             // Laser colour test
@@ -2008,7 +2061,30 @@ backgroundFrame[i+2] =
 
     }
 
+//------------------------------------------------
+// Update grid brightness map
+//------------------------------------------------
 
+for(let gy=0; gy<GRID_ROWS; gy++){
+
+    for(let gx=0; gx<GRID_COLS; gx++){
+
+        if(gridCount[gy][gx] > 0){
+
+            const average =
+
+                gridTotal[gy][gx] /
+
+                gridCount[gy][gx];
+
+            gridBrightness[gy][gx] =
+                average;
+
+        }
+
+    }
+
+}
     
 //---------------------------------------
 // NO LASER DETECTED
