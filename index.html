@@ -888,6 +888,43 @@ const DETECTOR = {
 
 };
 
+//------------------------------------------------
+// ADAPTIVE TARGET GRID (VERSION 9)
+//------------------------------------------------
+
+// Divide the calibrated target into
+// smaller regions.
+
+// Each region will maintain its own
+// average background brightness.
+
+const GRID_COLS = 4;
+const GRID_ROWS = 4;
+
+// One brightness value per region.
+
+let gridBrightness = [];
+
+function resetGrid(){
+
+    gridBrightness = [];
+
+    for(let y=0; y<GRID_ROWS; y++){
+
+        gridBrightness[y] = [];
+
+        for(let x=0; x<GRID_COLS; x++){
+
+            gridBrightness[y][x] = 0;
+
+        }
+
+    }
+
+}
+
+resetGrid();
+
 //-------------------------------------
 // BACKGROUND FRAME
 //-------------------------------------
