@@ -1926,17 +1926,12 @@ const greenRise = g - bgG;
 const blueRise  = b - bgB;
 
 // Detect a true red laser pulse
-const redScore =
+    redRise > 28 &&
 
-    r -
+    redRise > (greenRise + 20) &&
 
-    Math.max(g,b);
+    redRise > (blueRise + 20);
 
-const laser =
-
-    redScore > 35 &&
-
-    redRise > 15;
             
 if(!laser){
     continue;
@@ -1946,14 +1941,15 @@ if(!laser){
 
             brightPixels++;
 
-backgroundFrame[i] =
-(backgroundFrame[i] * 15 + r) / 16;
+ backgroundFrame[i] =
+    (backgroundFrame[i] * 7 + r) / 8;
 
 backgroundFrame[i+1] =
-(backgroundFrame[i+1] * 15 + g) / 16;
+    (backgroundFrame[i+1] * 7 + g) / 8;
 
 backgroundFrame[i+2] =
-(backgroundFrame[i+2] * 15 + b) / 16;
+    (backgroundFrame[i+2] * 7 + b) / 8;
+
 
             const weight=
 
