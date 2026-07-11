@@ -2015,10 +2015,38 @@ const redRise   = r - bgR;
 const greenRise = g - bgG;
 const blueRise  = b - bgB;
 
+//------------------------------------------------
+// Local lighting compensation
+//------------------------------------------------
+
+const localBrightness =
+    gridBrightness[gridY][gridX];
+
+// Darker regions get a slightly lower threshold.
+// Brighter regions get a slightly higher threshold.
+
+let localThreshold = 28;
+
+if(localBrightness > 190){
+
+    localThreshold = 34;
+
+}
+else if(localBrightness > 170){
+
+    localThreshold = 31;
+
+}
+else if(localBrightness < 120){
+
+    localThreshold = 24;
+
+}
+
 // Detect a true red laser pulse
 const laser =
 
-    redRise > 28 &&
+    redRise > localThreshold &&
 
     redRise > (greenRise + 20) &&
 
