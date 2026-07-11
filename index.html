@@ -1926,14 +1926,18 @@ const greenRise = g - bgG;
 const blueRise  = b - bgB;
 
 // Detect a true red laser pulse
+const redScore =
+
+    r -
+
+    Math.max(g,b);
+
 const laser =
 
-    redRise > 28 &&
+    redScore > 35 &&
 
-    redRise > (greenRise + 20) &&
-
-    redRise > (blueRise + 20);
-
+    redRise > 15;
+            
 if(!laser){
     continue;
 }
