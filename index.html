@@ -2018,67 +2018,61 @@ const gridX = Math.max(
 gridTotal[gridY][gridX] += brightness;
 gridCount[gridY][gridX]++;
 
+//---------------------------------
+// COLOR DIFFERENCE DETECTOR
+//---------------------------------
+
+const bgR = backgroundFrame[i];
+const bgG = backgroundFrame[i+1];
+const bgB = backgroundFrame[i+2];
+
+// How much each channel increased
+const redRise   = r - bgR;
+const greenRise = g - bgG;
+const blueRise  = b - bgB;
+
 //------------------------------------------------
-// LOCAL COLOR DETECTOR (VERSION 9)
+// Local lighting compensation
 //------------------------------------------------
 
-// Average surrounding pixels
+const localBrightness =
 
-let localRed = 0;
-let localGreen = 0;
-let localBlue = 0;
-let samples = 0;
+    gridBrightness[gridY]?.[gridX] ?? 150;
 
-for(let yy = -LOCAL_RADIUS; yy <= LOCAL_RADIUS; yy++){
+// Darker regions get a slightly lower threshold.
+// Brighter regions get a slightly higher threshold.
 
-    for(let xx = -LOCAL_RADIUS; xx <= LOCAL_RADIUS; xx++){
+let localThreshold = 28;
 
-        if(xx === 0 && yy === 0){
-            continue;
-        }
+if(localBrightness > 190){
 
-        const nx = x + xx;
-        const ny = y + yy;
+    localThreshold = 34;
 
-        if(
-            nx < Math.floor(box.left) ||
-            nx >= Math.floor(box.right) ||
-            ny < Math.floor(box.top) ||
-            ny >= Math.floor(box.bottom)
-        ){
-            continue;
-        }
+}
+else if(localBrightness > 170){
 
-        const ni =
-            (ny * detectCanvas.width + nx) * 4;
+    localThreshold = 31;
 
-        localRed += pixels[ni];
-        localGreen += pixels[ni + 1];
-        localBlue += pixels[ni + 2];
+}
+else if(localBrightness < 120){
 
-        samples++;
-
-    }
+    localThreshold = 24;
 
 }
 
-if(samples === 0){
+// Detect a true red laser pulse
+const laser =
+
+    redRise > localThreshold &&
+
+    redRise > (greenRise + 20) &&
+
+    redRise > (blueRise + 20);
+
+if(!laser){
     continue;
 }
 
-localRed /= samples;
-localGreen /= samples;
-localBlue /= samples;
-
-// Compare this pixel to its neighbors
-
-const laser =
-
-    (r - localRed) > 35 &&
-
-    (r - g) > 35 &&
-
-    (r - b) > 35;
 
             
 
