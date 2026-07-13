@@ -2427,52 +2427,27 @@ playback.currentTime
 
 
 
-const x=
-
-(hit.x/
-
-preview.videoWidth)
-
-*
-
-overlay.width;
-
-
-
-const y=
-
-(hit.y/
-
-preview.videoHeight)
-
-*
-
-overlay.height;
+const x = hit.x * overlay.width;
+const y = hit.y * overlay.height;
 
 
 
 ctx.beginPath();
 
-
-
 ctx.arc(
-
-x,
-
-y,
-
-16,
-
-0,
-
-Math.PI*2
-
+    x,
+    y,
+    5,
+    0,
+    Math.PI * 2
 );
 
+ctx.fillStyle = "yellow";
+ctx.fill();
 
-
+ctx.lineWidth = 1;
+ctx.strokeStyle = "black";
 ctx.stroke();
-
 
 
 }
