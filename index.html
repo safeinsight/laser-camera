@@ -789,7 +789,7 @@ let laserState = LASER_WAITING;
 // no laser detected.
 
 let laserMissingFrames = 0;
-let laserSeenFrames = 0;
+
 
 // Laser must disappear this many
 // frames before another shot is allowed.
@@ -2146,7 +2146,7 @@ if(
 ){
 
     laserMissingFrames++;
-    laserSeenFrames = 0;
+    
 
     //------------------------------------
     // Return to WAITING only after the
@@ -2209,26 +2209,19 @@ if(
 
 laserMissingFrames = 0;
 
-// Require two consecutive frames
-laserSeenFrames++;
-
 // Draw the live laser every frame
+
 drawCurrentLaser(hitX, hitY);
 
 //---------------------------------------
 // VERSION 7 STATE MACHINE
 //---------------------------------------
 
-if(
-    laserState === LASER_WAITING &&
-    laserSeenFrames >= 2
-){
+if(laserState === LASER_WAITING){
 
     laserState = LASER_TRACKING;
 
     laserMissingFrames = 0;
-
-    laserSeenFrames = 0;
 
     const now = performance.now();
 
