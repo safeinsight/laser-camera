@@ -2221,9 +2221,7 @@ if(
     // Keep previously recorded hits visible
     //------------------------------------
 
-    clearOverlay();
-
-    drawHits();
+    redrawOverlay();
 
     requestAnimationFrame(
 
@@ -2372,18 +2370,28 @@ const drawY =
 }
 
 //------------------------------------------------
+// REDRAW OVERLAY
+//------------------------------------------------
+
+function redrawOverlay(){
+
+    clearOverlay();
+
+    drawHits();
+
+}
+
+//------------------------------------------------
 // DRAW CURRENT LASER (VERSION 6.2)
 //------------------------------------------------
 
 function drawCurrentLaser(hitX, hitY){
 
-    //----------------------------------------
-    // Redraw everything in the proper order
-    //----------------------------------------
+//----------------------------------------
+// Redraw everything in the proper order
+//----------------------------------------
 
-    clearOverlay();
-
-    drawHits();
+redrawOverlay();
 
     //----------------------------------------
     // Convert detector coordinates
@@ -2443,71 +2451,11 @@ return;
 
 
 
-ctx.clearRect(
-
-0,
-
-0,
-
-overlay.width,
-
-overlay.height
-
-);
+redrawOverlay();
 
 
 
-ctx.strokeStyle="yellow";
-
-ctx.lineWidth=4;
-
-
-
-hits.forEach(hit=>{
-
-
-
-if(
-
-hit.time<=
-
-playback.currentTime
-
-){
-
-
-
-const x = hit.x * overlay.width;
-const y = hit.y * overlay.height;
-
-
-ctx.beginPath();
-
-
-
-ctx.beginPath();
-
-ctx.arc(
-    x,
-    y,
-    5,
-    0,
-    Math.PI * 2
-);
-
-ctx.fillStyle = "yellow";
-ctx.fill();
-
-ctx.lineWidth = 1;
-ctx.strokeStyle = "black";
-ctx.stroke();
-
-
-}
-
-
-
-});
+drawHits(playback.currentTime);
 
 
 
