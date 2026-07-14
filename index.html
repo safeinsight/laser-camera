@@ -398,9 +398,7 @@ Laser Target Trainer
 
 
 
-<div id="countdown">
-
-</div>
+<div id="countdown" style="display:none;"></div>
 
 
 
@@ -774,6 +772,10 @@ let targetDistance = 7;
 let shots = 0;
 let hits = [];
 
+// Countdown shown on the overlay.
+// null means no countdown is visible.
+let countdownValue = null;
+
 //-------------------------------------
 // LASER STATE MACHINE (VERSION 7)
 //-------------------------------------
@@ -1137,33 +1139,40 @@ function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
 
-    let count=3;
+    let count = 3;
 
-    countdown.innerHTML=count;
+    countdownValue = count;
 
-    const interval=setInterval(()=>{
+    drawCountdown();
+
+    const interval = setInterval(()=>{
 
         console.log("COUNT:", count);
 
         count--;
 
-        if(count>0){
+        if(count > 0){
 
-            countdown.innerHTML=count;
+            countdownValue = count;
 
-        } else {
+            drawCountdown();
+
+        }else{
 
             clearInterval(interval);
 
-            console.log("CALLING startRecording");
+            countdownValue = null;
 
-            countdown.innerHTML="";
+            clearOverlay();
+
+            drawHits();
 
             startRecording();
 
         }
 
     },1000);
+
 }
 
 
@@ -1701,6 +1710,47 @@ function clearOverlay(){
     }
 
 }
+
+function drawCountdown(){
+
+    clearOverlay();
+
+    drawHits();
+
+    if(countdownValue === null){
+        return;
+    }
+
+    ctx.save();
+
+    ctx.font = "bold 180px Arial";
+
+    ctx.textAlign = "center";
+
+    ctx.textBaseline = "middle";
+
+    ctx.lineWidth = 8;
+
+    ctx.strokeStyle = "black";
+
+    ctx.strokeText(
+        countdownValue,
+        overlay.width / 2,
+        overlay.height / 2
+    );
+
+    ctx.fillStyle = "#FFD400";
+
+    ctx.fillText(
+        countdownValue,
+        overlay.width / 2,
+        overlay.height / 2
+    );
+
+    ctx.restore();
+
+}
+
 
 //--------------------------
 // DISTANCE POPUP
