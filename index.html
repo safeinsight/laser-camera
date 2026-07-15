@@ -2518,13 +2518,12 @@ return;
 
 }
 
-
-
-redrawOverlay();
-
-
-
-drawHits(playback.currentTime);
+redrawOverlay(
+    false,
+    0,
+    0,
+    playback.currentTime
+);
 
 
 
