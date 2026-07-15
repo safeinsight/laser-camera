@@ -1015,11 +1015,13 @@ stream;
 
 preview.onloadedmetadata=()=>{
 
+    preview.play();
 
+    requestAnimationFrame(()=>{
 
-resizeEverything();
+        resizeEverything();
 
-
+    });
 
 };
 
