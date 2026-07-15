@@ -2371,14 +2371,77 @@ function drawHits(maxTime = Infinity){
 }
 
 //------------------------------------------------
-// REDRAW OVERLAY
+// REDRAW OVERLAY (VERSION 2)
 //------------------------------------------------
 
-function redrawOverlay(){
+function redrawOverlay(showCurrentLaser = false, laserX = 0, laserY = 0){
+
+    //----------------------------------------
+    // Clear everything
+    //----------------------------------------
 
     clearOverlay();
 
+    //----------------------------------------
+    // Draw all recorded hits
+    //----------------------------------------
+
     drawHits();
+
+    //----------------------------------------
+    // Draw countdown if active
+    //----------------------------------------
+
+    if(countdownValue !== null){
+
+        ctx.save();
+
+        ctx.font = "bold 180px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "black";
+
+        ctx.strokeText(
+            countdownValue,
+            overlay.width / 2,
+            overlay.height / 2
+        );
+
+        ctx.fillStyle = "#FFD400";
+
+        ctx.fillText(
+            countdownValue,
+            overlay.width / 2,
+            overlay.height / 2
+        );
+
+        ctx.restore();
+
+    }
+
+    //----------------------------------------
+    // Draw current laser if requested
+    //----------------------------------------
+
+    if(showCurrentLaser){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            laserX,
+            laserY,
+            8,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+    }
 
 }
 
