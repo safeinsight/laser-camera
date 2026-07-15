@@ -2446,16 +2446,10 @@ function redrawOverlay(showCurrentLaser = false, laserX = 0, laserY = 0){
 }
 
 //------------------------------------------------
-// DRAW CURRENT LASER (VERSION 6.2)
+// DRAW CURRENT LASER (VERSION 7)
 //------------------------------------------------
 
 function drawCurrentLaser(hitX, hitY){
-
-//----------------------------------------
-// Redraw everything in the proper order
-//----------------------------------------
-
-redrawOverlay();
 
     //----------------------------------------
     // Convert detector coordinates
@@ -2471,22 +2465,14 @@ redrawOverlay();
         overlay.height;
 
     //----------------------------------------
-    // Draw the live laser
+    // Let the master renderer draw everything
     //----------------------------------------
 
-    ctx.beginPath();
-
-    ctx.arc(
+    redrawOverlay(
+        true,
         drawX,
-        drawY,
-        8,
-        0,
-        Math.PI * 2
+        drawY
     );
-
-    ctx.strokeStyle = "red";
-    ctx.lineWidth = 3;
-    ctx.stroke();
 
 }
 
