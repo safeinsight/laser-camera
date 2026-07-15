@@ -1605,22 +1605,24 @@ function handleCalibrationTap(e){
 
     }
 
-    target.calibrated = true;
+target.calibrated = true;
 
-    calibrationStep = 0;
+calibrationStep = 0;
 
-    drawGreenBox();
+// Make absolutely sure the overlay
+// matches the current camera size.
+resizeEverything();
 
-    drawHits();
+redrawOverlay();
 
-    console.log(
-        "Normalized Target:",
-        target
-    );
+console.log(
+    "Normalized Target:",
+    target
+);
 
-    alert(
-        "Target Calibrated"
-    );
+alert(
+    "Target Calibrated"
+);
 
 }
 
