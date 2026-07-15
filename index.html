@@ -2384,11 +2384,11 @@ function redrawOverlay(showCurrentLaser = false, laserX = 0, laserY = 0){
 
     clearOverlay();
 
-    //----------------------------------------
-    // Draw all recorded hits
-    //----------------------------------------
+//----------------------------------------
+// Draw recorded hits
+//----------------------------------------
 
-    drawHits();
+drawHits(arguments.length > 3 ? arguments[3] : Infinity);
 
     //----------------------------------------
     // Draw countdown if active
