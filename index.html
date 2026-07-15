@@ -1057,6 +1057,8 @@ console.log(err);
 
 startCamera();
 
+liveOverlayLoop();
+
 preview.addEventListener(
 
 "click",
@@ -2482,6 +2484,23 @@ calibrateBtn.onclick=()=>{
 calibrateTarget();
 
 };
+
+//------------------------------------------------
+// LIVE OVERLAY LOOP
+//------------------------------------------------
+
+function liveOverlayLoop(){
+
+    // Only run while viewing the live camera
+    if(preview.style.display != "none"){
+
+        redrawOverlay();
+
+    }
+
+    requestAnimationFrame(liveOverlayLoop);
+
+}
 
 
 
