@@ -2341,7 +2341,17 @@ function drawHits(maxTime = Infinity){
 // REDRAW OVERLAY (VERSION 2)
 //------------------------------------------------
 
-function redrawOverlay(showCurrentLaser = false, laserX = 0, laserY = 0){
+function redrawOverlay({
+
+    showCurrentLaser = false,
+
+    laserX = 0,
+
+    laserY = 0,
+
+    maxTime = Infinity
+
+} = {}){
 
     //----------------------------------------
     // Clear everything
@@ -2353,7 +2363,7 @@ function redrawOverlay(showCurrentLaser = false, laserX = 0, laserY = 0){
 // Draw recorded hits
 //----------------------------------------
 
-drawHits(arguments.length > 3 ? arguments[3] : Infinity);
+drawHits(maxTime);
 
     //----------------------------------------
     // Draw countdown if active
@@ -2435,11 +2445,15 @@ function drawCurrentLaser(hitX, hitY){
     // Let the master renderer draw everything
     //----------------------------------------
 
-    redrawOverlay(
-        true,
-        drawX,
-        drawY
-    );
+redrawOverlay({
+
+    showCurrentLaser: true,
+
+    laserX: drawX,
+
+    laserY: drawY
+
+});
 
 }
 
@@ -2483,12 +2497,11 @@ return;
 
 }
 
-redrawOverlay(
-    false,
-    0,
-    0,
-    playback.currentTime
-);
+redrawOverlay({
+
+    maxTime: playback.currentTime
+
+});
 
 
 
