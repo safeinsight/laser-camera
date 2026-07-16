@@ -767,6 +767,9 @@ let recordedChunks = [];
 let recordingSeconds = 0;
 let timerInterval = null;
 
+// High-precision recording timer
+let recordingStartTime = 0;
+
 let targetDistance = 7;
 
 let shots = 0;
@@ -1282,6 +1285,12 @@ showPlayback;
 
 
 mediaRecorder.start();
+
+//-------------------------------------
+// Start high-precision recording timer
+//-------------------------------------
+
+recordingStartTime = performance.now();
 
 //-------------------------------------
 // Give camera one frame to stabilize
@@ -2292,7 +2301,7 @@ if(laserState === LASER_WAITING){
 
             y: hitY / detectCanvas.height,
 
-            time: recordingSeconds
+            time: (performance.now() - recordingStartTime) / 1000
 
         });
 
