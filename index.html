@@ -750,6 +750,13 @@ let currentLaserY = 0;
 //------------------------------------------------
 
 let groupCenter = null;
+
+//------------------------------------------------
+// Analysis overlay
+//------------------------------------------------
+
+let analysisEnabled = true;
+    
     
 
 //-------------------------------------
@@ -2474,8 +2481,11 @@ if(currentLaserVisible){
 // Draw group center
 //----------------------------------------
 
-if(groupCenter && playback.style.display != "none"){
-
+if(
+    analysisEnabled &&
+    groupCenter &&
+    playback.style.display != "none"
+){
     const centerX =
         groupCenter.x * overlay.width;
 
