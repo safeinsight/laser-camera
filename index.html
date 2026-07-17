@@ -744,6 +744,12 @@ let currentLaserVisible = false;
 let currentLaserX = 0;
 
 let currentLaserY = 0;
+
+//------------------------------------------------
+// Group center
+//------------------------------------------------
+
+let groupCenter = null;
     
 
 //-------------------------------------
@@ -1411,33 +1417,23 @@ playback.style.display=
 
 playback.src=url;
 
+//----------------------------------------
+// Calculate final group center
+//----------------------------------------
 
-
-
+groupCenter = calculateGroupCenter();
 
 playback.onloadedmetadata=()=>{
 
+    resizeEverything();
 
+    playback.play();
 
-resizeEverything();
+    requestAnimationFrame(
 
+        syncPlayback
 
-
-
-
-playback.play();
-
-
-
-
-
-requestAnimationFrame(
-
-syncPlayback
-
-);
-
-
+    );
 
 };
 
@@ -2350,6 +2346,53 @@ function drawHits(maxTime = Infinity){
 
 }
 
+
+//------------------------------------------------
+// CALCULATE GROUP CENTER
+//------------------------------------------------
+
+function calculateGroupCenter(){
+
+    //----------------------------------------
+    // No shots recorded
+    //----------------------------------------
+
+    if(hits.length === 0){
+
+        return null;
+
+    }
+
+    //----------------------------------------
+    // Add all shot locations
+    //----------------------------------------
+
+    let totalX = 0;
+    let totalY = 0;
+
+    for(const hit of hits){
+
+        totalX += hit.x;
+        totalY += hit.y;
+
+    }
+
+    //----------------------------------------
+    // Return average location
+    //----------------------------------------
+
+    return{
+
+        x: totalX / hits.length,
+
+        y: totalY / hits.length
+
+    };
+
+}
+    
+    
+
 //------------------------------------------------
 // REDRAW OVERLAY (VERSION 2)
 //------------------------------------------------
@@ -2426,6 +2469,68 @@ if(currentLaserVisible){
     ctx.stroke();
 
 }
+
+//----------------------------------------
+// Draw group center
+//----------------------------------------
+
+if(groupCenter && playback.style.display != "none"){
+
+    const centerX =
+        groupCenter.x * overlay.width;
+
+    const centerY =
+        groupCenter.y * overlay.height;
+
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 2;
+
+    //----------------------------------------
+    // Horizontal line
+    //----------------------------------------
+
+    ctx.beginPath();
+
+    ctx.moveTo(centerX - 12, centerY);
+
+    ctx.lineTo(centerX + 12, centerY);
+
+    ctx.stroke();
+
+    //----------------------------------------
+    // Vertical line
+    //----------------------------------------
+
+    ctx.beginPath();
+
+    ctx.moveTo(centerX, centerY - 12);
+
+    ctx.lineTo(centerX, centerY + 12);
+
+    ctx.stroke();
+
+    //----------------------------------------
+    // White center dot
+    //----------------------------------------
+
+    ctx.beginPath();
+
+    ctx.arc(
+        centerX,
+        centerY,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fill();
+
+    ctx.stroke();
+
+}
+    
 
 }
 
