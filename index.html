@@ -735,6 +735,17 @@ let hits = [];
 // null means no countdown is visible.
 let countdownValue = null;
 
+//------------------------------------------------
+// Current laser state
+//------------------------------------------------
+
+let currentLaserVisible = false;
+
+let currentLaserX = 0;
+
+let currentLaserY = 0;
+    
+
 //-------------------------------------
 // LASER STATE MACHINE (VERSION 7)
 //-------------------------------------
@@ -2195,6 +2206,8 @@ if(
     // Keep previously recorded hits visible
     //------------------------------------
 
+currentLaserVisible = false;
+    
     redrawOverlay();
 
     requestAnimationFrame(
@@ -2343,12 +2356,6 @@ function drawHits(maxTime = Infinity){
 
 function redrawOverlay({
 
-    showCurrentLaser = false,
-
-    laserX = 0,
-
-    laserY = 0,
-
     maxTime = Infinity
 
 } = {}){
@@ -2398,27 +2405,27 @@ drawHits(maxTime);
 
     }
 
-    //----------------------------------------
-    // Draw current laser if requested
-    //----------------------------------------
+//----------------------------------------
+// Draw current laser
+//----------------------------------------
 
-    if(showCurrentLaser){
+if(currentLaserVisible){
 
-        ctx.beginPath();
+    ctx.beginPath();
 
-        ctx.arc(
-            laserX,
-            laserY,
-            8,
-            0,
-            Math.PI * 2
-        );
+    ctx.arc(
+        currentLaserX,
+        currentLaserY,
+        8,
+        0,
+        Math.PI * 2
+    );
 
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 3;
-        ctx.stroke();
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 3;
+    ctx.stroke();
 
-    }
+}
 
 }
 
@@ -2426,34 +2433,29 @@ drawHits(maxTime);
 // DRAW CURRENT LASER (VERSION 7)
 //------------------------------------------------
 
+//------------------------------------------------
+// UPDATE CURRENT LASER
+//------------------------------------------------
+
 function drawCurrentLaser(hitX, hitY){
 
     //----------------------------------------
     // Convert detector coordinates
-    // to overlay coordinates
     //----------------------------------------
 
-    const drawX =
+    currentLaserX =
         (hitX / detectCanvas.width) *
         overlay.width;
 
-    const drawY =
+    currentLaserY =
         (hitY / detectCanvas.height) *
         overlay.height;
 
     //----------------------------------------
-    // Let the master renderer draw everything
+    // Laser is now visible
     //----------------------------------------
 
-redrawOverlay({
-
-    showCurrentLaser: true,
-
-    laserX: drawX,
-
-    laserY: drawY
-
-});
+    currentLaserVisible = true;
 
 }
 
