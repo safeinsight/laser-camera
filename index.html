@@ -539,13 +539,20 @@ class="distanceOption">
 
 
 
-<button
-
-id="startBtn">
+<button id="startBtn">
 
 Start Recording
 
 </button>
+
+    
+
+<button id="analysisBtn">
+
+Analysis ON
+
+</button>
+    
 
 
 
@@ -566,140 +573,106 @@ Stop Recording
 
 
 const preview=
-
 document.getElementById(
-
 "preview"
-
 );
 
 
 
 const playback=
-
 document.getElementById(
-
 "playback"
-
 );
 
 
 
 const overlay=
-
 document.getElementById(
-
 "overlay"
-
 );
 
 
 
 const ctx=
-
 overlay.getContext(
-
 "2d"
-
 );
 
 
 
 const detectCanvas=
-
 document.getElementById(
-
 "detectCanvas"
-
 );
 
 
 
 const detectCtx=
-
 detectCanvas.getContext(
-
 "2d",
-
 {
-
 willReadFrequently:true
-
 }
-
 );
 
 
 
 
 const timerOverlay=
-
 document.getElementById(
-
 "timerOverlay"
-
 );
 
 
 
 const shotsOverlay=
-
 document.getElementById(
-
 "shotsOverlay"
-
 );
 
 
 
 const distanceOverlay=
-
 document.getElementById(
-
 "distanceOverlay"
-
 );
 
 
 
 const distancePopup=
-
 document.getElementById(
-
 "distancePopup"
-
 );
 
 
 
 const distanceOptions=
-
 document.querySelectorAll(
-
 ".distanceOption"
-
 );
 
 
 
 const calibrateBtn=
-
 document.getElementById(
-
 "calibrateBtn"
-
 );
 
 
 
 const startBtn=
-
 document.getElementById(
-
 "startBtn"
-
 );
 
+
+
+const analysisBtn =
+document.getElementById(
+"analysisBtn"
+);
+    
+    
 
 
 const stopBtn=
@@ -2709,11 +2682,26 @@ beginCountdown();
 
 
 
+analysisBtn.onclick=()=>{
+
+    analysisEnabled=!analysisEnabled;
+
+    analysisBtn.textContent=
+        analysisEnabled
+        ? "Analysis ON"
+        : "Analysis OFF";
+
+};
+
+
+
 stopBtn.onclick=()=>{
 
 stopRecording();
 
 };
+
+    
 
 </script>
 
