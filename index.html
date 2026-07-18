@@ -548,9 +548,9 @@ Start Recording
     
 
 <button id="analysisBtn"
-style="background:green;color:white;">
+style="background:gray;color:white;">
 
-Analysis ON
+Analysis OFF
 
 </button>
     
@@ -672,10 +672,21 @@ const analysisBtn =
 document.getElementById(
 "analysisBtn"
 );
+
+analysisBtn.textContent =
+    analysisEnabled
+    ? "Analysis ON"
+    : "Analysis OFF";
+
+analysisBtn.style.background =
+    analysisEnabled
+    ? "green"
+    : "gray";
+
+analysisBtn.style.color = "white";
+
     
     
-
-
 const stopBtn=
 
 document.getElementById(
@@ -729,7 +740,7 @@ let groupCenter = null;
 // Analysis overlay
 //------------------------------------------------
 
-let analysisEnabled = true;
+let analysisEnabled = false;
     
     
 
