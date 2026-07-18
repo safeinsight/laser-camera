@@ -547,7 +547,8 @@ Start Recording
 
     
 
-<button id="analysisBtn">
+<button id="analysisBtn"
+style="background:green;color:white;">
 
 Analysis ON
 
@@ -2690,6 +2691,13 @@ analysisBtn.onclick=()=>{
         analysisEnabled
         ? "Analysis ON"
         : "Analysis OFF";
+
+    analysisBtn.style.background=
+        analysisEnabled
+        ? "green"
+        : "gray";
+
+    analysisBtn.style.color="white";
 
 };
 
