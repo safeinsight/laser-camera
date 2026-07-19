@@ -508,6 +508,43 @@ Control Buttons
     font-size:16px;
 
 }
+
+/*----------------------------------------
+Settings Panel
+----------------------------------------*/
+
+#settingsPanel{
+
+    display:none;
+
+    margin:15px auto;
+
+    width:90%;
+
+    max-width:500px;
+
+    background:#222;
+
+    border:2px solid #555;
+
+    border-radius:10px;
+
+    padding:15px;
+
+    color:white;
+
+    text-align:left;
+
+}
+
+#settingsPanel h3{
+
+    margin-top:0;
+
+    text-align:center;
+
+}
+    
     
 
 </style>
@@ -701,6 +738,18 @@ Start Recording
 
 </div>
 
+<div id="settingsPanel">
+
+    <h3>
+
+        Settings
+
+    </h3>
+
+</div>
+
+    
+
     
 
 <div id="analysisControl">
@@ -846,6 +895,18 @@ const analysisLabel =
 document.getElementById(
 "analysisLabel"
 );
+
+const settingsBtn =
+document.getElementById(
+"settingsBtn"
+);
+
+const settingsPanel =
+document.getElementById(
+"settingsPanel"
+);
+    
+    
     
      
 const stopBtn=
@@ -2864,6 +2925,22 @@ analysisBtn.onchange=()=>{
 };
 
 
+settingsBtn.onclick=()=>{
+
+    if(settingsPanel.style.display=="block"){
+
+        settingsPanel.style.display="none";
+
+    }
+
+    else{
+
+        settingsPanel.style.display="block";
+
+    }
+
+};
+    
 
 stopBtn.onclick=()=>{
 
