@@ -453,15 +453,23 @@ input:checked + .slider:before{
 
 }
 
-#analysisLabel{
+#analysisControl{
 
-    margin-left:10px;
+    display:inline-flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+#analysisLabel{
 
     color:white;
 
     font-weight:bold;
-
-    vertical-align:middle;
 
     user-select:none;
 
@@ -650,21 +658,25 @@ Start Recording
 
     
 
-<label class="switch">
+<div id="analysisControl">
 
-<input
-type="checkbox"
-id="analysisBtn">
+    <div id="analysisLabel">
 
-<span class="slider"></span>
+        Analysis
 
-</label>
+    </div>
 
-<span id="analysisLabel">
+    <label class="switch">
 
-Analysis
+        <input
+        type="checkbox"
+        id="analysisBtn">
 
-</span>
+        <span class="slider"></span>
+
+    </label>
+
+</div>
     
 
 
