@@ -544,6 +544,33 @@ Settings Panel
     text-align:center;
 
 }
+
+#settingsPanel h4{
+
+    margin-top:20px;
+
+    margin-bottom:10px;
+
+    color:#00d0ff;
+
+    border-bottom:1px solid #555;
+
+    padding-bottom:5px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+#countdownOptions{
+
+    margin-left:15px;
+
+    line-height:1.8;
+
+}
+    
     
     
 
@@ -747,13 +774,21 @@ Start Recording
 
     </h3>
 
-    <hr>
+    <!--=====================================-->
+    <!-- ANALYSIS -->
+    <!--=====================================-->
+
+    <h4>
+
+        ANALYSIS
+
+    </h4>
 
     <div id="analysisControl">
 
         <div id="analysisLabel">
 
-            Analysis
+            Average Point of Impact
 
         </div>
 
@@ -764,6 +799,60 @@ Start Recording
             id="analysisBtn">
 
             <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+    <hr>
+
+    <!--=====================================-->
+    <!-- RECORDING -->
+    <!--=====================================-->
+
+    <h4>
+
+        RECORDING
+
+    </h4>
+
+    <div id="countdownOptions">
+
+        <label>
+
+            <input
+            type="radio"
+            name="countdown"
+            value="5"
+            checked>
+
+            5 Seconds
+
+        </label>
+
+        <br><br>
+
+        <label>
+
+            <input
+            type="radio"
+            name="countdown"
+            value="3">
+
+            3 Seconds
+
+        </label>
+
+        <br><br>
+
+        <label>
+
+            <input
+            type="radio"
+            name="countdown"
+            value="0">
+
+            None
 
         </label>
 
