@@ -1132,6 +1132,13 @@ let target = {
 
 let calibrationStep = 0;
 
+// Drag calibration
+let calibrationDragging = false;
+let calibrationStartX = 0;
+let calibrationStartY = 0;
+let calibrationCurrentX = 0;
+let calibrationCurrentY = 0;
+    
 //-------------------------------------
 // CURRENT CAMERA SIZE
 //-------------------------------------
@@ -1350,11 +1357,18 @@ startCamera();
 liveOverlayLoop();
 
 preview.addEventListener(
+    "pointerdown",
+    beginCalibrationDrag
+);
 
-"click",
+preview.addEventListener(
+    "pointermove",
+    updateCalibrationDrag
+);
 
-handleCalibrationTap
-
+preview.addEventListener(
+    "pointerup",
+    finishCalibrationDrag
 );
 
 
