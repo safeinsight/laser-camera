@@ -1059,11 +1059,10 @@ let groupCenter = null;
 //------------------------------------------------
 
 let analysisEnabled = false;
-    let countdownSeconds = 5;
 
 analysisBtn.checked = analysisEnabled;
 
-    
+let countdownSeconds = 5;
     
     
 
@@ -1436,13 +1435,27 @@ function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
 
-    let count = 3;
+   let count = countdownSeconds;
+    
+if(count===0){
 
-    countdownValue = count;
+    countdownValue = null;
 
-    drawCountdown();
+    clearOverlay();
 
-    const interval = setInterval(()=>{
+    drawHits();
+
+    startRecording();
+
+    return;
+
+}
+
+countdownValue = count;
+
+drawCountdown();
+
+const interval = setInterval(()=>{
 
         console.log("COUNT:", count);
 
