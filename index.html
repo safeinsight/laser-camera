@@ -1902,14 +1902,64 @@ function finishCalibrationDrag(){
 }
 
 //------------------------------------------------
-// OLD TAP CALIBRATION
+// START DRAG CALIBRATION
 //------------------------------------------------
-       
-function handleCalibrationTap(e){
+
+function calibrateTarget(){
+
+    alert("Touch the TOP LEFT corner of the target and drag to the BOTTOM RIGHT corner.");
+
+    calibrationStep = 1;
+}
+
+//------------------------------------------------
+// COMPLETE DRAG CALIBRATION
+//------------------------------------------------
+
+function finishCalibrationDrag(e){
+
+    if(!calibrationDragging){
+        return;
+    }
+
+    calibrationDragging = false;
 
     if(calibrationStep===0){
         return;
     }
+
+    const rect = preview.getBoundingClientRect();
+
+    calibrationCurrentX =
+        (e.clientX - rect.left) / rect.width;
+
+    calibrationCurrentY =
+        (e.clientY - rect.top) / rect.height;
+
+    target.left =
+        Math.min(calibrationStartX, calibrationCurrentX);
+
+    target.right =
+        Math.max(calibrationStartX, calibrationCurrentX);
+
+    target.top =
+        Math.min(calibrationStartY, calibrationCurrentY);
+
+    target.bottom =
+        Math.max(calibrationStartY, calibrationCurrentY);
+
+    target.calibrated = true;
+
+    calibrationStep = 0;
+
+    resizeEverything();
+
+    redrawOverlay();
+
+    console.log("Normalized Target:", target);
+
+    alert("Target Calibrated");
+}
 
     //--------------------------------------
     // Get displayed video size
