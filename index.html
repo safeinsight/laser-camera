@@ -1357,18 +1357,8 @@ startCamera();
 liveOverlayLoop();
 
 preview.addEventListener(
-    "pointerdown",
-    beginCalibrationDrag
-);
-
-preview.addEventListener(
-    "pointermove",
-    updateCalibrationDrag
-);
-
-preview.addEventListener(
-    "pointerup",
-    finishCalibrationDrag
+    "click",
+    handleCalibrationTap
 );
 
 
