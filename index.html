@@ -1884,6 +1884,21 @@ function updateCalibrationDrag(e){
 
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
+
+    target.left =
+        Math.min(calibrationStartX, calibrationCurrentX);
+
+    target.right =
+        Math.max(calibrationStartX, calibrationCurrentX);
+
+    target.top =
+        Math.min(calibrationStartY, calibrationCurrentY);
+
+    target.bottom =
+        Math.max(calibrationStartY, calibrationCurrentY);
+
+    redrawOverlay();
+
 }
 
 
