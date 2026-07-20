@@ -1849,7 +1849,7 @@ distanceOverlay.innerHTML=
 
 function beginCalibrationDrag(e){
 
-    if(calibrationStep===0){
+    if(calibrationStep !== 1){
         return;
     }
 
@@ -1865,6 +1865,8 @@ function beginCalibrationDrag(e){
 
     calibrationCurrentX = calibrationStartX;
     calibrationCurrentY = calibrationStartY;
+
+    target.calibrated = false;
 }
 
 //------------------------------------------------
@@ -1960,28 +1962,10 @@ function finishCalibrationDrag(e){
 
     console.log("Normalized Target:", target);
 
-    alert("Target Calibrated");
+    alert("Calibration Complete");
 }
 
-    //--------------------------------------
-    // Get displayed video size
-    //--------------------------------------
-
-    const rect = preview.getBoundingClientRect();
-
-    //--------------------------------------
-    // NORMALIZED coordinates (0-1)
-    //--------------------------------------
-
-    const nx =
-        (e.clientX - rect.left) /
-        rect.width;
-
-    const ny =
-        (e.clientY - rect.top) /
-        rect.height;
-
-
+  
 
 //------------------------------------------------
 // TARGET PIXELS
@@ -2787,6 +2771,34 @@ function redrawOverlay({
     //----------------------------------------
 
     clearOverlay();
+
+//------------------------------------------------
+// Draw drag calibration rectangle
+//------------------------------------------------
+
+if(calibrationDragging){
+
+    ctx.save();
+
+    ctx.strokeStyle = "#00FF00";
+    ctx.lineWidth = 4;
+
+    ctx.strokeRect(
+
+        target.left * overlay.width,
+
+        target.top * overlay.height,
+
+        (target.right - target.left) * overlay.width,
+
+        (target.bottom - target.top) * overlay.height
+
+    );
+
+    ctx.restore();
+
+}
+    
 
 //----------------------------------------
 // Draw recorded hits
