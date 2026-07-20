@@ -1845,6 +1845,66 @@ function calibrateTarget(){
 }
 
 
+//------------------------------------------------
+// BEGIN CALIBRATION DRAG
+//------------------------------------------------
+
+function beginCalibrationDrag(e){
+
+    if(calibrationStep===0){
+        return;
+    }
+
+    const rect = preview.getBoundingClientRect();
+
+    calibrationDragging = true;
+
+    calibrationStartX =
+        (e.clientX - rect.left) / rect.width;
+
+    calibrationStartY =
+        (e.clientY - rect.top) / rect.height;
+
+    calibrationCurrentX = calibrationStartX;
+    calibrationCurrentY = calibrationStartY;
+}
+
+//------------------------------------------------
+// UPDATE CALIBRATION DRAG
+//------------------------------------------------
+
+function updateCalibrationDrag(e){
+
+    if(!calibrationDragging){
+        return;
+    }
+
+    const rect = preview.getBoundingClientRect();
+
+    calibrationCurrentX =
+        (e.clientX - rect.left) / rect.width;
+
+    calibrationCurrentY =
+        (e.clientY - rect.top) / rect.height;
+}
+
+//------------------------------------------------
+// FINISH CALIBRATION DRAG
+//------------------------------------------------
+
+function finishCalibrationDrag(){
+
+    if(!calibrationDragging){
+        return;
+    }
+
+    calibrationDragging = false;
+}
+
+//------------------------------------------------
+// OLD TAP CALIBRATION
+//------------------------------------------------
+       
 function handleCalibrationTap(e){
 
     if(calibrationStep===0){
