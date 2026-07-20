@@ -999,6 +999,11 @@ const settingsPanel =
 document.getElementById(
 "settingsPanel"
 );
+
+const countdownRadios =
+document.getElementsByName(
+"countdown"
+);
     
     
     
@@ -1054,6 +1059,7 @@ let groupCenter = null;
 //------------------------------------------------
 
 let analysisEnabled = false;
+    let countdownSeconds = 5;
 
 analysisBtn.checked = analysisEnabled;
 
@@ -3018,6 +3024,17 @@ analysisBtn.onchange=()=>{
 
 };
 
+for(const radio of countdownRadios){
+
+    radio.onchange=()=>{
+
+        countdownSeconds =
+            Number(radio.value);
+
+    };
+
+}
+    
 
 settingsBtn.onclick=()=>{
 
