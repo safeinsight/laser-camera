@@ -1888,18 +1888,7 @@ function updateCalibrationDrag(e){
         (e.clientY - rect.top) / rect.height;
 }
 
-//------------------------------------------------
-// FINISH CALIBRATION DRAG
-//------------------------------------------------
 
-function finishCalibrationDrag(){
-
-    if(!calibrationDragging){
-        return;
-    }
-
-    calibrationDragging = false;
-}
 
 //------------------------------------------------
 // START DRAG CALIBRATION
@@ -1979,72 +1968,7 @@ function finishCalibrationDrag(e){
         (e.clientY - rect.top) /
         rect.height;
 
-    //--------------------------------------
-    // FIRST TAP
-    //--------------------------------------
 
-    if(calibrationStep===1){
-
-        target.left = nx;
-        target.top = ny;
-
-        calibrationStep = 2;
-
-        alert(
-            "Now tap the BOTTOM RIGHT corner."
-        );
-
-        return;
-
-    }
-
-    //--------------------------------------
-    // SECOND TAP
-    //--------------------------------------
-
-    target.right = nx;
-    target.bottom = ny;
-
-    //--------------------------------------
-    // Ensure correct ordering
-    //--------------------------------------
-
-    if(target.left > target.right){
-
-        let t = target.left;
-        target.left = target.right;
-        target.right = t;
-
-    }
-
-    if(target.top > target.bottom){
-
-        let t = target.top;
-        target.top = target.bottom;
-        target.bottom = t;
-
-    }
-
-target.calibrated = true;
-
-calibrationStep = 0;
-
-// Make absolutely sure the overlay
-// matches the current camera size.
-resizeEverything();
-
-redrawOverlay();
-
-console.log(
-    "Normalized Target:",
-    target
-);
-
-alert(
-    "Target Calibrated"
-);
-
-}
 
 //------------------------------------------------
 // TARGET PIXELS
