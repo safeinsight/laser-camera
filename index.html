@@ -813,6 +813,43 @@ Start Recording
     <hr>
 
     <!--=====================================-->
+<!-- TARGET SHAPE -->
+<!--=====================================-->
+
+<h4>
+
+    TARGET SHAPE
+
+</h4>
+
+<label>
+
+    <input
+    type="radio"
+    name="targetShape"
+    value="rectangle"
+    checked>
+
+    Rectangle
+
+</label>
+
+<br><br>
+
+<label>
+
+    <input
+    type="radio"
+    name="targetShape"
+    value="oval">
+
+    Oval
+
+</label>
+
+<hr>
+
+    <!--=====================================-->
     <!-- RECORDING -->
     <!--=====================================-->
 
@@ -1006,6 +1043,12 @@ const countdownRadios =
 document.getElementsByName(
 "countdown"
 );
+
+const targetShapeRadios =
+document.getElementsByName(
+"targetShape"
+);
+    
     
     
     
@@ -1065,6 +1108,12 @@ let analysisEnabled = false;
 analysisBtn.checked = analysisEnabled;
 
 let countdownSeconds = 5;
+
+//------------------------------------------------
+// Target Shape
+//------------------------------------------------
+
+let targetShape = "rectangle";
     
     
 
@@ -3112,6 +3161,19 @@ for(const radio of countdownRadios){
     };
 
 }
+
+for(const radio of targetShapeRadios){
+
+    radio.onchange = ()=>{
+
+        targetShape = radio.value;
+
+        redrawOverlay();
+
+    };
+
+}
+    
     
 
 settingsBtn.onclick=()=>{
