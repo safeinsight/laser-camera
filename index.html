@@ -2466,6 +2466,38 @@ const gridY = Math.max(
 
         ){
 
+//------------------------------------------------
+// Skip pixels outside oval target
+//------------------------------------------------
+
+if(targetShape === "oval"){
+
+    const centerX =
+        (box.left + box.right) / 2;
+
+    const centerY =
+        (box.top + box.bottom) / 2;
+
+    const radiusX =
+        (box.right - box.left) / 2;
+
+    const radiusY =
+        (box.bottom - box.top) / 2;
+
+    const dx =
+        (x - centerX) / radiusX;
+
+    const dy =
+        (y - centerY) / radiusY;
+
+    if((dx * dx + dy * dy) > 1){
+
+        continue;
+
+    }
+
+}
+            
             const i=
 
                 (
