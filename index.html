@@ -2141,9 +2141,9 @@ function clearOverlay(){
         overlay.height
     );
 
-    if(target.calibrated){
-        drawGreenBox();
-    }
+ if(target.calibrated && !calibrationDragging){
+    drawGreenBox();
+}
 
 }
 
@@ -2863,6 +2863,17 @@ function redrawOverlay({
     //----------------------------------------
 
     clearOverlay();
+
+//----------------------------------------
+// Draw target while dragging
+//----------------------------------------
+
+if(calibrationDragging){
+
+    drawGreenBox();
+
+}
+    
 
 //------------------------------------------------
 // Draw drag calibration rectangle
