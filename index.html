@@ -2050,10 +2050,13 @@ function getTargetPixels(){
 // DRAW GREEN BOX (VERSION 5)
 //------------------------------------------------
 
-function drawGreenBox(){
-    console.log("Overlay:", overlay.width, overlay.height);
+//------------------------------------------------
+// DRAW GREEN BOX (VERSION 6)
+//------------------------------------------------
 
-    if(!target.calibrated){
+function drawGreenBox(){
+
+    if(!target.calibrated && !calibrationDragging){
         return;
     }
 
@@ -2076,12 +2079,50 @@ function drawGreenBox(){
     ctx.strokeStyle = "#00FF00";
     ctx.lineWidth = 4;
 
-    ctx.strokeRect(
-        left,
-        top,
-        width,
-        height
-    );
+    //----------------------------------------
+    // Rectangle
+    //----------------------------------------
+
+    if(targetShape === "rectangle"){
+
+        ctx.strokeRect(
+            left,
+            top,
+            width,
+            height
+        );
+
+    }
+
+    //----------------------------------------
+    // Oval
+    //----------------------------------------
+
+    else{
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+
+            left + width / 2,
+
+            top + height / 2,
+
+            width / 2,
+
+            height / 2,
+
+            0,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+        ctx.stroke();
+
+    }
 
     ctx.restore();
 
