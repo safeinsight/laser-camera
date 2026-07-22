@@ -861,47 +861,39 @@ Start Recording
 
 </h4>
 
-<div id="countdownOptions">
+<div style="margin-bottom:20px;">
 
-        <label>
+    <label>
 
-            <input
-            type="radio"
-            name="countdown"
-            value="5"
-            checked>
+        <strong>Countdown</strong>
+
+    </label>
+
+    <br><br>
+
+    <select id="countdownSelect">
+
+        <option value="5" selected>
 
             5 Seconds
 
-        </label>
+        </option>
 
-        <br><br>
-
-        <label>
-
-            <input
-            type="radio"
-            name="countdown"
-            value="3">
+        <option value="3">
 
             3 Seconds
 
-        </label>
+        </option>
 
-        <br><br>
-
-        <label>
-
-            <input
-            type="radio"
-            name="countdown"
-            value="0">
+        <option value="0">
 
             None
 
-        </label>
+        </option>
 
-    </div>
+    </select>
+
+</div>
 
 </div>
 
@@ -1037,6 +1029,12 @@ const distanceSelect =
 document.getElementById(
 "distanceSelect"
 );
+
+
+const countdownSelect =
+document.getElementById(
+"countdownSelect"
+);
     
 
 const targetShapeRadios =
@@ -1111,6 +1109,14 @@ let analysisEnabled = false;
 analysisBtn.checked = analysisEnabled;
 
 let countdownSeconds = 5;
+
+if(countdownSelect){
+
+    countdownSelect.value =
+        countdownSeconds;
+
+}
+    
 
 //------------------------------------------------
 // Target Shape
@@ -3101,17 +3107,13 @@ analysisBtn.onchange=()=>{
 
 };
 
-for(const radio of countdownRadios){
+countdownSelect.onchange = ()=>{
 
-    radio.onchange=()=>{
+    countdownSeconds =
+        Number(countdownSelect.value);
 
-        countdownSeconds =
-            Number(radio.value);
-
-    };
-
+};
     
-}
 
 distanceSelect.onchange = ()=>{
 
