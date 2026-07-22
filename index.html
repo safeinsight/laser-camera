@@ -805,30 +805,33 @@ Start Recording
 
 </h4>
 
-<label>
+<div style="margin-bottom:20px;">
 
-    <input
-    type="radio"
-    name="targetShape"
-    value="rectangle"
-    checked>
+    <label>
 
-    Rectangle
+        <strong>Shape</strong>
 
-</label>
+    </label>
 
-<br><br>
+    <br><br>
 
-<label>
+    <select id="targetShapeSelect">
 
-    <input
-    type="radio"
-    name="targetShape"
-    value="oval">
+        <option value="rectangle" selected>
 
-    Oval
+            Rectangle
 
-</label>
+        </option>
+
+        <option value="oval">
+
+            Oval
+
+        </option>
+
+    </select>
+
+</div>
 
 <hr>
 
@@ -1031,17 +1034,13 @@ const countdownSelect =
 document.getElementById(
 "countdownSelect"
 );
-    
 
-const targetShapeRadios =
-document.getElementsByName(
-"targetShape"
+const targetShapeSelect =
+document.getElementById(
+"targetShapeSelect"
 );
-    
-    
-    
-    
      
+        
 const stopBtn=
 document.getElementById(
 "stopBtn"
@@ -1119,7 +1118,13 @@ if(countdownSelect){
 //------------------------------------------------
 
 let targetShape = "rectangle";
-    
+
+if(targetShapeSelect){
+
+    targetShapeSelect.value =
+        targetShape;
+
+}
     
 
 //-------------------------------------
@@ -3103,6 +3108,16 @@ analysisBtn.onchange=()=>{
 
 };
 
+
+targetShapeSelect.onchange = ()=>{
+
+    targetShape =
+        targetShapeSelect.value;
+
+    redrawOverlay();
+
+};
+
 countdownSelect.onchange = ()=>{
 
     countdownSeconds =
@@ -3119,22 +3134,7 @@ distanceSelect.onchange = ()=>{
 };
     
 
-for(const radio of targetShapeRadios){
 
-    radio.onchange = ()=>{
-
-        targetShape = radio.value;
-
-        redrawOverlay();
-
-                console.log(
-            "Target Shape:",
-            targetShape
-                );
-
-    };
-
-}
     
     
 
