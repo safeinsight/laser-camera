@@ -1021,6 +1021,12 @@ document.getElementsByName(
 "countdown"
 );
 
+const distanceSelect =
+document.getElementById(
+"distanceSelect"
+);
+    
+
 const targetShapeRadios =
 document.getElementsByName(
 "targetShape"
@@ -1052,6 +1058,14 @@ let timerInterval = null;
 let recordingStartTime = 0;
 
 let targetDistance = 7;
+
+if(distanceSelect){
+
+    distanceSelect.value =
+        targetDistance;
+
+}   
+    
 
 let shots = 0;
 let hits = [];
@@ -3084,7 +3098,16 @@ for(const radio of countdownRadios){
 
     };
 
+    
 }
+
+distanceSelect.onchange = ()=>{
+
+    targetDistance =
+        Number(distanceSelect.value);
+
+};
+    
 
 for(const radio of targetShapeRadios){
 
