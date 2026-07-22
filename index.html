@@ -477,6 +477,34 @@ input:checked + .slider:before{
 
 }
 
+#topControls{
+
+    position:absolute;
+
+    top:15px;
+
+    left:15px;
+
+    right:15px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    z-index:40;
+
+}
+
+#topControls button{
+
+    min-width:unset;
+
+    padding:10px 18px;
+
+    font-size:16px;
+
+}
+    
 /*----------------------------------------
 Control Buttons
 ----------------------------------------*/
@@ -598,17 +626,6 @@ Laser Target Trainer
 
 
 
-
-<button
-
-id="calibrateBtn">
-
-Draw Target
-
-</button>
-
-
-
 <div class="container">
 
 <video
@@ -697,7 +714,21 @@ class="distanceOption">
 
 </div>
 
+<div id="topControls">
 
+    <button id="calibrateBtn">
+
+        Draw Target
+
+    </button>
+
+    <button id="settingsBtn">
+
+        ⚙
+
+    </button>
+
+</div>
 
 <div
 
@@ -756,12 +787,6 @@ class="distanceOption">
 
 
 <div id="controlButtons">
-
-<button id="settingsBtn">
-
-⚙ Settings
-
-</button>
 
 <button id="startBtn">
 
