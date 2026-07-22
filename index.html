@@ -945,25 +945,14 @@ Start Recording
 
 <button
 
-id="stopBtn"
-
-disabled>
-
-Stop Recording
-
-</button>
-
 
 
 <script>
-
-
 
 const preview=
 document.getElementById(
 "preview"
 );
-
 
 
 const playback=
@@ -972,12 +961,10 @@ document.getElementById(
 );
 
 
-
 const overlay=
 document.getElementById(
 "overlay"
 );
-
 
 
 const ctx=
@@ -986,12 +973,10 @@ overlay.getContext(
 );
 
 
-
 const detectCanvas=
 document.getElementById(
 "detectCanvas"
 );
-
 
 
 const detectCtx=
@@ -1001,7 +986,6 @@ detectCanvas.getContext(
 willReadFrequently:true
 }
 );
-
 
 
 
@@ -1018,12 +1002,10 @@ document.getElementById(
 );
 
 
-
 const distanceOverlay=
 document.getElementById(
 "distanceOverlay"
 );
-
 
 
 const distancePopup=
@@ -1032,12 +1014,10 @@ document.getElementById(
 );
 
 
-
 const distanceOptions=
 document.querySelectorAll(
 ".distanceOption"
 );
-
 
 
 const calibrateBtn=
@@ -1046,12 +1026,10 @@ document.getElementById(
 );
 
 
-
 const startBtn=
 document.getElementById(
 "startBtn"
 );
-
 
 
 const analysisBtn =
@@ -1083,10 +1061,7 @@ const targetShapeRadios =
 document.getElementsByName(
 "targetShape"
 );
-    
-    
-    
-    
+   
      
 const stopBtn=
 document.getElementById(
@@ -1723,15 +1698,9 @@ updateDisplays();
 
 },1000);
 
+startBtn.textContent = "Stop Recording";
 
-    
-startBtn.disabled=true;
-
-
-
-stopBtn.disabled=false;
-
-
+startBtn.style.background = "#d62828";
 
 }
 
@@ -1758,17 +1727,9 @@ timerInterval
 
 );
 
+startBtn.textContent = "Start Recording";
 
-
-
-
-startBtn.disabled=false;
-
-
-
-stopBtn.disabled=true;
-
-
+startBtn.style.background = "#00a651";
 
 }
 
@@ -3245,22 +3206,33 @@ syncPlayback
 
 
 
-startBtn.onclick=()=>{
+startBtn.onclick = ()=>{
 
-console.log("START BUTTON CLICKED");
+    if(
+        mediaRecorder &&
+        mediaRecorder.state === "recording"
+    ){
 
-playback.pause();
+        stopRecording();
 
-playback.src="";
+        return;
 
-preview.style.display="block";
+    }
 
-playback.style.display="none";
+    console.log("START BUTTON CLICKED");
 
-beginCountdown();
+    playback.pause();
+
+    playback.src = "";
+
+    preview.style.display = "block";
+
+    playback.style.display = "none";
+
+    beginCountdown();
 
 };
-
+        
 
 
 analysisBtn.onchange=()=>{
@@ -3317,11 +3289,7 @@ settingsBtn.onclick=()=>{
 };
     
 
-stopBtn.onclick=()=>{
 
-stopRecording();
-
-};
 
     
 
