@@ -547,17 +547,19 @@ Settings Panel
 
     display:none;
 
-    margin:15px auto;
+    position:absolute;
 
-    width:95%;
+    top:60px;
 
-    max-width:650px;
+    left:15px;
 
-    max-height:70vh;
+    right:15px;
 
-overflow-y:auto;
+    bottom:15px;
 
-    background:#222;
+    overflow-y:auto;
+
+    background:rgba(34,34,34,.96);
 
     border:2px solid #555;
 
@@ -568,6 +570,8 @@ overflow-y:auto;
     color:white;
 
     text-align:left;
+
+    z-index:100;
 
 }
 
@@ -784,9 +788,6 @@ class="distanceOption">
 
 </div>
 
-</div>
-
-
 <div id="controlButtons">
 
 <button id="startBtn">
@@ -796,7 +797,6 @@ Start Recording
 </button>
 
 </div>
-
 
 <div id="settingsPanel">
 
@@ -928,11 +928,8 @@ Start Recording
     </div>
 
 </div>
-    
 
-
-
-
+</div>
 
 <button
 
