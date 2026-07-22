@@ -509,15 +509,27 @@ input:checked + .slider:before{
 Control Buttons
 ----------------------------------------*/
 
-#controlButtons{
+#bottomControls{
+
+    position:absolute;
+
+    bottom:15px;
+
+    left:15px;
+
+    right:15px;
 
     display:flex;
 
     justify-content:center;
 
-    gap:12px;
+    z-index:40;
 
-    margin-top:15px;
+}
+
+#bottomControls button{
+
+    min-width:220px;
 
 }
 
@@ -788,7 +800,7 @@ class="distanceOption">
 
 </div>
 
-<div id="controlButtons">
+<div id="bottomControls">
 
 <button id="startBtn">
 
