@@ -943,16 +943,6 @@ Start Recording
 
 </div>
 
-<button
-
-id="stopBtn"
-
-disabled>
-
-Stop Recording
-
-</button>
-
 
 
 <script>
@@ -1723,16 +1713,9 @@ updateDisplays();
 
 },1000);
 
+startBtn.textContent = "Stop Recording";
 
-    
-startBtn.disabled=true;
-
-
-
-stopBtn.disabled=false;
-
-
-
+startBtn.style.background = "#d62828";
 }
 
 
@@ -1759,17 +1742,9 @@ timerInterval
 );
 
 
+startBtn.textContent = "Start Recording";
 
-
-
-startBtn.disabled=false;
-
-
-
-stopBtn.disabled=true;
-
-
-
+startBtn.style.background = "#00a651";
 }
 
 
@@ -3245,27 +3220,33 @@ syncPlayback
 
 
 
-startBtn.onclick=()=>{
+startBtn.onclick = ()=>{
 
-console.log("START BUTTON CLICKED");
+    if(
+        mediaRecorder &&
+        mediaRecorder.state === "recording"
+    ){
 
-playback.pause();
+        stopRecording();
 
-playback.src="";
+        return;
 
-preview.style.display="block";
+    }
 
-playback.style.display="none";
+    console.log("START BUTTON CLICKED");
 
-beginCountdown();
+    playback.pause();
+
+    playback.src = "";
+
+    preview.style.display = "block";
+
+    playback.style.display = "none";
+
+    beginCountdown();
 
 };
-
-stopBtn.onclick=()=>{
-
-stopRecording();
-
-};
+    
 
 analysisBtn.onchange=()=>{
 
