@@ -3206,32 +3206,29 @@ syncPlayback
 
 
 
-startBtn.onclick = ()=>{
+startBtn.onclick=()=>{
 
-    if(
-        mediaRecorder &&
-        mediaRecorder.state === "recording"
-    ){
+console.log("START BUTTON CLICKED");
 
-        stopRecording();
+playback.pause();
 
-        return;
+playback.src="";
 
-    }
+preview.style.display="block";
 
-    console.log("START BUTTON CLICKED");
+playback.style.display="none";
 
-    playback.pause();
-
-    playback.src = "";
-
-    preview.style.display = "block";
-
-    playback.style.display = "none";
-
-    beginCountdown();
+beginCountdown();
 
 };
+
+
+stopBtn.onclick=()=>{
+
+stopRecording();
+
+};
+
         
 
 
