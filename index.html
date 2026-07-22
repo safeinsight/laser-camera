@@ -945,14 +945,25 @@ Start Recording
 
 <button
 
+id="stopBtn"
+
+disabled>
+
+Stop Recording
+
+</button>
+
 
 
 <script>
+
+
 
 const preview=
 document.getElementById(
 "preview"
 );
+
 
 
 const playback=
@@ -961,10 +972,12 @@ document.getElementById(
 );
 
 
+
 const overlay=
 document.getElementById(
 "overlay"
 );
+
 
 
 const ctx=
@@ -973,10 +986,12 @@ overlay.getContext(
 );
 
 
+
 const detectCanvas=
 document.getElementById(
 "detectCanvas"
 );
+
 
 
 const detectCtx=
@@ -986,6 +1001,7 @@ detectCanvas.getContext(
 willReadFrequently:true
 }
 );
+
 
 
 
@@ -1002,10 +1018,12 @@ document.getElementById(
 );
 
 
+
 const distanceOverlay=
 document.getElementById(
 "distanceOverlay"
 );
+
 
 
 const distancePopup=
@@ -1014,10 +1032,12 @@ document.getElementById(
 );
 
 
+
 const distanceOptions=
 document.querySelectorAll(
 ".distanceOption"
 );
+
 
 
 const calibrateBtn=
@@ -1026,10 +1046,12 @@ document.getElementById(
 );
 
 
+
 const startBtn=
 document.getElementById(
 "startBtn"
 );
+
 
 
 const analysisBtn =
@@ -1061,7 +1083,10 @@ const targetShapeRadios =
 document.getElementsByName(
 "targetShape"
 );
-   
+    
+    
+    
+    
      
 const stopBtn=
 document.getElementById(
@@ -1698,9 +1723,15 @@ updateDisplays();
 
 },1000);
 
-startBtn.textContent = "Stop Recording";
 
-startBtn.style.background = "#d62828";
+    
+startBtn.disabled=true;
+
+
+
+stopBtn.disabled=false;
+
+
 
 }
 
@@ -1727,9 +1758,17 @@ timerInterval
 
 );
 
-startBtn.textContent = "Start Recording";
 
-startBtn.style.background = "#00a651";
+
+
+
+startBtn.disabled=false;
+
+
+
+stopBtn.disabled=true;
+
+
 
 }
 
@@ -3224,10 +3263,6 @@ beginCountdown();
 
 
 
-
-        
-
-
 analysisBtn.onchange=()=>{
 
     analysisEnabled =
@@ -3279,16 +3314,14 @@ settingsBtn.onclick=()=>{
 
     }
 
+};
+    
+
 stopBtn.onclick=()=>{
 
 stopRecording();
 
 };
-        
-};
-    
-
-
 
     
 
@@ -3297,3 +3330,5 @@ stopRecording();
 </body>
 
 </html>
+
+
