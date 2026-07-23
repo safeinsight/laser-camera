@@ -1061,6 +1061,8 @@ let timerInterval = null;
 
 let countdownRunning = false;
 
+let countdownInterval = null;  
+
 // High-precision recording timer
 let recordingStartTime = 0;
 
@@ -1534,7 +1536,7 @@ countdownValue = count;
 
 drawCountdown();
 
-const interval = setInterval(()=>{
+countdownInterval = setInterval(()=>{
 
         console.log("COUNT:", count);
 
@@ -1548,7 +1550,9 @@ const interval = setInterval(()=>{
 
         }else{
 
-            clearInterval(interval);
+            clearInterval(countdownInterval);
+countdownInterval = null;
+countdownRunning = false;
 
             countdownValue = null;
 
