@@ -1059,6 +1059,8 @@ let recordedChunks = [];
 let recordingSeconds = 0;
 let timerInterval = null;
 
+let countdownRunning = false;
+
 // High-precision recording timer
 let recordingStartTime = 0;
 
@@ -1509,6 +1511,8 @@ function resizeEverything(){
 function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
+   
+    countdownRunning = true;
 
    let count = countdownSeconds;
     
@@ -1568,7 +1572,7 @@ const interval = setInterval(()=>{
 
 function startRecording(){
 
-
+countdownRunning = false;
 
 recordedChunks=[];
 
