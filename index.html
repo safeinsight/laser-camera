@@ -1718,27 +1718,19 @@ updateDisplays();
 
 function stopRecording(){
 
+    mediaRecorder.stop();
 
+    clearInterval(timerInterval);
 
-mediaRecorder.stop();
+    startBtn.textContent = "Start Recording";
+    startBtn.style.background = "#00a651";
+    startBtn.style.color = "white";
 
+    // Show setup controls again
+    calibrateBtn.style.display = "";
+    settingsBtn.style.display = "";
 
-
-
-
-clearInterval(
-
-timerInterval
-
-);
-
-
-startBtn.textContent = "Start Recording";
-
-startBtn.style.background = "#00a651";
 }
-
-
 
 
 //--------------------------
@@ -3096,6 +3088,9 @@ startBtn.onclick = ()=>{
         startBtn.style.background = "#2e7d32";   // use your normal start color
         startBtn.style.color = "white";
 
+        calibrateBtn.style.display = "";
+settingsBtn.style.display = "";
+
         return;
     }
 
@@ -3117,6 +3112,9 @@ startBtn.onclick = ()=>{
     startBtn.textContent = "Stop Recording";
     startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
+
+    calibrateBtn.style.display = "none";
+settingsBtn.style.display = "none";
 
     playback.pause();
 
