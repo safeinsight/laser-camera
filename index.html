@@ -1738,8 +1738,7 @@ function stopRecording(){
     startBtn.style.color = "white";
 
     // Show setup controls again
-    calibrateBtn.style.display = "";
-    settingsBtn.style.display = "";
+setupControls.hidden = true;
 
 }
 
@@ -3101,8 +3100,7 @@ startBtn.style.color = "white";
 
 
 // Restore setup buttons
-calibrateBtn.style.display = "block";
-settingsBtn.style.display = "block";
+setupControls.hidden = false;
 
 console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
 
@@ -3137,7 +3135,7 @@ return;
     playback.style.display = "none";
 
     
-    setupControls.style.display = "none";
+    setupControls.hidden = true;
 
     beginCountdown();
 
