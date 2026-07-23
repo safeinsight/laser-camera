@@ -3118,9 +3118,6 @@ console.log("settings:", settingsBtn);
     startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
 
-    calibrateBtn.style.display = "none";
-settingsBtn.style.display = "none";
-
     playback.pause();
 
     playback.src = "";
@@ -3128,6 +3125,10 @@ settingsBtn.style.display = "none";
     preview.style.display = "block";
 
     playback.style.display = "none";
+
+    
+    calibrateBtn.style.display = "none";
+settingsBtn.style.display = "none";
 
     beginCountdown();
 
