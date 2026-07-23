@@ -1698,9 +1698,7 @@ updateDisplays();
 
 },1000);
 
-startBtn.textContent = "Stop Recording";
 
-startBtn.style.background = "#d62828";
 }
 
 
@@ -3087,6 +3085,11 @@ startBtn.onclick = ()=>{
     }
 
     console.log("START BUTTON CLICKED");
+
+    // Immediately switch button to STOP state
+    startBtn.textContent = "Stop Recording";
+    startBtn.style.background = "#d32f2f";
+    startBtn.style.color = "white";
 
     playback.pause();
 
