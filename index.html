@@ -811,6 +811,27 @@ Start Recording
     <hr>
 
 <!--=====================================-->
+<!-- LASER SENSITIVITY -->
+<!--=====================================-->
+
+    <hr>
+
+<h4>Laser Detection Sensitivity</h4>
+
+<select id="sensitivitySelect">
+
+    <option value="normal" selected>Normal</option>
+
+    <option value="medium">Medium</option>
+
+    <option value="high">High</option>
+
+</select>
+
+<br><br>
+    
+
+<!--=====================================-->
 <!-- TARGET SHAPE -->
 <!--=====================================-->
 
@@ -1056,6 +1077,12 @@ document.getElementById(
 "countdownSelect"
 );
 
+const sensitivitySelect =
+document.getElementById(
+"sensitivitySelect"
+);
+    
+
 const targetShapeSelect =
 document.getElementById(
 "targetShapeSelect"
@@ -1083,6 +1110,9 @@ let timerInterval = null;
 let countdownRunning = false;
 
 let countdownInterval = null;  
+    
+let laserSensitivity = "normal";
+    
 
 // High-precision recording timer
 let recordingStartTime = 0;
@@ -3162,6 +3192,41 @@ analysisBtn.onchange=()=>{
 
 };
 
+sensitivitySelect.onchange = ()=>{
+
+    laserSensitivity = sensitivitySelect.value;
+
+    switch(laserSensitivity){
+
+        case "normal":
+
+            DETECTOR.minBrightness = 145;
+
+            break;
+
+        case "medium":
+
+            DETECTOR.minBrightness = 130;
+
+            break;
+
+        case "high":
+
+            DETECTOR.minBrightness = 115;
+
+            break;
+
+    }
+
+    console.log(
+        "Laser Sensitivity:",
+        laserSensitivity,
+        "Min Brightness:",
+        DETECTOR.minBrightness
+    );
+
+};
+    
 
 targetShapeSelect.onchange = ()=>{
 
