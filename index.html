@@ -3084,19 +3084,18 @@ startBtn.onclick = ()=>{
         clearOverlay();
         drawHits();
 
-        startBtn.textContent = "Start Recording";
-        startBtn.style.background = "#2e7d32";   // use your normal start color
-        startBtn.style.color = "white";
+startBtn.textContent = "Start Recording";
+startBtn.style.background = "#2e7d32";
+startBtn.style.color = "white";
 
 
+// Restore setup buttons
+calibrateBtn.style.display = "block";
+settingsBtn.style.display = "block";
 
-        console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
+console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
 
-console.log("HIDING BUTTONS");
-console.log("calibrate:", calibrateBtn);
-console.log("settings:", settingsBtn);
-
-        return;
+return;
     }
 
     // If already recording, stop recording.
