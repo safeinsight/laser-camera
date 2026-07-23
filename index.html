@@ -3088,8 +3088,12 @@ startBtn.onclick = ()=>{
         startBtn.style.background = "#2e7d32";   // use your normal start color
         startBtn.style.color = "white";
 
-        calibrateBtn.style.display = "";
-settingsBtn.style.display = "";
+        calibrateBtn.style.display = "none";
+settingsBtn.style.display = "none";
+
+console.log("HIDING BUTTONS");
+console.log("calibrate:", calibrateBtn);
+console.log("settings:", settingsBtn);
 
         return;
     }
