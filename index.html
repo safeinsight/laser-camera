@@ -3081,6 +3081,25 @@ syncPlayback
 
 startBtn.onclick = ()=>{
 
+    // If we're currently counting down, cancel it.
+    if(countdownRunning){
+
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        countdownRunning = false;
+
+        countdownValue = null;
+        clearOverlay();
+        drawHits();
+
+        startBtn.textContent = "Start Recording";
+        startBtn.style.background = "#2e7d32";   // use your normal start color
+        startBtn.style.color = "white";
+
+        return;
+    }
+
+    // If already recording, stop recording.
     if(
         mediaRecorder &&
         mediaRecorder.state === "recording"
