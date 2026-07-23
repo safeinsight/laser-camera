@@ -731,6 +731,8 @@ Shots: 0
 
 <div id="topControls">
 
+    <div id="setupControls">
+
     <button id="calibrateBtn">
 
         Draw Target
@@ -742,6 +744,9 @@ Shots: 0
         ⚙
 
     </button>
+
+</div>
+        
 
 </div>
 
@@ -1017,6 +1022,12 @@ const settingsBtn =
 document.getElementById(
 "settingsBtn"
 );
+
+const setupControls =
+document.getElementById(
+"setupControls"
+);
+    
 
 const settingsPanel =
 document.getElementById(
@@ -3126,8 +3137,7 @@ return;
     playback.style.display = "none";
 
     
-    calibrateBtn.style.display = "none";
-settingsBtn.style.display = "none";
+    setupControls.style.display = "none";
 
     beginCountdown();
 
