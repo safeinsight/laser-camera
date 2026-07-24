@@ -1202,7 +1202,6 @@ let laserMissingFrames = 0;
 // frames before another shot is allowed.
 
 const LASER_RELEASE_FRAMES = 8;
-const LASER_CONFIRM_FRAMES = 2;
     
 
 // Prevent double-shots from timer
@@ -1210,10 +1209,7 @@ const LASER_CONFIRM_FRAMES = 2;
 
 let lastShotTime = 0;
 
-// Prevent false hits
-    
-let laserConfirmFrames = 0;
-    
+   
 
 
 //-------------------------------------
@@ -1652,8 +1648,7 @@ laserState = LASER_WAITING;
 
 laserMissingFrames = 0;
 
-laserConfirmFrames = 0;  
-    
+   
 
 backgroundFrame = null;
 
@@ -2601,8 +2596,6 @@ if(
 
         laserState = LASER_WAITING;
 
-        laserConfirmFrames = 0;
-
         laserMissingFrames =
 
             LASER_RELEASE_FRAMES;
@@ -2661,62 +2654,50 @@ drawCurrentLaser(hitX, hitY);
 
 if(laserState === LASER_WAITING){
 
-    laserConfirmFrames++;
+    laserState = LASER_TRACKING;
 
-    // Wait until we've seen the laser
-    // in multiple consecutive frames.
+    laserMissingFrames = 0;
 
-    if(laserConfirmFrames >= LASER_CONFIRM_FRAMES){
+    const now = performance.now();
 
-        laserState = LASER_TRACKING;
+    if(now - lastShotTime >= DETECTOR.shotDelay){
 
-        laserMissingFrames = 0;
+        lastShotTime = now;
 
-        laserConfirmFrames = 0;
+        shots++;
 
-        const now = performance.now();
+        hits.push({
 
-        if(now - lastShotTime >= DETECTOR.shotDelay){
+            x: hitX / detectCanvas.width,
 
-            lastShotTime = now;
+            y: hitY / detectCanvas.height,
 
-            shots++;
+            time: (performance.now() - recordingStartTime) / 1000
 
-            hits.push({
+        });
 
-                x: hitX / detectCanvas.width,
+        updateDisplays();
 
-                y: hitY / detectCanvas.height,
+        console.log(
 
-                time: (performance.now() - recordingStartTime) / 1000
+            "SHOT",
 
-            });
+            shots,
 
-            updateDisplays();
+            Math.round(hitX),
 
-            console.log(
+            Math.round(hitY)
 
-                "SHOT",
-
-                shots,
-
-                Math.round(hitX),
-
-                Math.round(hitY)
-
-            );
-
-        }
+        );
 
     }
 
 }else{
 
     // Laser is already being tracked.
+    // Do not record another shot.
 
     laserMissingFrames = 0;
-
-    laserConfirmFrames = 0;
 
 }
 
