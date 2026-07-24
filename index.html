@@ -352,36 +352,30 @@ background:#0066cc;
 color:white;
 
 }
+    
 
-
-
-
-#startBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px; /* Spaces the triangle from the text */
-  padding: 10px 20px;
+#startBtn{
 
 background:#00a651;
 
 color:white;
 
-  font-size: 16px;
-  cursor: pointer;
 }
+
 
 #startBtn::before {
   content: "";
   display: inline-block;
+  margin-right: 8px; /* Spaces the triangle away from the text */
   
-  /* Creates the triangle shape using borders */
+  /* Creates the triangle shape */
   width: 0;
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-left: 10px solid currentColor; /* Matches the text color automatically */
+  border-left: 10px solid currentColor; /* Matches your current text color */
 }
-
+    
 
 
 #stopBtn{
