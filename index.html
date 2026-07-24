@@ -2661,50 +2661,62 @@ drawCurrentLaser(hitX, hitY);
 
 if(laserState === LASER_WAITING){
 
-    laserState = LASER_TRACKING;
+    laserConfirmFrames++;
 
-    laserMissingFrames = 0;
+    // Wait until we've seen the laser
+    // in multiple consecutive frames.
 
-    const now = performance.now();
+    if(laserConfirmFrames >= LASER_CONFIRM_FRAMES){
 
-    if(now - lastShotTime >= DETECTOR.shotDelay){
+        laserState = LASER_TRACKING;
 
-        lastShotTime = now;
+        laserMissingFrames = 0;
 
-        shots++;
+        laserConfirmFrames = 0;
 
-        hits.push({
+        const now = performance.now();
 
-            x: hitX / detectCanvas.width,
+        if(now - lastShotTime >= DETECTOR.shotDelay){
 
-            y: hitY / detectCanvas.height,
+            lastShotTime = now;
 
-            time: (performance.now() - recordingStartTime) / 1000
+            shots++;
 
-        });
+            hits.push({
 
-        updateDisplays();
+                x: hitX / detectCanvas.width,
 
-        console.log(
+                y: hitY / detectCanvas.height,
 
-            "SHOT",
+                time: (performance.now() - recordingStartTime) / 1000
 
-            shots,
+            });
 
-            Math.round(hitX),
+            updateDisplays();
 
-            Math.round(hitY)
+            console.log(
 
-        );
+                "SHOT",
+
+                shots,
+
+                Math.round(hitX),
+
+                Math.round(hitY)
+
+            );
+
+        }
 
     }
 
 }else{
 
     // Laser is already being tracked.
-    // Do not record another shot.
 
     laserMissingFrames = 0;
+
+    laserConfirmFrames = 0;
 
 }
 
