@@ -955,7 +955,7 @@ Shots: 0
         </option>
 
         <option value="random">
-            Random (2–10 sec)
+            Random (3-7 sec)
         </option>
 
     </select>
@@ -1621,9 +1621,9 @@ function beginCountdown(){
 
 if(countdownSeconds === "random"){
 
-    // Random whole number from 2 to 10 seconds
-    count = Math.floor(Math.random() * 9) + 2;
-
+   // Random whole number from 3 to 7 seconds
+count = Math.floor(Math.random() * 5) + 3;
+    
     console.log("Random countdown:", count);
 
 }else{
