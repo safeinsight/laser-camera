@@ -1077,6 +1077,15 @@ document.getElementById(
 "countdownSelect"
 );
 
+
+//------------------------------------
+// COUNTDOWN SOUND
+//------------------------------------
+
+const countdownSound = new Audio("shot-beep.mp3");
+countdownSound.preload = "auto";
+    
+
 const sensitivitySelect =
 document.getElementById(
 "sensitivitySelect"
@@ -1610,6 +1619,12 @@ if(count===0){
     clearOverlay();
 
     drawHits();
+
+    // Play countdown finished sound
+    countdownSound.currentTime = 0;
+    countdownSound.play().catch(err=>{
+        console.log("Countdown sound blocked:", err);
+    });
 
     startRecording();
 
