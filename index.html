@@ -1612,36 +1612,7 @@ function beginCountdown(){
 
    let count = countdownSeconds;
     
-if(count===0){
 
-    countdownValue = null;
-
-    clearOverlay();
-
-    drawHits();
-
-    // Play countdown finished sound
-  countdownSound.currentTime = 0;
-
-countdownSound.onended = ()=>{
-
-    countdownSound.onended = null;
-
-    startRecording();
-
-};
-
-countdownSound.play().catch(err=>{
-
-    console.log("Countdown sound failed:", err);
-
-    startRecording();
-
-});
-
-return;
-
-}
 
 countdownValue = count;
 
@@ -1671,7 +1642,23 @@ countdownRunning = false;
 
             drawHits();
 
-            startRecording();
+           countdownSound.currentTime = 0;
+
+countdownSound.play().then(()=>{
+
+    console.log("Countdown beep started.");
+
+}).catch(err=>{
+
+    console.log("Countdown sound failed:", err);
+
+});
+
+setTimeout(()=>{
+
+    startRecording();
+
+},100);
 
         }
 
