@@ -1621,14 +1621,25 @@ if(count===0){
     drawHits();
 
     // Play countdown finished sound
-    countdownSound.currentTime = 0;
-    countdownSound.play().catch(err=>{
-        console.log("Countdown sound blocked:", err);
-    });
+  countdownSound.currentTime = 0;
+
+countdownSound.onended = ()=>{
+
+    countdownSound.onended = null;
 
     startRecording();
 
-    return;
+};
+
+countdownSound.play().catch(err=>{
+
+    console.log("Countdown sound failed:", err);
+
+    startRecording();
+
+});
+
+return;
 
 }
 
@@ -3247,20 +3258,9 @@ return;
     playback.style.display = "none";
 
     
-  setupControls.hidden = true;
+setupControls.hidden = true;
 
-// TEST THE SOUND
-countdownSound.currentTime = 0;
-
-countdownSound.play().then(()=>{
-
-    console.log("Sound played successfully.");
-
-}).catch(err=>{
-
-    console.error("Sound failed:", err);
-
-});
+beginCountdown();
 
 };
     
