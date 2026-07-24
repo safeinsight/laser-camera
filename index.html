@@ -1291,9 +1291,9 @@ const DETECTOR = {
 
     pixelStep:2,
 
-    deltaThreshold:28,
+   baseThreshold:28,
 
-    minBrightness:145,
+colorDifference:20,
 
     minBlobPixels:1,
 
@@ -2472,21 +2472,21 @@ const localBrightness =
 // Darker regions get a slightly lower threshold.
 // Brighter regions get a slightly higher threshold.
 
-let localThreshold = 28;
+let localThreshold = DETECTOR.baseThreshold;
 
 if(localBrightness > 190){
 
-    localThreshold = 34;
+    localThreshold = DETECTOR.baseThreshold + 6;
 
 }
 else if(localBrightness > 170){
 
-    localThreshold = 31;
+    localThreshold = DETECTOR.baseThreshold + 3;
 
 }
 else if(localBrightness < 120){
 
-    localThreshold = 24;
+    localThreshold = DETECTOR.baseThreshold - 4;
 
 }
 
@@ -2495,9 +2495,9 @@ const laser =
 
     redRise > localThreshold &&
 
-    redRise > (greenRise + 20) &&
+    redRise > (greenRise + DETECTOR.colorDifference) &&
 
-    redRise > (blueRise + 20);
+    redRise > (blueRise + DETECTOR.colorDifference);
 
 if(!laser){
     continue;
@@ -3200,19 +3200,22 @@ sensitivitySelect.onchange = ()=>{
 
         case "normal":
 
-            DETECTOR.minBrightness = 145;
+            DETECTOR.baseThreshold = 28;
+            DETECTOR.colorDifference = 20;
 
             break;
 
         case "medium":
 
-            DETECTOR.minBrightness = 130;
+            DETECTOR.baseThreshold = 22;
+            DETECTOR.colorDifference = 16;
 
             break;
 
         case "high":
 
-            DETECTOR.minBrightness = 115;
+            DETECTOR.baseThreshold = 16;
+            DETECTOR.colorDifference = 12;
 
             break;
 
@@ -3221,8 +3224,10 @@ sensitivitySelect.onchange = ()=>{
     console.log(
         "Laser Sensitivity:",
         laserSensitivity,
-        "Min Brightness:",
-        DETECTOR.minBrightness
+        "Base Threshold:",
+        DETECTOR.baseThreshold,
+        "Color Difference:",
+        DETECTOR.colorDifference
     );
 
 };
