@@ -1559,7 +1559,36 @@ function resizeEverything(){
 
 }
 
+//------------------------------------
+// CLEAR ALL OLD OVERLAY INFORMATION
+//------------------------------------
 
+function clearOverlayData(){
+
+    // Remove recorded laser hits
+    hits = [];
+
+    // Remove current laser position
+    laserX = 0;
+    laserY = 0;
+
+    // Reset laser state
+    laserState = LASER_WAITING;
+
+    // Reset timing
+    laserMissingFrames = 0;
+
+    // Clear overlay canvas
+    const ctx = overlay.getContext("2d");
+
+    ctx.clearRect(
+        0,
+        0,
+        overlay.width,
+        overlay.height
+    );
+
+}
 
 
 //--------------------------
@@ -3029,7 +3058,9 @@ function drawCurrentLaser(hitX, hitY){
 
 calibrateBtn.onclick=()=>{
 
-settingsPanel.style.display = "none";    
+settingsPanel.style.display = "none"; 
+
+clearOverlayData();    
 
 calibrateTarget();
 
@@ -3188,6 +3219,8 @@ return;
     startBtn.textContent = "Stop Recording";
     startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
+
+     clearOverlayData();
 
     playback.pause();
 
