@@ -355,12 +355,31 @@ color:white;
 
 
 
-#startBtn{
+
+#startBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Spaces the triangle from the text */
+  padding: 10px 20px;
 
 background:#00a651;
 
 color:white;
 
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#startBtn::before {
+  content: "";
+  display: inline-block;
+  
+  /* Creates the triangle shape using borders */
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid currentColor; /* Matches the text color automatically */
 }
 
 
