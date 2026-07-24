@@ -1197,6 +1197,8 @@ let laserState = LASER_WAITING;
 // no laser detected.
 
 let laserMissingFrames = 0;
+let freezeBackground = false;
+    
 
 // Laser must disappear this many
 // frames before another shot is allowed.
@@ -1647,6 +1649,9 @@ recordingSeconds=0;
 laserState = LASER_WAITING;
 
 laserMissingFrames = 0;
+
+freezeBackground = false;
+    
 
    
 
@@ -2513,14 +2518,18 @@ if(!laser){
 
             brightPixels++;
 
- backgroundFrame[i] =
-    (backgroundFrame[i] * 7 + r) / 8;
+if(!freezeBackground){
 
-backgroundFrame[i+1] =
-    (backgroundFrame[i+1] * 7 + g) / 8;
+    backgroundFrame[i] =
+        (backgroundFrame[i] * 7 + r) / 8;
 
-backgroundFrame[i+2] =
-    (backgroundFrame[i+2] * 7 + b) / 8;
+    backgroundFrame[i+1] =
+        (backgroundFrame[i+1] * 7 + g) / 8;
+
+    backgroundFrame[i+2] =
+        (backgroundFrame[i+2] * 7 + b) / 8;
+
+}
 
             const weight=
 
@@ -2586,21 +2595,23 @@ if(
     // laser has been gone several frames.
     //------------------------------------
 
-    if(
+if(
 
-        laserMissingFrames >=
+    laserMissingFrames >=
 
-        LASER_RELEASE_FRAMES
+    LASER_RELEASE_FRAMES
 
-    ){
+){
 
-        laserState = LASER_WAITING;
+    laserState = LASER_WAITING;
 
-        laserMissingFrames =
+    freezeBackground = false;
 
-            LASER_RELEASE_FRAMES;
+    laserMissingFrames =
 
-    }
+        LASER_RELEASE_FRAMES;
+
+}
 
     
 
@@ -2655,6 +2666,8 @@ drawCurrentLaser(hitX, hitY);
 if(laserState === LASER_WAITING){
 
     laserState = LASER_TRACKING;
+
+    freezeBackground = true;
 
     laserMissingFrames = 0;
 
