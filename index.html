@@ -1202,11 +1202,18 @@ let laserMissingFrames = 0;
 // frames before another shot is allowed.
 
 const LASER_RELEASE_FRAMES = 8;
+const LASER_CONFIRM_FRAMES = 2;
+    
 
 // Prevent double-shots from timer
 // glitches.
 
 let lastShotTime = 0;
+
+// Prevent false hits
+    
+let laserConfirmFrames = 0;
+    
 
 
 //-------------------------------------
@@ -1644,6 +1651,9 @@ recordingSeconds=0;
 laserState = LASER_WAITING;
 
 laserMissingFrames = 0;
+
+laserConfirmFrames = 0;  
+    
 
 backgroundFrame = null;
 
@@ -2591,11 +2601,15 @@ if(
 
         laserState = LASER_WAITING;
 
+        laserConfirmFrames = 0;
+
         laserMissingFrames =
 
             LASER_RELEASE_FRAMES;
 
     }
+
+    
 
     //------------------------------------
     // Keep previously recorded hits visible
