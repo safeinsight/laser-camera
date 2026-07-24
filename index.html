@@ -3247,9 +3247,20 @@ return;
     playback.style.display = "none";
 
     
-    setupControls.hidden = true;
+  setupControls.hidden = true;
 
-    beginCountdown();
+// TEST THE SOUND
+countdownSound.currentTime = 0;
+
+countdownSound.play().then(()=>{
+
+    console.log("Sound played successfully.");
+
+}).catch(err=>{
+
+    console.error("Sound failed:", err);
+
+});
 
 };
     
