@@ -951,6 +951,10 @@ Shots: 0
 
         </option>
 
+        <option value="random">
+            Random (2–10 sec)
+        </option>
+
     </select>
 
 </div>
@@ -1610,7 +1614,20 @@ function beginCountdown(){
    
     countdownRunning = true;
 
-   let count = countdownSeconds;
+  let count;
+
+if(countdownSeconds === "random"){
+
+    // Random whole number from 2 to 10 seconds
+    count = Math.floor(Math.random() * 9) + 2;
+
+    console.log("Random countdown:", count);
+
+}else{
+
+    count = countdownSeconds;
+
+}
     
 
 
@@ -3311,8 +3328,16 @@ targetShapeSelect.onchange = ()=>{
 
 countdownSelect.onchange = ()=>{
 
-    countdownSeconds =
-        Number(countdownSelect.value);
+    if(countdownSelect.value === "random"){
+
+        countdownSeconds = "random";
+
+    }else{
+
+        countdownSeconds =
+            Number(countdownSelect.value);
+
+    }
 
 };
     
