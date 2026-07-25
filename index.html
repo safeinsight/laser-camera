@@ -1590,7 +1590,7 @@ function resizeEverything(){
         overlay.height
     );
 
-    drawGreenBox();
+    drawGreenBoxes();
 
     drawHits();
 
@@ -2201,92 +2201,146 @@ function getTargetPixels(){
 }
 
 //------------------------------------------------
-// DRAW GREEN BOX (VERSION 5)
+// DRAW ALL TARGETS
 //------------------------------------------------
 
-//------------------------------------------------
-// DRAW GREEN BOX (VERSION 6)
-//------------------------------------------------
-
-function drawGreenBox(){
-
-    if(!target.calibrated && !calibrationDragging){
-        return;
-    }
-
-const drawTarget =
-    calibrationDragging
-        ? currentTarget
-        : target;
-
-const left =
-    drawTarget.left * overlay.width;
-
-const top =
-    drawTarget.top * overlay.height;
-
-const width =
-    (drawTarget.right - drawTarget.left) *
-    overlay.width;
-
-const height =
-    (drawTarget.bottom - drawTarget.top) *
-    overlay.height;
-
-    ctx.save();
-
-    ctx.strokeStyle = "#00FF00";
-    ctx.lineWidth = 4;
+function drawGreenBoxes(){
 
     //----------------------------------------
-    // Rectangle
+    // Draw every completed target
     //----------------------------------------
 
-    if(drawTarget.shape === "rectangle"){
+    for(const target of targets){
 
-        ctx.strokeRect(
-            left,
-            top,
-            width,
-            height
-        );
+        if(!target.calibrated){
+            continue;
+        }
 
-    }
+        const left =
+            target.left * overlay.width;
 
-    //----------------------------------------
-    // Oval
-    //----------------------------------------
+        const top =
+            target.top * overlay.height;
 
-    else{
+        const width =
+            (target.right - target.left) *
+            overlay.width;
 
-        ctx.beginPath();
+        const height =
+            (target.bottom - target.top) *
+            overlay.height;
 
-        ctx.ellipse(
+        ctx.save();
 
-            left + width / 2,
+        ctx.strokeStyle = "#00FF00";
 
-            top + height / 2,
+        ctx.lineWidth = 4;
 
-            width / 2,
+        if(target.shape === "rectangle"){
 
-            height / 2,
+            ctx.strokeRect(
+                left,
+                top,
+                width,
+                height
+            );
 
-            0,
+        }else{
 
-            0,
+            ctx.beginPath();
 
-            Math.PI * 2
+            ctx.ellipse(
 
-        );
+                left + width/2,
 
-        ctx.stroke();
+                top + height/2,
+
+                width/2,
+
+                height/2,
+
+                0,
+
+                0,
+
+                Math.PI * 2
+
+            );
+
+            ctx.stroke();
+
+        }
+
+        ctx.restore();
 
     }
 
-    ctx.restore();
+    //----------------------------------------
+    // Draw target currently being dragged
+    //----------------------------------------
+
+    if(calibrationDragging){
+
+        const left =
+            currentTarget.left * overlay.width;
+
+        const top =
+            currentTarget.top * overlay.height;
+
+        const width =
+            (currentTarget.right - currentTarget.left) *
+            overlay.width;
+
+        const height =
+            (currentTarget.bottom - currentTarget.top) *
+            overlay.height;
+
+        ctx.save();
+
+        ctx.strokeStyle = "#00FF00";
+
+        ctx.lineWidth = 4;
+
+        if(currentTarget.shape === "rectangle"){
+
+            ctx.strokeRect(
+                left,
+                top,
+                width,
+                height
+            );
+
+        }else{
+
+            ctx.beginPath();
+
+            ctx.ellipse(
+
+                left + width/2,
+
+                top + height/2,
+
+                width/2,
+
+                height/2,
+
+                0,
+
+                0,
+
+                Math.PI * 2
+
+            );
+
+            ctx.stroke();
+
+        }
+
+        ctx.restore();
+
+    }
 
 }
-
 //------------------------------------------------
 // CLEAR OVERLAY
 //------------------------------------------------
@@ -2301,7 +2355,7 @@ function clearOverlay(){
     );
 
  if(target.calibrated && !calibrationDragging){
-    drawGreenBox();
+    drawGreenBoxes();
 }
 
 }
@@ -2940,42 +2994,13 @@ function redrawOverlay({
     clearOverlay();
 
 //----------------------------------------
-// Draw target while dragging
+// Draw all targets
 //----------------------------------------
 
-if(calibrationDragging){
-
-    drawGreenBox();
-
-}
+drawGreenBoxes();
     
 
-//------------------------------------------------
-// Draw drag calibration rectangle
-//------------------------------------------------
 
-if(calibrationDragging){
-
-    ctx.save();
-
-    ctx.strokeStyle = "#00FF00";
-    ctx.lineWidth = 4;
-
-    ctx.strokeRect(
-
-        target.left * overlay.width,
-
-        target.top * overlay.height,
-
-        (target.right - target.left) * overlay.width,
-
-        (target.bottom - target.top) * overlay.height
-
-    );
-
-    ctx.restore();
-
-}
     
 
 //----------------------------------------
