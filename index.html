@@ -2134,6 +2134,8 @@ const rect = overlay.getBoundingClientRect();
 
     target.calibrated = true;
 
+    target.shape = targetShape;
+
     calibrationStep = 0;
 
     resizeEverything();
@@ -2212,7 +2214,7 @@ function drawGreenBox(){
     // Rectangle
     //----------------------------------------
 
-    if(targetShape === "rectangle"){
+    if(target.shape === "rectangle"){
 
         ctx.strokeRect(
             left,
