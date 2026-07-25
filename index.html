@@ -2173,12 +2173,11 @@ const rect = overlay.getBoundingClientRect();
 }
 
   
-
 //------------------------------------------------
 // TARGET PIXELS
 //------------------------------------------------
 
-function getTargetPixels(){
+function getTargetPixels(target){
 
     return{
 
@@ -2499,7 +2498,7 @@ if(!backgroundFrame){
     // Current calibrated target
     //---------------------------------------
 
-    const box = getTargetPixels();
+    const box = getTargetPixels(target);
 
     let totalWeight = 0;
     let totalX = 0;
