@@ -1283,6 +1283,8 @@ let targets = [
 // the first target in the array.
 
 let target = targets[0];
+let currentTarget = target;
+    
     
 // Used only during calibration
 
@@ -2046,7 +2048,7 @@ const rect = overlay.getBoundingClientRect();
     calibrationCurrentX = calibrationStartX;
     calibrationCurrentY = calibrationStartY;
 
-    target.calibrated = false;
+    currentTarget.calibrated = false;
 }
 
 //------------------------------------------------
@@ -2067,16 +2069,16 @@ const rect = overlay.getBoundingClientRect();
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
 
-    target.left =
+    currentTarget.left =
         Math.min(calibrationStartX, calibrationCurrentX);
 
-    target.right =
+    currentTarget.right =
         Math.max(calibrationStartX, calibrationCurrentX);
 
-    target.top =
+    currentTarget.top =
         Math.min(calibrationStartY, calibrationCurrentY);
 
-    target.bottom =
+    currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
 
     redrawOverlay();
@@ -2093,7 +2095,24 @@ function calibrateTarget(){
 
     alert("DRAW TARGET\n\nTouch and drag to draw a box around your target.");
 
+    currentTarget = {
+
+        left:0,
+
+        right:0,
+
+        top:0,
+
+        bottom:0,
+
+        calibrated:false,
+
+        shape:targetShape
+
+    };
+
     calibrationStep = 1;
+
 }
 
 //------------------------------------------------
@@ -2120,21 +2139,25 @@ const rect = overlay.getBoundingClientRect();
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
 
-    target.left =
+    currentTarget.left =
         Math.min(calibrationStartX, calibrationCurrentX);
 
-    target.right =
+    currentTarget.right =
         Math.max(calibrationStartX, calibrationCurrentX);
 
-    target.top =
+    currentTarget.top =
         Math.min(calibrationStartY, calibrationCurrentY);
 
-    target.bottom =
+    currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
 
-    target.calibrated = true;
+    currentTarget.calibrated = true;
 
-    target.shape = targetShape;
+    currentTarget.shape = targetShape;
+
+    targets.push(currentTarget);
+
+    target = currentTarget;
 
     calibrationStep = 0;
 
