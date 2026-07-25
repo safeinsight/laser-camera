@@ -2214,19 +2214,24 @@ function drawGreenBox(){
         return;
     }
 
-    const left =
-        target.left * overlay.width;
+const drawTarget =
+    calibrationDragging
+        ? currentTarget
+        : target;
 
-    const top =
-        target.top * overlay.height;
+const left =
+    drawTarget.left * overlay.width;
 
-    const width =
-        (target.right - target.left) *
-        overlay.width;
+const top =
+    drawTarget.top * overlay.height;
 
-    const height =
-        (target.bottom - target.top) *
-        overlay.height;
+const width =
+    (drawTarget.right - drawTarget.left) *
+    overlay.width;
+
+const height =
+    (drawTarget.bottom - drawTarget.top) *
+    overlay.height;
 
     ctx.save();
 
@@ -2237,7 +2242,7 @@ function drawGreenBox(){
     // Rectangle
     //----------------------------------------
 
-    if(target.shape === "rectangle"){
+    if(drawTarget.shape === "rectangle"){
 
         ctx.strokeRect(
             left,
