@@ -1251,20 +1251,39 @@ let lastShotTime = 0;
 // 22% across the image.
 //
 
-let target = {
+//------------------------------------------------
+// TARGET COLLECTION
+//------------------------------------------------
 
-    left:0,
+let targets = [
 
-    right:0,
+    {
 
-    top:0,
+        left:0,
 
-    bottom:0,
+        right:0,
 
-    calibrated:false
+        top:0,
 
-};
+        bottom:0,
 
+        calibrated:false,
+
+        shape:"rectangle"
+
+    }
+
+];
+
+//------------------------------------------------
+// CURRENT TARGET
+//------------------------------------------------
+
+// For now, the app still works with only
+// the first target in the array.
+
+let target = targets[0];
+    
 // Used only during calibration
 
 let calibrationStep = 0;
