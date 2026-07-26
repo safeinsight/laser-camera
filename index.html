@@ -1213,54 +1213,28 @@ playback.onloadedmetadata=()=>{
 function updateDisplays(){
 
 let mins=
-
 Math.floor(
-
 recordingSeconds/60
-
 )
-
 .toString()
-
 .padStart(2,"0");
-
-
 
 let secs=
-
 (recordingSeconds%60)
-
 .toString()
-
 .padStart(2,"0");
 
-
-
 let time=
-
 `${mins}:${secs}`;
-
-
-
 timerOverlay.innerHTML=
-
 time;
 
-
-
 shotsOverlay.innerHTML=
-
 `Shots: ${shots}`;
-
 }
 
-
-
-
-
-
 //------------------------------------------------
-// BEGIN CALIBRATION DRAG
+// BEGIN CALIBRATION DRAG -->
 //------------------------------------------------
 
 function beginCalibrationDrag(e){
@@ -1268,25 +1242,19 @@ function beginCalibrationDrag(e){
     if(calibrationStep !== 1){
         return;
     }
-
 const rect = overlay.getBoundingClientRect();
-    
     calibrationDragging = true;
-
     calibrationStartX =
         (e.clientX - rect.left) / rect.width;
-
     calibrationStartY =
         (e.clientY - rect.top) / rect.height;
-
     calibrationCurrentX = calibrationStartX;
     calibrationCurrentY = calibrationStartY;
-
     currentTarget.calibrated = false;
 }
 
 //------------------------------------------------
-// UPDATE CALIBRATION DRAG
+// UPDATE CALIBRATION DRAG -->
 //------------------------------------------------
 
 function updateCalibrationDrag(e){
@@ -1294,65 +1262,43 @@ function updateCalibrationDrag(e){
     if(!calibrationDragging){
         return;
     }
-
 const rect = overlay.getBoundingClientRect();
-    
     calibrationCurrentX =
         (e.clientX - rect.left) / rect.width;
-
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
-
     currentTarget.left =
         Math.min(calibrationStartX, calibrationCurrentX);
-
     currentTarget.right =
         Math.max(calibrationStartX, calibrationCurrentX);
-
     currentTarget.top =
         Math.min(calibrationStartY, calibrationCurrentY);
-
     currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
-
     redrawOverlay();
-
 }
 
-
-
 //------------------------------------------------
-// START DRAG CALIBRATION
+// START DRAG CALIBRATION -->
 //------------------------------------------------
 
 function calibrateTarget(){
 
     alert("DRAW TARGET\n\nTouch and drag to draw a box around your target.");
-
 currentTarget = {
-
     left:0,
-
     right:0,
-
     top:0,
-
     bottom:0,
-
     calibrated:false,
-
     shape:targetShape,
-
     id: targets.length + 1
-
 };
-
     calibrationStep = 1;
-
 }
 
 //------------------------------------------------
-// COMPLETE DRAG CALIBRATION
+// COMPLETE DRAG CALIBRATION -->
 //------------------------------------------------
 
 function finishCalibrationDrag(e){
@@ -1360,84 +1306,59 @@ function finishCalibrationDrag(e){
     if(!calibrationDragging){
         return;
     }
-
     calibrationDragging = false;
-
     if(calibrationStep===0){
         return;
     }
-
 const rect = overlay.getBoundingClientRect();
-    
     calibrationCurrentX =
         (e.clientX - rect.left) / rect.width;
-
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
-
     currentTarget.left =
         Math.min(calibrationStartX, calibrationCurrentX);
-
     currentTarget.right =
         Math.max(calibrationStartX, calibrationCurrentX);
-
     currentTarget.top =
         Math.min(calibrationStartY, calibrationCurrentY);
-
     currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
-
     currentTarget.calibrated = true;
-
     currentTarget.shape = targetShape;
-
     targets.push(currentTarget);
-
     target = currentTarget;
-
     calibrationStep = 0;
-
     resizeEverything();
-
     redrawOverlay();
 
     console.log("Normalized Target:", target);
-
     alert("Calibration Complete");
 }
 
-  
-
 //------------------------------------------------
-// TARGET PIXELS
+// TARGET PIXELS -->
 //------------------------------------------------
 
 function getTargetPixels(){
 
     return{
-
         left:
             target.left *
             detectCanvas.width,
-
         right:
             target.right *
             detectCanvas.width,
-
         top:
             target.top *
             detectCanvas.height,
-
         bottom:
             target.bottom *
             detectCanvas.height
-
     };
-
 }
 
 //------------------------------------------------
-// DRAW ALL TARGETS
+// DRAW ALL TARGETS -->
 //------------------------------------------------
 
 function drawGreenBoxes(){
@@ -1447,33 +1368,23 @@ function drawGreenBoxes(){
     //----------------------------------------
 
     for(const target of targets){
-
         if(!target.calibrated){
             continue;
         }
-
         const left =
             target.left * overlay.width;
-
         const top =
             target.top * overlay.height;
-
         const width =
             (target.right - target.left) *
             overlay.width;
-
         const height =
             (target.bottom - target.top) *
             overlay.height;
-
         ctx.save();
-
         ctx.strokeStyle = "#00FF00";
-
         ctx.lineWidth = 4;
-
         if(target.shape === "rectangle"){
-
             ctx.strokeRect(
                 left,
                 top,
@@ -1482,50 +1393,31 @@ function drawGreenBoxes(){
             );
 
         }else{
-
             ctx.beginPath();
-
             ctx.ellipse(
-
                 left + width/2,
-
                 top + height/2,
-
                 width/2,
-
                 height/2,
-
                 0,
-
                 0,
-
                 Math.PI * 2
-
             );
-
             ctx.stroke();
-
         }
 
-//----------------------------------------
-// Draw target number
-//----------------------------------------
+    //----------------------------------------
+    // Draw target number
+    //----------------------------------------
 
 ctx.fillStyle = "#00FF00";
-
 ctx.font = "bold 24px Arial";
-
 ctx.fillText(
-
     target.id,
-
     left + 8,
-
     top + 28
-
 );
         ctx.restore();
-
     }
 
     //----------------------------------------
@@ -1533,29 +1425,20 @@ ctx.fillText(
     //----------------------------------------
 
     if(calibrationDragging){
-
         const left =
             currentTarget.left * overlay.width;
-
         const top =
             currentTarget.top * overlay.height;
-
         const width =
             (currentTarget.right - currentTarget.left) *
             overlay.width;
-
         const height =
             (currentTarget.bottom - currentTarget.top) *
             overlay.height;
-
         ctx.save();
-
         ctx.strokeStyle = "#00FF00";
-
         ctx.lineWidth = 4;
-
         if(currentTarget.shape === "rectangle"){
-
             ctx.strokeRect(
                 left,
                 top,
@@ -1564,38 +1447,24 @@ ctx.fillText(
             );
 
         }else{
-
             ctx.beginPath();
-
             ctx.ellipse(
-
                 left + width/2,
-
                 top + height/2,
-
                 width/2,
-
                 height/2,
-
                 0,
-
                 0,
-
                 Math.PI * 2
-
             );
-
             ctx.stroke();
-
         }
-
         ctx.restore();
-
     }
-
 }
+
 //------------------------------------------------
-// CLEAR OVERLAY
+// CLEAR OVERLAY -->
 //------------------------------------------------
 
 function clearOverlay(){
