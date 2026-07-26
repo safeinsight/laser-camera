@@ -2066,128 +2066,71 @@ function drawCurrentLaser(hitX, hitY){
     //----------------------------------------
 
     currentLaserVisible = true;
-
 }
 
-
 calibrateBtn.onclick=()=>{
-
 settingsPanel.style.display = "none"; 
-
 clearOverlayData();    
-
 calibrateTarget();
-
 };
 
 //------------------------------------------------
-// LIVE OVERLAY LOOP
+// LIVE OVERLAY LOOP -->
 //------------------------------------------------
 
 function liveOverlayLoop(){
 
     // Only run while viewing the live camera
     if(preview.style.display != "none"){
-
         redrawOverlay();
-
     }
-
     requestAnimationFrame(liveOverlayLoop);
-
 }
-
-
 
 function syncPlayback(){
 
 if(
-
 playback.paused ||
-
 playback.ended
-
 ){
-
 return;
-
 }
-
 redrawOverlay({
-
     maxTime: playback.currentTime
-
 });
 
-
-
 let t=
-
 Math.floor(
-
 playback.currentTime
-
 );
 
-
-
 let mins=
-
 Math.floor(
-
 t/60
-
 )
 
 .toString()
-
 .padStart(
-
 2,
-
 "0"
-
 );
-
-
 
 let secs=
-
 (t%60)
-
 .toString()
-
 .padStart(
-
 2,
-
 "0"
-
 );
-
-
 
 timerOverlay.innerHTML=
-
 `${mins}:${secs}`;
-
-
-
 shotsOverlay.innerHTML=
-
 `Shots: ${hits.length}`;
-
-
-
 requestAnimationFrame(
-
 syncPlayback
-
 );
-
 }
-
-
 
 startBtn.onclick = ()=>{
 
@@ -2206,7 +2149,6 @@ startBtn.innerHTML = "&#9654; Start Recording";
 startBtn.style.background = "#2e7d32";
 startBtn.style.color = "white";
 
-
 // Restore setup buttons
 setupControls.hidden = false;
 
@@ -2220,11 +2162,8 @@ return;
         mediaRecorder &&
         mediaRecorder.state === "recording"
     ){
-
         stopRecording();
-
         return;
-
     }
 
     console.log("START BUTTON CLICKED");
@@ -2234,59 +2173,35 @@ return;
     startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
 
-
      clearOverlayData();
-
     playback.pause();
-
     playback.src = "";
-
     preview.style.display = "block";
-
     playback.style.display = "none";
-
-    
 setupControls.hidden = true;
-
 beginCountdown();
-
 };
-    
 
 analysisBtn.onchange=()=>{
-
     analysisEnabled =
         analysisBtn.checked;
-
 };
 
 sensitivitySelect.onchange = ()=>{
-
     laserSensitivity = sensitivitySelect.value;
-
     switch(laserSensitivity){
-
         case "normal":
-
             DETECTOR.baseThreshold = 30;
             DETECTOR.colorDifference = 22;
-
             break;
-
         case "medium":
-
             DETECTOR.baseThreshold = 22;
             DETECTOR.colorDifference = 16;
-
             break;
-
         case "high":
-
             DETECTOR.baseThreshold = 12;
             DETECTOR.colorDifference = 8;
-
             break;
-
     }
 
     console.log(
@@ -2297,64 +2212,37 @@ sensitivitySelect.onchange = ()=>{
         "Color Difference:",
         DETECTOR.colorDifference
     );
-
 };
     
-
 targetShapeSelect.onchange = ()=>{
-
     targetShape =
         targetShapeSelect.value;
-
     redrawOverlay();
-
 };
 
 countdownSelect.onchange = ()=>{
-
     if(countdownSelect.value === "random"){
-
         countdownSeconds = "random";
-
     }else{
-
         countdownSeconds =
             Number(countdownSelect.value);
-
     }
-
 };
-    
 
 distanceSelect.onchange = ()=>{
-
     targetDistance =
         Number(distanceSelect.value);
-
 };
-    
-
-
-    
-    
 
 settingsBtn.onclick=()=>{
-
     if(settingsPanel.style.display=="block"){
-
         settingsPanel.style.display="none";
-
     }
 
     else{
-
         settingsPanel.style.display="block";
-
     }
-
 };
-    
-
 
 
     
