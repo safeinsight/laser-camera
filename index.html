@@ -727,32 +727,23 @@ const LASER_WAITING = 0;
 const LASER_TRACKING = 1;
 
 // Current detector state
-
 let laserState = LASER_WAITING;
 
 // Number of consecutive frames with
 // no laser detected.
-
 let laserMissingFrames = 0;
 let freezeBackground = false;
-    
 
 // Laser must disappear this many
 // frames before another shot is allowed.
-
 const LASER_RELEASE_FRAMES = 2;
-    
 
 // Prevent double-shots from timer
 // glitches.
-
 let lastShotTime = 0;
 
-   
-
-
 //-------------------------------------
-// NORMALIZED TARGET
+// NORMALIZED TARGET -->
 //-------------------------------------
 
 // IMPORTANT:
@@ -772,43 +763,31 @@ let lastShotTime = 0;
 // 22% across the image.
 //
 
-//------------------------------------------------
-// TARGET COLLECTION
-//------------------------------------------------
+    //------------------------------------------------
+    // Target Collection
+    //------------------------------------------------
 
 let targets = [
-
     {
-
         left:0,
-
         right:0,
-
         top:0,
-
         bottom:0,
-
         calibrated:false,
-
         shape:"rectangle"
-
     }
-
 ];
 
-//------------------------------------------------
-// CURRENT TARGET
-//------------------------------------------------
+    //------------------------------------------------
+    // Current Target
+    //------------------------------------------------
 
 // For now, the app still works with only
 // the first target in the array.
-
 let target = targets[0];
 let currentTarget = target;
     
-    
 // Used only during calibration
-
 let calibrationStep = 0;
 
 // Drag calibration
@@ -818,221 +797,132 @@ let calibrationStartY = 0;
 let calibrationCurrentX = 0;
 let calibrationCurrentY = 0;
     
-//-------------------------------------
-// CURRENT CAMERA SIZE
-//-------------------------------------
+    //-------------------------------------
+    // Current Camera Size
+    //-------------------------------------
 
 // Updated every resize()
 
 let cameraWidth = 0;
 let cameraHeight = 0;
 
-//-------------------------------------
-// DISPLAY SIZE
-//-------------------------------------
+    //-------------------------------------
+    // Display Size
+    //-------------------------------------
 
 // Size of displayed video element
-
 let displayWidth = 0;
 let displayHeight = 0;
 
-//-------------------------------------
-// OVERLAY SCALE
-//-------------------------------------
+    //-------------------------------------
+    // Overlay Scale
+    //-------------------------------------
 
 // Converts camera coordinates
 // to overlay coordinates.
-
 let scaleX = 1;
 let scaleY = 1;
 
 //-------------------------------------
-// DETECTOR SETTINGS (VERSION 5)
+// DETECTOR SETTINGS -->
 //-------------------------------------
 
 const DETECTOR = {
-
     pixelStep:1,
-
    baseThreshold:28,
-
 colorDifference:20,
-
     minBlobPixels:1,
-
     maxBlobPixels:80,
-
     shotDelay:250
-
 };
 
-//------------------------------------------------
-// LOCAL COLOR DETECTOR (VERSION 9)
-//------------------------------------------------
+    //------------------------------------------------
+    // Local Color Detector
+    //------------------------------------------------
 
 // Size of neighborhood around each pixel
-
 const LOCAL_RADIUS = 1;
 
-//------------------------------------------------
-// ADAPTIVE TARGET GRID (VERSION 9)
-//------------------------------------------------
+    //------------------------------------------------
+    // Adaptive Target Grid
+    //------------------------------------------------
 
 // Divide the calibrated target into
 // smaller regions.
 
 // Each region will maintain its own
 // average background brightness.
-
 const GRID_COLS = 4;
 const GRID_ROWS = 4;
 
 // One brightness value per region.
-
 let gridBrightness = [];
 
 function resetGrid(){
-
     gridBrightness = [];
-
     for(let y=0; y<GRID_ROWS; y++){
-
         gridBrightness[y] = [];
-
         for(let x=0; x<GRID_COLS; x++){
-
             gridBrightness[y][x] = 0;
-
         }
-
     }
-
 }
-
 resetGrid();
 
-//-------------------------------------
-// BACKGROUND FRAME
-//-------------------------------------
+    //-------------------------------------
+    // Background Frame
+    //-------------------------------------
 
 let backgroundFrame = null;
 
 // Wait one frame before learning
 // the background after recording starts.
-
 let learnBackground = true;
 
-
 //--------------------------
-// CAMERA
+// CAMERA -->
 //--------------------------
 
 async function startCamera(){
-
-
-
 try{
-
-
-
 stream=
-
 await navigator.mediaDevices
-
 .getUserMedia({
-
-
-
 video:{
-
-
-
 facingMode:{
-
 ideal:"environment"
-
 },
-
-
-
 width:{
-
 ideal:1280
-
 },
-
-
-
 height:{
-
 ideal:720
-
 }
-
-
-
 },
-
-
-
 audio:true
-
-
-
 });
 
-
-
 preview.srcObject=
-
 stream;
-    
 preview.style.display = "block";
 playback.style.display = "none";
-
-
 preview.onloadedmetadata=()=>{
-
     preview.play();
-
     requestAnimationFrame(()=>{
-
         resizeEverything();
-
     });
-
 };
 
-
-
-
-
 }catch(err){
-
-
-
 alert(
-
 "Unable to access camera"
-
 );
 
-
-
 console.log(err);
-
-
-
 }
-
-
-
 }
-
-
 
 startCamera();
-
 liveOverlayLoop();
 
 overlay.addEventListener(
@@ -1050,9 +940,8 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
-
 //------------------------------------------------
-// RESIZE EVERYTHING (VERSION 4)
+// RESIZE EVERYTHING -->
 //------------------------------------------------
 
 function resizeEverything(){
@@ -1061,7 +950,6 @@ function resizeEverything(){
         preview.style.display != "none"
             ? preview
             : playback;
-
     if(
         !video.videoWidth ||
         !video.videoHeight
@@ -1082,7 +970,6 @@ function resizeEverything(){
 
     const rect =
         video.getBoundingClientRect();
-
     displayWidth = rect.width;
     displayHeight = rect.height;
 
@@ -1112,13 +999,11 @@ function resizeEverything(){
     );
 
     drawGreenBoxes();
-
     drawHits();
-
 }
 
 //------------------------------------
-// CLEAR ALL OLD OVERLAY INFORMATION
+// CLEAR OLD OVERLAY INFORMATION -->
 //------------------------------------
 
 function clearOverlayData(){
@@ -1145,248 +1030,134 @@ function clearOverlayData(){
         overlay.width,
         overlay.height
     );
-
 }
 
-
 //--------------------------
-// COUNTDOWN
+// COUNTDOWN -->
 //--------------------------
 
 function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
-   
     countdownRunning = true;
-
   let count;
-
 if(countdownSeconds === "random"){
-
    // Random whole number from 3 to 7 seconds
 count = Math.floor(Math.random() * 5) + 3;
-    
     console.log("Random countdown:", count);
-
 }else{
-
     count = countdownSeconds;
-
 }
-    
-
 
 countdownValue = count;
-
 drawCountdown();
-
 countdownInterval = setInterval(()=>{
-
         console.log("COUNT:", count);
-
         count--;
-
         if(count > 0){
-
             countdownValue = count;
-
             drawCountdown();
-
         }else{
-
             clearInterval(countdownInterval);
 countdownInterval = null;
 countdownRunning = false;
-
             countdownValue = null;
-
             clearOverlay();
-
             drawHits();
-
            countdownSound.currentTime = 0;
-
 countdownSound.play().then(()=>{
-
     console.log("Countdown beep started.");
-
 }).catch(err=>{
 
     console.log("Countdown sound failed:", err);
-
 });
 
 setTimeout(()=>{
-
     startRecording();
-
 },100);
-
         }
-
     },1000);
-
 }
 
-
-
 //--------------------------
-// START RECORDING
+// START RECORDING -->
 //--------------------------
 
 function startRecording(){
 
 countdownRunning = false;
-
 recordedChunks=[];
-
 hits=[];
-
 shots=0;
-
 recordingSeconds=0;
 
-//-------------------------------------
-// Reset detector state
-//-------------------------------------
+    //-------------------------------------
+    // Reset Detector State
+    //-------------------------------------
 
 laserState = LASER_WAITING;
-
 laserMissingFrames = 0;
-
 freezeBackground = false;
-    
-
-   
 
 backgroundFrame = null;
-
 learnBackground = true;
-
 lastShotTime = 0;
 
-
-
-
-
 updateDisplays();
-
-
-
-
 
 mediaRecorder=
 
-
-
 new MediaRecorder(
-
 stream
-
 );
 
-
-
-
-
 mediaRecorder
-
 .ondataavailable=(e)=>{
-
-
-
 if(
-
 e.data.size>0
-
 ){
 
-
-
 recordedChunks.push(
-
 e.data
-
 );
-
-
-
 }
-
-
-
 };
 
-
-
-
-
 mediaRecorder
-
 .onstop=
-
-
-
 showPlayback;
-
-
-
-
-
 mediaRecorder.start();
 
-//-------------------------------------
-// Start high-precision recording timer
-//-------------------------------------
+    //-------------------------------------
+    // Start high-precision recording timer
+    //-------------------------------------
 
 recordingStartTime = performance.now();
 
-//-------------------------------------
-// Give camera one frame to stabilize
-//-------------------------------------
+    //-------------------------------------
+    // Give camera one frame to stabilize
+    //-------------------------------------
 
 setTimeout(()=>{
-
     requestAnimationFrame(
         detectLaser
     );
-
 },100);
-
-
-
 timerInterval=
-
-
-
 setInterval(()=>{
-
-
 recordingSeconds++;
-
-
 updateDisplays();
-
-
-
 },1000);
-
-
 }
 
-
-
-
 //--------------------------
-// STOP RECORDING
+// STOP RECORDING -->
 //--------------------------
 
 function stopRecording(){
 
     mediaRecorder.stop();
-
     clearInterval(timerInterval);
-
    startBtn.innerHTML = "&#9654; Start Recording";
     startBtn.style.background = "#00a651";
     startBtn.style.color = "white";
@@ -1394,107 +1165,49 @@ function stopRecording(){
 
     // Show setup controls again
 setupControls.hidden = false;
-
 }
 
-
 //--------------------------
-// PLAYBACK
+// PLAYBACK -->
 //--------------------------
 
 function showPlayback(){
 
-
-
 const blob=
-
-
-
 new Blob(
-
-
-
 recordedChunks,
-
-
-
 {
-
 type:"video/webm"
-
 }
-
-
-
 );
-
-
-
-
 
 const url=
-
-
-
 URL.createObjectURL(
-
 blob
-
 );
 
-
-
-
-
 preview.style.display=
-
-
-
 "none";
-
-
-
-
-
 playback.style.display=
-
-
-
 "block";
-
-
-
-
-
 playback.src=url;
 
-//----------------------------------------
-// Calculate final group center
-//----------------------------------------
+    //----------------------------------------
+    // Calculate final group center
+    //----------------------------------------
 
 groupCenter = calculateGroupCenter();
-
 playback.onloadedmetadata=()=>{
-
     resizeEverything();
-
     playback.play();
-
     requestAnimationFrame(
-
         syncPlayback
-
     );
-
 };
-
-
-
 }
 
-
 //--------------------------
-// UPDATE DISPLAYS
+// UPDATE DISPLAYS -->
 //--------------------------
 
 function updateDisplays(){
