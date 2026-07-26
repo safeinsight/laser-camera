@@ -2173,11 +2173,12 @@ const rect = overlay.getBoundingClientRect();
 }
 
   
+
 //------------------------------------------------
 // TARGET PIXELS
 //------------------------------------------------
 
-function getTargetPixels(target){
+function getTargetPixels(){
 
     return{
 
@@ -2494,25 +2495,19 @@ if(!backgroundFrame){
 
 }
 
-  //---------------------------------------
-// Scan every target
-//---------------------------------------
+    //---------------------------------------
+    // Current calibrated target
+    //---------------------------------------
 
-for(const target of targets){
-
-    if(!target.calibrated){
-        continue;
-    }
-
-    const box = getTargetPixels(target);
+    const box = getTargetPixels();
 
     let totalWeight = 0;
     let totalX = 0;
     let totalY = 0;
 
     let brightPixels = 0;
-    
-//------------------------------------------------
+
+    //------------------------------------------------
 // Reset grid brightness sums
 //------------------------------------------------
 
