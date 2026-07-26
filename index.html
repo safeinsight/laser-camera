@@ -1809,7 +1809,7 @@ if(!backgroundFrame){
 //------------------------------------------------
 
 let result = null;
-
+let hitTarget = null;
 for(const target of targets){
     if(!target.calibrated){
         continue;
@@ -1823,12 +1823,13 @@ for(const target of targets){
     // Laser found in this target
     //----------------------------------------
 
-    if(
-        result.brightPixels >= DETECTOR.minBlobPixels &&
-        result.brightPixels <= DETECTOR.maxBlobPixels
-    ){
-        break;
-    }
+  if(
+    result.brightPixels >= DETECTOR.minBlobPixels &&
+    result.brightPixels <= DETECTOR.maxBlobPixels
+){
+    hitTarget = target;
+    break;
+}
 }
 
 //------------------------------------------------
