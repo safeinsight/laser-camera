@@ -1804,171 +1804,41 @@ if(!backgroundFrame){
     return;
 }
 
-    //---------------------------------------
-    // Current calibrated target
-    //---------------------------------------
+//------------------------------------------------
+// Scan current target
+//------------------------------------------------
 
-    const box = getTargetPixels();
-    let totalWeight = 0;
-    let totalX = 0;
-    let totalY = 0;
-    let brightPixels = 0;
+const result = scanTarget(
 
-    //------------------------------------------------
-    // Reset grid brightness sums
-    //------------------------------------------------
+    target,
 
-let gridTotal = [];
-let gridCount = [];
+    pixels
 
-for(let gy=0; gy<GRID_ROWS; gy++){
-    gridTotal[gy] = [];
-    gridCount[gy] = [];
-
-    for(let gx=0; gx<GRID_COLS; gx++){
-        gridTotal[gy][gx] = 0;
-        gridCount[gy][gx] = 0;
-    }
-}
-
-    //---------------------------------------
-    // Scan target
-    //---------------------------------------
-
-    for(
-        let y=Math.floor(box.top);
-        y<Math.floor(box.bottom);
-        y+=DETECTOR.pixelStep
-    ){
-
-const gridY = Math.max(
-    0,
-    Math.min(
-        GRID_ROWS - 1,
-        Math.floor(
-            ((y - box.top) * GRID_ROWS) /
-            (box.bottom - box.top)
-        )
-    )
 );
 
-        for(
-            let x=Math.floor(box.left);
-            x<Math.floor(box.right);
-            x+=DETECTOR.pixelStep
-        ){
+let brightPixels =
 
-    //------------------------------------------------
-    // Skip pixels outside oval target
-    //------------------------------------------------
+    result.brightPixels;
 
-if(targetShape === "oval"){
-    const centerX =
-        (box.left + box.right) / 2;
-    const centerY =
-        (box.top + box.bottom) / 2;
-    const radiusX =
-        (box.right - box.left) / 2;
-    const radiusY =
-        (box.bottom - box.top) / 2;
-    const dx =
-        (x - centerX) / radiusX;
-    const dy =
-        (y - centerY) / radiusY;
-    if((dx * dx + dy * dy) > 1){
-        continue;
-    }
-}
-            
-            const i=
-                (
-                    y*detectCanvas.width+x
-                )*4;
+let totalWeight =
 
-            const r=pixels[i];
-            const g=pixels[i+1];
-            const b=pixels[i+2];
-            const brightness=
-                (r+g+b)/3;
+    result.totalWeight;
 
-const gridX = Math.max(
-    0,
-    Math.min(
-        GRID_COLS - 1,
-        Math.floor(
-            ((x - box.left) * GRID_COLS) /
-            (box.right - box.left)
-        )
-    )
-);
+let totalX =
 
-// Learn average brightness
-gridTotal[gridY][gridX] += brightness;
-gridCount[gridY][gridX]++;
+    result.totalX;
 
-//---------------------------------
-// COLOR DIFFERENCE DETECTOR -->
-//---------------------------------
+let totalY =
 
-const bgR = backgroundFrame[i];
-const bgG = backgroundFrame[i+1];
-const bgB = backgroundFrame[i+2];
+    result.totalY;
 
-// How much each channel increased
-const redRise   = r - bgR;
-const greenRise = g - bgG;
-const blueRise  = b - bgB;
+let gridTotal =
 
-    //------------------------------------------------
-    // Local lighting compensation
-    //------------------------------------------------
+    result.gridTotal;
 
-const localBrightness =
-    gridBrightness[gridY]?.[gridX] ?? 150;
+let gridCount =
 
-// Darker regions get a slightly lower threshold.
-// Brighter regions get a slightly higher threshold.
-let localThreshold = DETECTOR.baseThreshold;
-if(localBrightness > 190){
-    localThreshold = DETECTOR.baseThreshold + 6;
-}
-else if(localBrightness > 170){
-    localThreshold = DETECTOR.baseThreshold + 3;
-}
-else if(localBrightness < 120){
-    localThreshold = DETECTOR.baseThreshold - 4;
-}
-
-// Detect a true red laser pulse
-const laser =
-    redRise > localThreshold &&
-    redRise > (greenRise + DETECTOR.colorDifference) &&
-    redRise > (blueRise + DETECTOR.colorDifference);
-if(!laser){
-    continue;
-}
-            brightPixels++;
-
-if(!freezeBackground){
-    backgroundFrame[i] =
-        (backgroundFrame[i] * 7 + r) / 8;
-    backgroundFrame[i+1] =
-        (backgroundFrame[i+1] * 7 + g) / 8;
-    backgroundFrame[i+2] =
-        (backgroundFrame[i+2] * 7 + b) / 8;
-}
-
-            const weight=
-                Math.max(
-                    brightness,
-                    r
-                );
-
-            totalWeight+=weight;
-            totalX+=x*weight;
-            totalY+=y*weight;
-        }
-    }
+    result.gridCount;
 
     //------------------------------------------------
     // Update grid brightness map
