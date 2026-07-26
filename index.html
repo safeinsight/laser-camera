@@ -1805,40 +1805,48 @@ if(!backgroundFrame){
 }
 
 //------------------------------------------------
-// Scan current target
+// Scan every target
 //------------------------------------------------
 
-const result = scanTarget(
+let result = null;
 
-    target,
+for(const target of targets){
+    if(!target.calibrated){
+        continue;
+    }
+    result = scanTarget(
+        target,
+        pixels
+    );
 
-    pixels
+    //----------------------------------------
+    // Laser found in this target
+    //----------------------------------------
 
-);
+    if(
+        result.brightPixels >= DETECTOR.minBlobPixels &&
+        result.brightPixels <= DETECTOR.maxBlobPixels
+    ){
+        break;
+    }
+}
+
+//------------------------------------------------
+// Copy scan results
+//------------------------------------------------
 
 let brightPixels =
-
-    result.brightPixels;
-
+    result?.brightPixels ?? 0;
 let totalWeight =
-
-    result.totalWeight;
-
+    result?.totalWeight ?? 0;
 let totalX =
-
-    result.totalX;
-
+    result?.totalX ?? 0;
 let totalY =
-
-    result.totalY;
-
+    result?.totalY ?? 0;
 let gridTotal =
-
-    result.gridTotal;
-
+    result?.gridTotal ?? [];
 let gridCount =
-
-    result.gridCount;
+    result?.gridCount ?? [];
 
     //------------------------------------------------
     // Update grid brightness map
