@@ -1,397 +1,194 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
     <link rel="icon" type="image/png" href="Logo Sharp 260x260 png.png">
-
-
 <meta charset="UTF-8">
-
 <meta
-
 name="viewport"
-
 content="width=device-width, initial-scale=1.0">
 
 <title>
-
 Laser Target Trainer
-
 </title>
-
-
 
 <style>
 
-
-
 body{
-
 margin:0;
-
 background:#111;
-
 font-family:Arial,sans-serif;
-
 text-align:center;
-
 color:white;
-
 }
-
-
 
 h2{
-
 margin-top:15px;
-
 }
-
-
 
 .container{
-
 position:relative;
-
 width:95%;
-
 max-width:700px;
-
 margin:auto;
-
 }
-
-
 
 video{
-
 width:100%;
-
 display:block;
-
 background:black;
-
 border-radius:12px;
-
 }
-
-
 
 #overlay{
-
 position:absolute;
-
 top:0;
-
 left:0;
-
 width:100%;
-
 height:100%;
-
 pointer-events:auto;
-
 z-index:5;
-
 touch-action:none;
-
 }
-
-
 
 #detectCanvas{
-
 display:none;
-
 }
-
-
 
 #timerOverlay{
-
 position:absolute;
-
 top:15px;
-
 left:50%;
-
 transform:
-
 translateX(-50%);
-
-
-
 background:
-
 rgba(0,0,0,.55);
-
-
-
 padding:
-
 6px 16px;
-
-
-
 border-radius:
-
 10px;
-
-
-
 font-size:
-
 22px;
-
-
-
 font-weight:
-
 bold;
-
-
-
 z-index:20;
-
 }
-
-
 
 #shotsOverlay{
-
 position:absolute;
-
 bottom:15px;
-
 left:15px;
-
 background:
-
 rgba(0,0,0,.55);
-
 padding:
-
 6px 12px;
-
 border-radius:
-
 10px;
-
 font-size:
-
 18px;
-
 font-weight:
-
 bold;
-
 z-index:20;
-
 }
-
-
 
 #distanceOverlay{
-
 position:absolute;
-
 bottom:15px;
-
 right:15px;
-
 background:
-
 rgba(0,0,0,.55);
-
 padding:
-
 6px 12px;
-
 border-radius:
-
 10px;
-
 font-size:
-
 18px;
-
 font-weight:
-
 bold;
-
 z-index:20;
-
 cursor:pointer;
-
 }
-
-
 
 #distancePopup{
-
 display:none;
-
 position:absolute;
-
 bottom:60px;
-
 right:15px;
-
 background:#222;
-
 border-radius:12px;
-
 overflow:hidden;
-
 box-shadow:
-
 0 0 20px
-
 rgba(0,0,0,.7);
-
 z-index:50;
-
 }
-
-
 
 .distanceOption{
-
 padding:
-
 14px 25px;
-
 font-size:20px;
-
 cursor:pointer;
-
 border-bottom:
-
 1px solid #444;
-
 }
-
-
 
 .distanceOption:hover{
-
 background:#333;
-
 }
-
-
 
 .selected{
-
 background:#00a651;
-
 }
-
-
-
-
 
 button{
-
 padding:
-
 16px 30px;
-
 margin:
-
 10px;
-
 font-size:
-
 20px;
-
 font-weight:
-
 bold;
-
 border:none;
-
 border-radius:
-
 12px;
-
 cursor:pointer;
-
 min-width:
-
 220px;
-
 }
-
 
 select{
-
     font-size:30px;
-
     font-weight:bold;
-
     padding:12px 18px;
-
     border-radius:12px;
-
     border:2px solid #555;
-
     background:#333;
-
     color:white;
-
 }
-    
-    
-
-
 
 #calibrateBtn{
-
 background:#0066cc;
-
 color:white;
-
 }
-    
 
 #startBtn{
 startBtn.innerHTML = "&#9654; Start Recording";
 background:#00a651;
-
 color:white;
-
 }
-
-  
-
 
 #stopBtn{
-
 background:#d62828;
-
 color:white;
-
 }
-
-
 
 #countdown{
-
 height:90px;
-
 font-size:72px;
-
 font-weight:bold;
-
 color:#ffcc00;
-
 }
-
 #timer{
-
     ...
 }
 
@@ -400,133 +197,78 @@ color:#ffcc00;
 ----------------------------------------*/
 
 .switch{
-
     position:relative;
-
     display:inline-block;
-
     width:60px;
-
     height:34px;
-
     vertical-align:middle;
-
 }
 
 .switch input{
-
     opacity:0;
-
     width:0;
-
     height:0;
-
 }
 
 .slider{
-
     position:absolute;
-
     cursor:pointer;
-
     top:0;
-
     left:0;
-
     right:0;
-
     bottom:0;
-
     background:#888;
-
     transition:.25s;
-
     border-radius:34px;
-
 }
 
 .slider:before{
-
     position:absolute;
-
     content:"";
-
     height:26px;
-
     width:26px;
-
     left:4px;
-
     bottom:4px;
-
     background:white;
-
     transition:.25s;
-
     border-radius:50%;
-
 }
 
 input:checked + .slider{
-
     background:#28a745;
-
 }
 
 input:checked + .slider:before{
-
     transform:translateX(26px);
-
 }
 
 #analysisControl{
-
     display:inline-flex;
-
     flex-direction:column;
-
     align-items:center;
-
     gap:6px;
-
 }
 
 #analysisLabel{
-
     color:white;
-
     font-weight:bold;
-
     user-select:none;
-
 }
 
 #topControls{
-
     position:absolute;
-
     top:15px;
-
     left:15px;
-
     right:15px;
-
     display:flex;
-
     justify-content:space-between;
-
     z-index:40;
-
 }
 
 #topControls button{
-
     min-width:unset;
-
     padding:10px 18px;
-
     font-size:16px;
-
 }
     
 /*----------------------------------------
@@ -534,45 +276,27 @@ Control Buttons
 ----------------------------------------*/
 
 #bottomControls{
-
     position:absolute;
-
     bottom:15px;
-
     left:15px;
-
     right:15px;
-
     display:flex;
-
     justify-content:center;
-
     z-index:40;
-
 }
 
 #bottomControls button{
-
     min-width:220px;
-
 }
 
 #settingsBtn{
-
     background:#444;
-
     color:white;
-
     border:none;
-
     padding:10px 18px;
-
     border-radius:8px;
-
     cursor:pointer;
-
     font-size:16px;
-
 }
 
 /*----------------------------------------
@@ -580,73 +304,41 @@ Settings Panel
 ----------------------------------------*/
 
 #settingsPanel{
-
     display:none;
-
     position:absolute;
-
     top:60px;
-
     left:15px;
-
     right:15px;
-
     bottom:15px;
-
     overflow-y:auto;
-
     background:rgba(34,34,34,.96);
-
     border:2px solid #555;
-
     border-radius:10px;
-
     padding:20px;
-
     color:white;
-
     text-align:left;
-
     z-index:100;
-
 }
 
 #settingsPanel h3{
-
     margin-top:0;
-
     text-align:center;
-
 }
 
 #settingsPanel h4{
-
     margin-top:20px;
-
     margin-bottom:10px;
-
     color:#00d0ff;
-
     border-bottom:1px solid #555;
-
     padding-bottom:5px;
-
     text-transform:uppercase;
-
     letter-spacing:1px;
-
 }
 
 #countdownOptions{
-
     margin-left:15px;
-
     line-height:1.8;
-
 }
-    
-    
-    
 
 </style>
 
@@ -654,115 +346,63 @@ Settings Panel
 
 </head>
 
+
+
 <body>
 
-
-
 <h2>
-
 Laser Target Trainer
-
 </h2>
 
-
-
 <div class="container">
-
 <video
-
 id="preview"
-
 autoplay
-
 playsinline
-
 muted>
-
 </video>
-
-
 
 <video
-
 id="playback"
-
 playsinline
-
 style="display;">
-
 </video>
 
-
-
 <canvas
-
 id="overlay">
-
 </canvas>
-
-
 
 <canvas
-
 id="detectCanvas">
-
 </canvas>
 
-
-
 <div
-
 id="timerOverlay">
-
 00:00
-
 </div>
-
-
 
 <div
-
 id="shotsOverlay">
-
 Shots: 0
-
 </div>
-
-
-
-
 
 <div id="topControls">
-
     <div id="setupControls">
-
     <button id="settingsBtn">
-
         ⚙
-
     </button>
-
 </div>
-        
-
 </div>
 
 <div id="bottomControls">
-
 <button id="startBtn">
-
 &#9654; Start Recording
-
 </button>
-
 </div>
 
 <div id="settingsPanel">
-
     <h3>
-
         Settings
-
     </h3>
 
     <!--=====================================-->
@@ -772,11 +412,8 @@ Shots: 0
     <hr>
 
 <h4>Target Draw</h4>
-
 <button id="calibrateBtn">
-
     Draw Target
-
 </button>
 
 <br><br>
@@ -786,29 +423,19 @@ Shots: 0
     <!--=====================================-->
 
     <h4>
-
         ANALYSIS
-
     </h4>
 
     <div id="analysisControl">
-
         <div id="analysisLabel">
-
             Average Point of Impact
-
         </div>
-
         <label class="switch">
-
             <input
             type="checkbox"
             id="analysisBtn">
-
             <span class="slider"></span>
-
         </label>
-
     </div>
 
     <hr>
