@@ -412,6 +412,7 @@ Shots: 0
     <hr>
 
 <h4>Target Draw</h4>
+
 <button id="calibrateBtn">
     Draw Target
 </button>
@@ -449,56 +450,37 @@ Shots: 0
 <h4>Laser Detection Sensitivity</h4>
 
 <select id="sensitivitySelect">
-
     <option value="normal" selected>Normal</option>
-
     <option value="medium">Medium</option>
-
     <option value="high">High</option>
-
 </select>
 
 <br><br>
-    
 
 <!--=====================================-->
 <!-- TARGET SHAPE -->
 <!--=====================================-->
 
 <h4>
-
     TARGET SHAPE
-
 </h4>
 
 <div style="margin-bottom:20px;">
-
     <label>
-
         <strong>Shape</strong>
-
     </label>
 
     <br><br>
 
     <select id="targetShapeSelect">
-
         <option value="rectangle" selected>
-
             Rectangle
-
         </option>
-
         <option value="oval">
-
             Oval
-
         </option>
-
     </select>
-
 </div>
-
 <hr>
 
 <!--=====================================-->
@@ -506,39 +488,25 @@ Shots: 0
 <!--=====================================-->
 
 <h4>
-
     TARGET
-
 </h4>
 
 <div style="margin-bottom:20px;">
-
 <label>
-
     <strong>Distance</strong>
-
 </label>
 
 <br><br>
 
 <select id="distanceSelect">
-
     <option value="3">3 yards</option>
-
     <option value="5">5 yards</option>
-
     <option value="7" selected>7 yards</option>
-
     <option value="10">10 yards</option>
-
     <option value="15">15 yards</option>
-
     <option value="25">25 yards</option>
-
 </select>
-
 </div>
-
 <hr>
 
 <!--=====================================-->
@@ -546,93 +514,63 @@ Shots: 0
 <!--=====================================-->
 
 <h4>
-
     COUNTDOWN
-
 </h4>
 
 <div style="margin-bottom:20px;">
-
     <label>
-
         <strong>Countdown</strong>
-
     </label>
-
     <br><br>
 
     <select id="countdownSelect">
-
         <option value="5" selected>
-
             5 Seconds
-
         </option>
-
         <option value="3">
-
             3 Seconds
-
         </option>
-
         <option value="0">
-
             None
-
         </option>
-
         <option value="random">
             Random (3-7 sec)
         </option>
-
     </select>
-
 </div>
-
 </div>
-
 </div>
-
 
 
 <script>
 
-
-
+//------------------------------------
+// CONSTANTS
+//------------------------------------
 const preview=
 document.getElementById(
 "preview"
 );
-
-
 
 const playback=
 document.getElementById(
 "playback"
 );
 
-
-
 const overlay=
 document.getElementById(
 "overlay"
 );
-
-
 
 const ctx=
 overlay.getContext(
 "2d"
 );
 
-
-
 const detectCanvas=
 document.getElementById(
 "detectCanvas"
 );
-
-
 
 const detectCtx=
 detectCanvas.getContext(
@@ -642,36 +580,25 @@ willReadFrequently:true
 }
 );
 
-
-
-
 const timerOverlay=
 document.getElementById(
 "timerOverlay"
 );
-
-
 
 const shotsOverlay=
 document.getElementById(
 "shotsOverlay"
 );
 
-
-
 const calibrateBtn=
 document.getElementById(
 "calibrateBtn"
 );
 
-
-
 const startBtn=
 document.getElementById(
 "startBtn"
 );
-
-
 
 const analysisBtn =
 document.getElementById(
@@ -692,25 +619,21 @@ const setupControls =
 document.getElementById(
 "setupControls"
 );
-    
 
 const settingsPanel =
 document.getElementById(
 "settingsPanel"
 );
 
-
 const distanceSelect =
 document.getElementById(
 "distanceSelect"
 );
 
-
 const countdownSelect =
 document.getElementById(
 "countdownSelect"
 );
-
 
 //------------------------------------
 // COUNTDOWN SOUND
