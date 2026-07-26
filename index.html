@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="icon" type="image/png" href="Logo Sharp 260x260 png.png">
 <meta charset="UTF-8">
@@ -782,8 +783,11 @@ let targets = [
     // Current Target
     //------------------------------------------------
 
-// For now, the app still works with only
-// the first target in the array.
+// Temporary compatibility.
+// Older detector code still references
+// the original target object while the
+// detector is being converted to use
+// the targets[] array.
 let target = targets[0];
 let currentTarget = target;
     
@@ -1508,6 +1512,240 @@ function drawCountdown(){
         overlay.height / 2
     );
     ctx.restore();
+}
+
+//------------------------------------------------
+// SCAN ONE TARGET -->
+//------------------------------------------------
+
+function scanTarget(target, pixels){
+
+    const box = getTargetPixels(target);
+
+    let totalWeight = 0;
+    let totalX = 0;
+    let totalY = 0;
+
+    let brightPixels = 0;
+
+    //------------------------------------------------
+    // Reset grid brightness sums
+    //------------------------------------------------
+
+    let gridTotal = [];
+    let gridCount = [];
+
+    for(let gy=0; gy<GRID_ROWS; gy++){
+
+        gridTotal[gy] = [];
+        gridCount[gy] = [];
+
+        for(let gx=0; gx<GRID_COLS; gx++){
+
+            gridTotal[gy][gx] = 0;
+            gridCount[gy][gx] = 0;
+
+        }
+
+    }
+
+    //------------------------------------------------
+    // Scan target
+    //------------------------------------------------
+
+    for(
+
+        let y = Math.floor(box.top);
+
+        y < Math.floor(box.bottom);
+
+        y += DETECTOR.pixelStep
+
+    ){
+
+        const gridY = Math.max(
+
+            0,
+
+            Math.min(
+
+                GRID_ROWS - 1,
+
+                Math.floor(
+
+                    ((y - box.top) * GRID_ROWS) /
+
+                    (box.bottom - box.top)
+
+                )
+
+            )
+
+        );
+
+        for(
+
+            let x = Math.floor(box.left);
+
+            x < Math.floor(box.right);
+
+            x += DETECTOR.pixelStep
+
+        ){
+
+            //----------------------------------------
+            // Ignore pixels outside an oval target
+            //----------------------------------------
+
+            if(target.shape === "oval"){
+
+                const centerX =
+                    (box.left + box.right) / 2;
+
+                const centerY =
+                    (box.top + box.bottom) / 2;
+
+                const radiusX =
+                    (box.right - box.left) / 2;
+
+                const radiusY =
+                    (box.bottom - box.top) / 2;
+
+                const dx =
+                    (x - centerX) / radiusX;
+
+                const dy =
+                    (y - centerY) / radiusY;
+
+                if((dx * dx + dy * dy) > 1){
+
+                    continue;
+
+                }
+
+            }
+
+            const i =
+
+                (y * detectCanvas.width + x) * 4;
+
+            const r = pixels[i];
+            const g = pixels[i+1];
+            const b = pixels[i+2];
+
+            const brightness =
+
+                (r + g + b) / 3;
+
+            const gridX = Math.max(
+
+                0,
+
+                Math.min(
+
+                    GRID_COLS - 1,
+
+                    Math.floor(
+
+                        ((x - box.left) * GRID_COLS) /
+
+                        (box.right - box.left)
+
+                    )
+
+                )
+
+            );
+
+            gridTotal[gridY][gridX] += brightness;
+            gridCount[gridY][gridX]++;
+
+            const bgR = backgroundFrame[i];
+            const bgG = backgroundFrame[i+1];
+            const bgB = backgroundFrame[i+2];
+
+            const redRise   = r - bgR;
+            const greenRise = g - bgG;
+            const blueRise  = b - bgB;
+
+            const localBrightness =
+
+                gridBrightness[gridY]?.[gridX] ?? 150;
+
+            let localThreshold = DETECTOR.baseThreshold;
+
+            if(localBrightness > 190){
+
+                localThreshold += 6;
+
+            }else if(localBrightness > 170){
+
+                localThreshold += 3;
+
+            }else if(localBrightness < 120){
+
+                localThreshold -= 4;
+
+            }
+
+            const laser =
+
+                redRise > localThreshold &&
+
+                redRise >
+
+                (greenRise + DETECTOR.colorDifference) &&
+
+                redRise >
+
+                (blueRise + DETECTOR.colorDifference);
+
+            if(!laser){
+                continue;
+            }
+
+            brightPixels++;
+
+            const weight =
+
+                Math.max(
+
+                    brightness,
+
+                    r
+
+                );
+
+            totalWeight += weight;
+
+            totalX += x * weight;
+
+            totalY += y * weight;
+
+        }
+
+    }
+
+    //------------------------------------------------
+    // Return scan results
+    //------------------------------------------------
+
+    return{
+
+        brightPixels,
+
+        totalWeight,
+
+        totalX,
+
+        totalY,
+
+        gridTotal,
+
+        gridCount
+
+    };
+
 }
 
 //------------------------------------------------
