@@ -635,108 +635,79 @@ document.getElementById(
 "countdownSelect"
 );
 
-//------------------------------------
-// COUNTDOWN SOUND
-//------------------------------------
-
 const countdownSound = new Audio("shot-beep.mp3");
 countdownSound.preload = "auto";
-    
 
 const sensitivitySelect =
 document.getElementById(
 "sensitivitySelect"
 );
-    
 
 const targetShapeSelect =
 document.getElementById(
 "targetShapeSelect"
 );
-     
         
 const stopBtn=
 document.getElementById(
 "stopBtn"
 );
 
-
-
 //--------------------------
-// VARIABLES (VERSION 4)
+// VARIABLES
 //--------------------------
 
 let stream = null;
 let mediaRecorder = null;
 let recordedChunks = [];
-
 let recordingSeconds = 0;
 let timerInterval = null;
-
 let countdownRunning = false;
-
 let countdownInterval = null;  
-    
 let laserSensitivity = "normal";
-    
-
-// High-precision recording timer
 let recordingStartTime = 0;
-
 let targetDistance = 7;
 
 if(distanceSelect){
-
     distanceSelect.value =
         targetDistance;
-
 }   
-    
 
 let shots = 0;
 let hits = [];
-
-// Countdown shown on the overlay.
-// null means no countdown is visible.
 let countdownValue = null;
 
-//------------------------------------------------
-// Current laser state
-//------------------------------------------------
+    //------------------------------------------------
+    // Current laser state
+    //------------------------------------------------
 
 let currentLaserVisible = false;
-
 let currentLaserX = 0;
-
 let currentLaserY = 0;
 
-//------------------------------------------------
-// Group center
-//------------------------------------------------
+    //------------------------------------------------
+    // Group center
+    //------------------------------------------------
 
 let groupCenter = null;
 
-//------------------------------------------------
-// Analysis overlay
-//------------------------------------------------
+    //------------------------------------------------
+    // Analysis overlay
+    //------------------------------------------------
 
 let analysisEnabled = false;
-
 analysisBtn.checked = analysisEnabled;
 
 let countdownSeconds = 3;
-
 if(countdownSelect){
 
     countdownSelect.value =
         countdownSeconds;
-
 }
-    
 
-//------------------------------------------------
-// Target Shape
-//------------------------------------------------
+    //------------------------------------------------
+    // Target Shape
+    //------------------------------------------------
 
 let targetShape = "rectangle";
 
