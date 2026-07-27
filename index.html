@@ -1008,29 +1008,32 @@ function clearSessionData(){
 
 
 
-    //--------------------------------
-    // Remove recorded laser hits
-    //--------------------------------
+    //------------------------------------
+    // Clear recorded shots
+    //------------------------------------
 
     hits = [];
+    shots = 0;
 
-    //--------------------------------
-    // Remove current laser position
-    //--------------------------------
 
-    laserX = 0;
-    laserY = 0;
-    currentLaserVisible = false;
-
-    //--------------------------------
-    // Reset laser state
-    //--------------------------------
+    //------------------------------------
+    // Reset laser detector
+    //------------------------------------
 
     laserState = LASER_WAITING;
     laserMissingFrames = 0;
+    freezeBackground = false;
+
+    //------------------------------------
+    // Reset live laser
+    //------------------------------------
+
+    currentLaserVisible = false;
+    laserX = 0;
+    laserY = 0;
 
     //--------------------------------
-    // Clear overlay canvas
+    // Clear overlay
     //--------------------------------
 
     ctx.clearRect(
