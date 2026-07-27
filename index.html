@@ -1006,21 +1006,37 @@ function resizeEverything(){
 
 function clearOverlayData(){
 
+    //--------------------------------
+    // Remove all targets
+    //--------------------------------
+
+    targets = [];
+    currentTarget = null;
+
+    //--------------------------------
     // Remove recorded laser hits
+    //--------------------------------
+
     hits = [];
 
+    //--------------------------------
     // Remove current laser position
+    //--------------------------------
+
     laserX = 0;
     laserY = 0;
+    currentLaserVisible = false;
 
+    //--------------------------------
     // Reset laser state
-    laserState = LASER_WAITING;
+    //--------------------------------
 
-    // Reset timing
+    laserState = LASER_WAITING;
     laserMissingFrames = 0;
 
+    //--------------------------------
     // Clear overlay canvas
-    const ctx = overlay.getContext("2d");
+    //--------------------------------
 
     ctx.clearRect(
         0,
