@@ -1004,14 +1004,9 @@ function resizeEverything(){
 // CLEAR OLD OVERLAY INFORMATION -->
 //------------------------------------
 
-function clearOverlayData(){
+function clearSessionData(){
 
-    //--------------------------------
-    // Remove all targets
-    //--------------------------------
 
-    targets = [];
-    currentTarget = null;
 
     //--------------------------------
     // Remove recorded laser hits
@@ -2362,7 +2357,20 @@ return;
     startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
 
-     clearOverlayData();
+   clearSessionData();
+//------------------------------------------------
+// CLEAR ALL TARGETS
+//------------------------------------------------
+
+function clearTargets(){
+
+    targets = [];
+
+    currentTarget = null;
+
+    redrawOverlay();
+
+}
     playback.pause();
     playback.src = "";
     preview.style.display = "block";
