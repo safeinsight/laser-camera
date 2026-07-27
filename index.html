@@ -1339,6 +1339,13 @@ const rect = overlay.getBoundingClientRect();
         Math.max(calibrationStartY, calibrationCurrentY);
 currentTarget.calibrated = true;
 currentTarget.shape = targetShape;
+
+//----------------------------------------
+// Every new target starts active
+//----------------------------------------
+
+currentTarget.active = true;
+
 targets.push(currentTarget);
 calibrationStep = 0;
 resizeEverything();
@@ -1371,6 +1378,24 @@ function getTargetPixels(target){
 }
 
 //------------------------------------------------
+// SET ACTIVE TARGET
+//------------------------------------------------
+
+function setActiveTarget(targetId){
+
+    for(const target of targets){
+
+        target.active =
+
+            target.id === targetId;
+
+    }
+
+    redrawOverlay();
+
+}
+    
+//------------------------------------------------
 // DRAW ALL TARGETS -->
 //------------------------------------------------
 
@@ -1395,7 +1420,13 @@ function drawGreenBoxes(){
             (target.bottom - target.top) *
             overlay.height;
         ctx.save();
-        ctx.strokeStyle = "#00FF00";
+      ctx.strokeStyle =
+
+    target.active
+
+        ? "#00FF00"
+
+        : "#808080";
         ctx.lineWidth = 4;
         if(target.shape === "rectangle"){
             ctx.strokeRect(
@@ -1425,8 +1456,13 @@ function drawGreenBoxes(){
 
 ctx.fillStyle = "#00FF00";
 ctx.font = "bold 24px Arial";
+let label =
+    target.active
+        ? target.id
+        : target.id + "X";
+
 ctx.fillText(
-    target.id,
+    label,
     left + 8,
     top + 28
 );
