@@ -779,17 +779,11 @@ let targets = [
     }
 ];
 
-    //------------------------------------------------
-    // Current Target
-    //------------------------------------------------
+//------------------------------------------------
+// Current Target
+//------------------------------------------------
 
-// Temporary compatibility.
-// Older detector code still references
-// the original target object while the
-// detector is being converted to use
-// the targets[] array.
-let target = targets[0];
-let currentTarget = target;
+let currentTarget = null;
     
 // Used only during calibration
 let calibrationStep = 0;
@@ -1327,15 +1321,14 @@ const rect = overlay.getBoundingClientRect();
         Math.min(calibrationStartY, calibrationCurrentY);
     currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
-    currentTarget.calibrated = true;
-    currentTarget.shape = targetShape;
-    targets.push(currentTarget);
-    target = currentTarget;
-    calibrationStep = 0;
-    resizeEverything();
-    redrawOverlay();
+currentTarget.calibrated = true;
+currentTarget.shape = targetShape;
+targets.push(currentTarget);
+calibrationStep = 0;
+resizeEverything();
+redrawOverlay();
 
-    console.log("Normalized Target:", target);
+console.log("Normalized Target:", currentTarget);
     alert("Calibration Complete");
 }
 
@@ -1479,9 +1472,10 @@ function clearOverlay(){
         overlay.width,
         overlay.height
     );
- if(target.calibrated && !calibrationDragging){
-    drawGreenBoxes();
-}
+
+    if(!calibrationDragging){
+        drawGreenBoxes();
+    }
 }
 
 //------------------------------------------------
