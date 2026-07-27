@@ -2252,9 +2252,15 @@ function drawCurrentLaser(hitX, hitY){
 }
 
 calibrateBtn.onclick=()=>{
-settingsPanel.style.display = "none"; 
-clearOverlayData();    
-calibrateTarget();
+
+    settingsPanel.style.display = "none";
+
+    //------------------------------------
+    // Start drawing another target
+    //------------------------------------
+
+    calibrateTarget();
+
 };
 
 //------------------------------------------------
