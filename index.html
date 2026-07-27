@@ -1776,17 +1776,12 @@ function detectLaser(){
 //------------------------------------------------
 
 const hasTarget = targets.some(
-
     target => target.calibrated
-
 );
 
 if(!hasTarget){
-
     requestAnimationFrame(detectLaser);
-
     return;
-
 }
 
     //---------------------------------------
