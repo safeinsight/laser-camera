@@ -661,6 +661,9 @@ document.getElementById(
 const countdownSound = new Audio("shot-beep.mp3");
 countdownSound.preload = "auto";
 
+const hitSound = new Audio("pistol-shot.mp3");
+hitSound.preload = "auto";
+    
 const sensitivitySelect =
 document.getElementById(
 "sensitivitySelect"
@@ -2135,6 +2138,11 @@ if(laserState === LASER_WAITING){
             time: (performance.now() - recordingStartTime) / 1000
         });
         updateDisplays();
+
+        hitSound.currentTime = 0;
+    hitSound.play().catch(err => {
+    console.log("Hit sound failed:", err);
+    });
 
         console.log(
             "SHOT",
