@@ -2147,12 +2147,9 @@ if(laserState === LASER_WAITING){
             y: hitY / detectCanvas.height,
             time: (performance.now() - recordingStartTime) / 1000
         });
-        updateDisplays();
 
-        hitSound.currentTime = 0;
-    hitSound.play().catch(err => {
-    console.log("Hit sound failed:", err);
-    });
+        updateDisplays();
+        playHitSound();
 
         console.log(
             "SHOT",
