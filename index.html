@@ -1881,43 +1881,38 @@ if(!backgroundFrame){
 }
 
 //------------------------------------------------
-// Scan every target
+// Scan active target only
 //------------------------------------------------
 
 let result = null;
 let hitTarget = null;
-for(const target of targets){
-    if(!target.calibrated){
-        continue;
-    }
+
+if(
+    activeTarget &&
+    activeTarget.calibrated
+){
     result = scanTarget(
-        target,
+        activeTarget,
         pixels
     );
 
     //----------------------------------------
-    // Laser found in this target
+    // Laser found in active target
     //----------------------------------------
 
-  if(
-    result.brightPixels >= DETECTOR.minBlobPixels &&
-    result.brightPixels <= DETECTOR.maxBlobPixels
-){
-    hitTarget = target;
-    break;
+    if(
+        result.brightPixels >= DETECTOR.minBlobPixels &&
+        result.brightPixels <= DETECTOR.maxBlobPixels
+    ){
+        hitTarget = activeTarget;
+    }
 }
-}
-
+    
 if(hitTarget){
-
     console.log(
-
         "Hit Target:",
-
         hitTarget.id
-
     );
-
 }
 
 //------------------------------------------------
