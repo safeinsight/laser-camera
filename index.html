@@ -1236,6 +1236,28 @@ mediaRecorder.start();
 
 recordingStartTime = performance.now();
 
+//-------------------------------------
+// Reset target history
+//-------------------------------------
+
+targetHistory = [];
+
+//-------------------------------------
+// Record first active target
+//-------------------------------------
+
+if(activeTarget){
+
+    targetHistory.push({
+
+        id: activeTarget.id,
+
+        time: 0
+
+    });
+
+}
+    
     //-------------------------------------
     // Give camera one frame to stabilize
     //-------------------------------------
@@ -1683,7 +1705,20 @@ function nextTarget(){
 
     activeTarget = newTarget;
 
-    redrawOverlay();
+//----------------------------------------
+// Save target change for playback
+//----------------------------------------
+
+targetHistory.push({
+
+    id: activeTarget.id,
+
+    time:
+        (performance.now() - recordingStartTime) / 1000
+
+});
+
+redrawOverlay();
 
 }
     
