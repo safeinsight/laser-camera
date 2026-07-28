@@ -812,6 +812,12 @@ let targets = [];
 let activeTarget = null;
 
 //------------------------------------------------
+// TARGET CHANGE LOCK
+//------------------------------------------------
+
+let waitingForNextTarget = false;
+
+//------------------------------------------------
 // Current Target
 //------------------------------------------------
 let target = targets[0];
@@ -2066,13 +2072,29 @@ if(hitTarget){
     // Wait before calling next target
     //----------------------------------------
 
-setTimeout(
+//----------------------------------------
+// Schedule next target only once
+//----------------------------------------
 
-    nextTarget,
+if(!waitingForNextTarget){
 
-    750
+    waitingForNextTarget = true;
 
-);
+    setTimeout(
+
+        ()=>{
+
+            nextTarget();
+
+            waitingForNextTarget = false;
+
+        },
+
+        750
+
+    );
+
+}
 
 }
 
