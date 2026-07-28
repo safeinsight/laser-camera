@@ -783,7 +783,7 @@ let targets = [
 // ACTIVE TARGET
 //------------------------------------------------
 
-let activeTargetId = null;
+let activeTarget = null;
 
 //------------------------------------------------
 // Current Target
@@ -1351,8 +1351,15 @@ currentTarget.shape = targetShape;
 currentTarget.active = true;
 
 targets.push(currentTarget);
-if(activeTargetId === null){
-    activeTargetId = currentTarget.id;
+
+//----------------------------------------
+// First target becomes active
+//----------------------------------------
+
+if(activeTarget === null){
+
+    activeTarget = currentTarget;
+
 }
 calibrationStep = 0;
 resizeEverything();
@@ -1462,9 +1469,10 @@ function drawGreenBoxes(){
     //----------------------------------------
 
 ctx.fillStyle =
-    target.id === activeTargetId
+    target === activeTarget
         ? "#00FF00"
-        : "#777777";
+        : "#666666";
+
 ctx.font = "bold 24px Arial";
 let label =
     target.active
@@ -1497,9 +1505,12 @@ ctx.fillText(
         ctx.save();
      
         ctx.strokeStyle =
-    target.id === activeTargetId
+  
+    ctx.strokeStyle =
+    target === activeTarget
         ? "#00FF00"
-        : "#555555";
+        : "#666666";
+        
         ctx.lineWidth = 4;
         if(currentTarget.shape === "rectangle"){
             ctx.strokeRect(
