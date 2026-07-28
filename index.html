@@ -1721,6 +1721,52 @@ targetHistory.push({
 redrawOverlay();
 
 }
+
+//------------------------------------------------
+// GET ACTIVE TARGET FOR PLAYBACK
+//------------------------------------------------
+
+function getPlaybackActiveTarget(playbackTime){
+
+    //----------------------------------------
+    // Default to current active target
+    //----------------------------------------
+
+    let targetId = null;
+
+    //----------------------------------------
+    // Find latest target change
+    //----------------------------------------
+
+    for(const event of targetHistory){
+
+        if(event.time <= playbackTime){
+
+            targetId = event.id;
+
+        }else{
+
+            break;
+
+        }
+
+    }
+
+    //----------------------------------------
+    // Find matching target object
+    //----------------------------------------
+
+    if(targetId === null){
+        return null;
+    }
+
+    return targets.find(
+
+        target => target.id === targetId
+
+    );
+
+}
     
 //------------------------------------------------
 // CLEAR OVERLAY -->
@@ -2360,6 +2406,30 @@ function redrawOverlay({
 
     clearOverlay();
 
+//----------------------------------------
+// Playback active target
+//----------------------------------------
+
+let savedActiveTarget = activeTarget;
+
+if(maxTime !== Infinity){
+
+    const playbackTarget =
+
+        getPlaybackActiveTarget(
+
+            maxTime
+
+        );
+
+    if(playbackTarget){
+
+        activeTarget = playbackTarget;
+
+    }
+
+}
+    
     //----------------------------------------
     // Draw all targets
     //----------------------------------------
@@ -2372,6 +2442,12 @@ drawGreenBoxes();
 
 drawHits(maxTime);
 
+//----------------------------------------
+// Restore live active target
+//----------------------------------------
+
+activeTarget = savedActiveTarget;
+    
     //----------------------------------------
     // Draw countdown if active
     //----------------------------------------
