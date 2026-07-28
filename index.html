@@ -1609,20 +1609,30 @@ ctx.fillText(
 function nextTarget(){
 
     //----------------------------------------
-    // Need at least one target
+    // Build a list of usable targets
     //----------------------------------------
 
-    if(targets.length === 0){
+    const availableTargets =
+
+        targets.filter(
+
+            target => target.calibrated
+
+        );
+
+    if(availableTargets.length === 0){
+
         return;
+
     }
 
     //----------------------------------------
-    // No active target yet
+    // Only one target
     //----------------------------------------
 
-    if(activeTarget === null){
+    if(availableTargets.length === 1){
 
-        activeTarget = targets[0];
+        activeTarget = availableTargets[0];
 
         redrawOverlay();
 
@@ -1631,24 +1641,34 @@ function nextTarget(){
     }
 
     //----------------------------------------
-    // Find current target index
+    // Pick a different target
     //----------------------------------------
 
-    let index = targets.indexOf(activeTarget);
+    let newTarget;
 
-    //----------------------------------------
-    // Move to next target
-    //----------------------------------------
+    do{
 
-    index++;
+        const randomIndex = Math.floor(
 
-    if(index >= targets.length){
+            Math.random() *
 
-        index = 0;
+            availableTargets.length
+
+        );
+
+        newTarget =
+
+            availableTargets[randomIndex];
 
     }
 
-    activeTarget = targets[index];
+    while(newTarget === activeTarget);
+
+    //----------------------------------------
+    // Activate it
+    //----------------------------------------
+
+    activeTarget = newTarget;
 
     redrawOverlay();
 
