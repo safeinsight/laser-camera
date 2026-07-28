@@ -1436,11 +1436,11 @@ function drawGreenBoxes(){
         ctx.save();
       ctx.strokeStyle =
 
-    target.active
-
+ctx.strokeStyle =
+    target === activeTarget
         ? "#00FF00"
-
         : "#808080";
+        
         ctx.lineWidth = 4;
         if(target.shape === "rectangle"){
             ctx.strokeRect(
@@ -1474,10 +1474,7 @@ ctx.fillStyle =
         : "#666666";
 
 ctx.font = "bold 24px Arial";
-let label =
-    target.active
-        ? target.id
-        : target.id + "X";
+let label = target.id;
 
 ctx.fillText(
     label,
