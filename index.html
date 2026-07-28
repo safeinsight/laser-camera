@@ -167,7 +167,7 @@ select{
     color:white;
 }
 
-#calibrateBtn{
+#drawTargetBtn{
 background:#0066cc;
 color:white;
 }
@@ -414,7 +414,7 @@ Shots: 0
 
 <h4>Target Draw</h4>
 
-<button id="calibrateBtn">
+<button id="drawTargetBtn">
     Draw Target
 </button>
 
@@ -603,9 +603,9 @@ document.getElementById(
 "shotsOverlay"
 );
 
-const calibrateBtn=
+const drawTargetBtn=
 document.getElementById(
-"calibrateBtn"
+"drawTargetBtn"
 );
 
 const startBtn=
@@ -2375,7 +2375,7 @@ function drawCurrentLaser(hitX, hitY){
     currentLaserVisible = true;
 }
 
-calibrateBtn.onclick=()=>{
+drawTargetBtn.onclick=()=>{
 
     settingsPanel.style.display = "none";
 
