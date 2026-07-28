@@ -422,6 +422,12 @@ Shots: 0
     Clear Target
 </button>
 
+<button id="deleteTargetsBtn">
+    Delete Targets
+</button>
+
+<br><br>    
+
 <br><br>
 
 <br><br>
@@ -616,6 +622,11 @@ const clearTargetBtn =
 document.getElementById(
 "clearTargetBtn"
 );
+
+const deleteTargetsBtn =
+document.getElementById(
+"deleteTargetsBtn"
+);    
 
 const analysisLabel =
 document.getElementById(
@@ -1069,6 +1080,33 @@ function clearSessionData(){
 
     redrawOverlay();
 }
+
+    //--------------------------------
+    // Delete Targets
+    //--------------------------------
+    
+function deleteAllTargets(){
+
+    // Clear all shot data
+    hits = [];
+    shots = 0;
+    groupCenter = null;
+
+    // Remove every target
+    targets = [];
+
+    activeTarget = null;
+    currentTarget = null;
+
+    calibrationStep = 0;
+    calibrationDragging = false;
+
+    currentLaserVisible = false;
+
+    updateDisplays();
+    redrawOverlay();
+}
+    
     
 //--------------------------
 // COUNTDOWN -->
@@ -2540,6 +2578,17 @@ clearTargetBtn.onclick = () => {
     settingsPanel.style.display = "none";
 };
 
+
+deleteTargetsBtn.onclick = ()=>{
+
+    if(confirm("Delete ALL targets?")){
+        deleteAllTargets();
+        settingsPanel.style.display = "none";
+    }
+
+};
+
+    
     
 
 </script>
