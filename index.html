@@ -418,6 +418,12 @@ Shots: 0
     Draw Target
 </button>
 
+<button id="clearTargetBtn">
+    Clear Target
+</button>
+
+<br><br>
+
 <br><br>
 
     <!--=====================================-->
@@ -604,6 +610,11 @@ document.getElementById(
 const analysisBtn =
 document.getElementById(
 "analysisBtn"
+);
+
+const clearTargetBtn =
+document.getElementById(
+"clearTargetBtn"
 );
 
 const analysisLabel =
@@ -1041,6 +1052,24 @@ function clearSessionData(){
     );
 }
 
+    //--------------------------------
+    // Clear Target Information
+    //--------------------------------
+    
+    function clearTargetData(){
+
+    hits = [];
+    shots = 0;
+
+    groupCenter = null;
+
+    currentLaserVisible = false;
+
+    updateDisplays();
+
+    redrawOverlay();
+}
+    
 //--------------------------
 // COUNTDOWN -->
 //--------------------------
@@ -2503,6 +2532,13 @@ settingsBtn.onclick=()=>{
     }
 };
 
+
+clearTargetBtn.onclick = () => {
+
+    clearTargetData();
+
+    settingsPanel.style.display = "none";
+};
 
     
 
