@@ -661,8 +661,18 @@ document.getElementById(
 const countdownSound = new Audio("shot-beep.mp3");
 countdownSound.preload = "auto";
 
-const hitSound = new Audio("pistol-shot.mp3");
-hitSound.preload = "auto";
+const hitSoundTemplate = new Audio("pistol-shot.mp3");
+hitSoundTemplate.preload = "auto";
+
+function playHitSound() {
+    const sound = hitSoundTemplate.cloneNode();
+
+    sound.volume = 1.0;
+
+    sound.play().catch(err => {
+        console.log("Hit sound failed:", err);
+    });
+}
     
 const sensitivitySelect =
 document.getElementById(
