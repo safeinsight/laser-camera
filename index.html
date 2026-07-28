@@ -1408,6 +1408,8 @@ function setActiveTarget(targetId){
     redrawOverlay();
 
 }
+
+
     
 //------------------------------------------------
 // DRAW ALL TARGETS -->
@@ -1534,6 +1536,58 @@ ctx.fillText(
     }
 }
 
+//------------------------------------------------
+// NEXT TARGET
+//------------------------------------------------
+
+function nextTarget(){
+
+    //----------------------------------------
+    // Need at least one target
+    //----------------------------------------
+
+    if(targets.length === 0){
+        return;
+    }
+
+    //----------------------------------------
+    // No active target yet
+    //----------------------------------------
+
+    if(activeTarget === null){
+
+        activeTarget = targets[0];
+
+        redrawOverlay();
+
+        return;
+
+    }
+
+    //----------------------------------------
+    // Find current target index
+    //----------------------------------------
+
+    let index = targets.indexOf(activeTarget);
+
+    //----------------------------------------
+    // Move to next target
+    //----------------------------------------
+
+    index++;
+
+    if(index >= targets.length){
+
+        index = 0;
+
+    }
+
+    activeTarget = targets[index];
+
+    redrawOverlay();
+
+}
+    
 //------------------------------------------------
 // CLEAR OVERLAY -->
 //------------------------------------------------
