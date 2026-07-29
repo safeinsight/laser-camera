@@ -1008,6 +1008,46 @@ function resizeEverything(){
     cameraHeight = video.videoHeight;
 
     //----------------------------------------
+    // Fit video to available screen
+    //----------------------------------------
+
+    const maxWidth = window.innerWidth;
+
+    const maxHeight =
+        window.innerHeight;
+
+    const aspect =
+        cameraWidth / cameraHeight;
+
+    let drawWidth =
+        maxWidth;
+
+    let drawHeight =
+        drawWidth / aspect;
+
+    if(drawHeight > maxHeight){
+
+        drawHeight =
+            maxHeight;
+
+        drawWidth =
+            drawHeight * aspect;
+
+    }
+
+    video.style.width =
+        drawWidth + "px";
+
+    video.style.height =
+        drawHeight + "px";
+
+    overlay.style.width =
+        drawWidth + "px";
+
+    overlay.style.height =
+        drawHeight + "px";
+
+    //----------------------------------------
     // Store displayed size
     //----------------------------------------
 
