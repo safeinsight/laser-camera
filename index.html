@@ -44,7 +44,7 @@ align-items:center;
 
 width:100vw;
 
-height:calc(100dvh - 70px);
+height:100vh;
 
 overflow:hidden;
 
@@ -82,28 +82,54 @@ display:none;
 }
 
 #timerOverlay{
-    position:static;      /* No longer absolutely positioned */
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
+    position:absolute;
+    top:15px;
+    left:15px;
 
-    min-width:110px;
-    height:42px;
+    background:rgba(0,0,0,.55);
 
-    background:#000;
-    color:#fff;
+    padding:6px 16px;
 
-    padding:0 18px;
-
-    border-radius:8px;
+    border-radius:10px;
 
     font-size:22px;
+
     font-weight:bold;
 
-    box-sizing:border-box;
+    z-index:20;
 }
 
+#shotsOverlay{
 
+position:absolute;
+
+top:15px;
+
+right:15px;
+
+background:
+
+rgba(0,0,0,.55);
+
+padding:
+
+6px 12px;
+
+border-radius:
+
+10px;
+
+font-size:
+
+18px;
+
+font-weight:
+
+bold;
+
+z-index:20;
+
+}
 #distanceOverlay{
 position:absolute;
 bottom:15px;
@@ -185,10 +211,14 @@ background:#0066cc;
 color:white;
 }
 
-
+#startBtn{
+startBtn.innerHTML = "&#9654; Start Recording";
+background:#00a651;
+color:white;
+}
 
 #stopBtn{
-background:#ff0000;
+background:#d62828;
 color:white;
 }
 
@@ -265,74 +295,47 @@ input:checked + .slider:before{
     user-select:none;
 }
 
+#topControls{
+    position:absolute;
+    top:15px;
+    left:15px;
+    width:calc(100% - 30px);
+
+    display:flex;
+
+    justify-content:flex-start;
+
+    z-index:40;
+}
+
+#topControls button{
+    min-width:unset;
+    padding:10px 18px;
+    font-size:16px;
+}
+    
 /*----------------------------------------
-Bottom Toolbar
+Control Buttons
 ----------------------------------------*/
 
-#toolbar{
-
+#bottomControls{
     position:absolute;
 
-    bottom:0;
-    left:0;
+    bottom:15px;
 
-    width:100%;
+    left:15px;
 
-    min-height:70px;
-
-    padding:
-        0 20px
-        env(safe-area-inset-bottom);
-
-    background:white;
+    width:calc(100% - 30px);
 
     display:flex;
 
-    justify-content:space-between;
-
-    align-items:center;
-
-    box-sizing:border-box;
-
-    z-index:50;
-
-}
-
-.toolbar-section{
-    flex:1;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.toolbar-section.left{
-    justify-content:flex-start;
-}
-
-.toolbar-section.right{
     justify-content:flex-end;
+
+    z-index:40;
 }
 
-#toolbar button{
-    min-width:unset;
-    margin:0;
-    padding:10px 18px;
-    font-size:18px;
-}
-
-#settingsBtn{
-    background:#444;
-    color:white;
-}
-
-#timerBtn{
-    background:#0d6efd;
-    color:white;
-}
-
-#startBtn{
-    background:#00a651;
-    color:white;
+#bottomControls button{
+    min-width:220px;
 }
 
 #settingsBtn{
@@ -396,8 +399,8 @@ Settings Panel
 
 <body>
 
-<h2 style="color: red;">
-Safe Insight Laser Target
+<h2>
+Laser Target Trainer
 </h2>
 
 <div class="container">
@@ -422,30 +425,28 @@ id="overlay">
 id="detectCanvas">
 </canvas>
 
-
-
-<div id="toolbar">
-
-    <div class="toolbar-section left">
-        <div id="setupControls">
-            <button id="settingsBtn">
-                ⚙ 
-            </button>
-        </div>
-    </div>
-
-   <div class="toolbar-section">
-    <div id="timerOverlay">
-        00:00
-    </div>
+<div
+id="timerOverlay">
+00:00
 </div>
 
-    <div class="toolbar-section right">
-        <button id="startBtn">
-            ▶ Start 
-        </button>
-    </div>
+<div
+id="shotsOverlay">
+Shots: 0
+</div>
 
+<div id="topControls">
+    <div id="setupControls">
+    <button id="settingsBtn">
+        ⚙
+    </button>
+</div>
+</div>
+
+<div id="bottomControls">
+<button id="startBtn">
+&#9654; Start Recording
+</button>
 </div>
 
 <div id="settingsPanel">
@@ -645,7 +646,10 @@ document.getElementById(
 "timerOverlay"
 );
 
-
+const shotsOverlay=
+document.getElementById(
+"shotsOverlay"
+);
 
 const drawTargetBtn=
 document.getElementById(
@@ -1030,8 +1034,7 @@ overlay.addEventListener(
 //------------------------------------------------
 // RESIZE EVERYTHING -->
 //------------------------------------------------
-console.log("resizeEverything() called");
-    
+
 function resizeEverything(){
 
     const video =
@@ -1058,17 +1061,8 @@ function resizeEverything(){
 
     const maxWidth = window.innerWidth;
 
-    const toolbar =
-    document.getElementById("toolbar");
-
-    const toolbarHeight =
-    toolbar
-        ? toolbar.offsetHeight
-        : 0;
-
     const maxHeight =
-    window.innerHeight -
-    toolbarHeight;
+        window.innerHeight;
 
     const aspect =
         cameraWidth / cameraHeight;
@@ -1116,18 +1110,6 @@ function resizeEverything(){
 
     overlay.width = cameraWidth;
     overlay.height = cameraHeight;
-
-    detectCanvas.width = displayWidth;
-    detectCanvas.height = displayHeight;
-
-    detectCanvas.style.width = drawWidth + "px";
-    detectCanvas.style.height = drawHeight + "px";
-
-    console.log(
-    "detectCanvas after resize:",
-    detectCanvas.width,
-    detectCanvas.height
-);
 
     //----------------------------------------
     // Conversion factors
@@ -1388,7 +1370,7 @@ function stopRecording(){
 
     mediaRecorder.stop();
     clearInterval(timerInterval);
-   startBtn.innerHTML = "&#9654; Start";
+   startBtn.innerHTML = "&#9654; Start Recording";
     startBtn.style.background = "#00a651";
     startBtn.style.color = "white";
     setupControls.hidden = false;
@@ -1459,7 +1441,8 @@ let time=
 timerOverlay.innerHTML=
 time;
 
-    
+shotsOverlay.innerHTML=
+`Shots: ${shots}`;
 }
 
 //------------------------------------------------
@@ -1552,12 +1535,6 @@ const rect = overlay.getBoundingClientRect();
         Math.min(calibrationStartY, calibrationCurrentY);
     currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
-    
-    console.log(
-    "Saved Target:",
-    currentTarget
-);
-    
 currentTarget.calibrated = true;
 currentTarget.shape = targetShape;
 
@@ -1935,14 +1912,6 @@ function scanTarget(target, pixels){
 
     const box = getTargetPixels(target);
 
-    console.log({
-    id: target.id,
-    top: target.top,
-    bottom: target.bottom,
-    boxTop: box.top,
-    boxBottom: box.bottom
-});
-
     let totalWeight = 0;
     let totalX = 0;
     let totalY = 0;
@@ -2172,15 +2141,9 @@ function scanTarget(target, pixels){
 //------------------------------------------------
 // LASER DETECTION -->
 //------------------------------------------------
-    
+
 function detectLaser(){
 
-    console.log(
-    "Detect canvas during detection:",
-    detectCanvas.width,
-    detectCanvas.height
-);
-    
     if(
         !mediaRecorder ||
         mediaRecorder.state !== "recording"
@@ -2395,18 +2358,6 @@ currentLaserVisible = false;
         totalY/
         totalWeight;
 
-    console.log(
-    "Detector:",
-    Math.round(hitX),
-    Math.round(hitY)
-);
-
-console.log(
-    "Overlay:",
-    Math.round(currentLaserX),
-    Math.round(currentLaserY)
-);
-
     //---------------------------------------
     // Laser is currently being tracked
     //---------------------------------------
@@ -2430,19 +2381,6 @@ if(laserState === LASER_WAITING){
     if(now - lastShotTime >= DETECTOR.shotDelay){
         lastShotTime = now;
         shots++;
-        
-        console.log(
-    "RAW HIT:",
-    hitX,
-    hitY,
-    "canvas:",
-    detectCanvas.width,
-    detectCanvas.height,
-    "overlay:",
-    overlay.width,
-    overlay.height
-);
-        
         hits.push({
             x: hitX / detectCanvas.width,
             y: hitY / detectCanvas.height,
@@ -2784,7 +2722,8 @@ let secs=
 
 timerOverlay.innerHTML=
 `${mins}:${secs}`;
-
+shotsOverlay.innerHTML=
+`Shots: ${hits.length}`;
 requestAnimationFrame(
 syncPlayback
 );
@@ -2803,8 +2742,8 @@ startBtn.onclick = ()=>{
         clearOverlay();
         drawHits();
 
-startBtn.innerHTML = "&#9654; Start";
-startBtn.style.background = "#00a651";
+startBtn.innerHTML = "&#9654; Start Recording";
+startBtn.style.background = "#2e7d32";
 startBtn.style.color = "white";
 
 // Restore setup buttons
@@ -2827,8 +2766,8 @@ return;
     console.log("START BUTTON CLICKED");
 
     // Immediately switch button to STOP state
-  startBtn.innerHTML = "&#9632; Stop";
-    startBtn.style.background = "#ff0000";
+  startBtn.innerHTML = "&#9632; Stop Recording";
+    startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
 
    clearSessionData();
