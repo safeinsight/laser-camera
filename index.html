@@ -1519,7 +1519,7 @@ let time=
 timerOverlay.innerHTML=
 time;
 
-shotsOverlay.innerHTML=
+shotsOverlay?.innerHTML=
 `Shots: ${shots}`;
 }
 
@@ -2800,7 +2800,7 @@ let secs=
 
 timerOverlay.innerHTML=
 `${mins}:${secs}`;
-shotsOverlay.innerHTML=
+shotsOverlay?.innerHTML=
 `Shots: ${hits.length}`;
 requestAnimationFrame(
 syncPlayback
