@@ -382,10 +382,6 @@ id="timerOverlay">
 00:00
 </div>
 
-<div
-id="shotsOverlay">
-Shots: 0
-</div>
 
 <div id="topControls">
     <div id="setupControls">
@@ -598,10 +594,6 @@ document.getElementById(
 "timerOverlay"
 );
 
-const shotsOverlay=
-document.getElementById(
-"shotsOverlay"
-);
 
 const drawTargetBtn=
 document.getElementById(
@@ -1353,8 +1345,6 @@ let time=
 timerOverlay.innerHTML=
 time;
 
-shotsOverlay.innerHTML=
-`Shots: ${shots}`;
 }
 
 //------------------------------------------------
@@ -2634,8 +2624,7 @@ let secs=
 
 timerOverlay.innerHTML=
 `${mins}:${secs}`;
-shotsOverlay.innerHTML=
-`Shots: ${hits.length}`;
+
 requestAnimationFrame(
 syncPlayback
 );
