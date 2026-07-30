@@ -27,57 +27,29 @@ margin-top:15px;
 }
 
 .container{
-
-    position:fixed;
-
-    top:0;
-    left:0;
-
-    width:100vw;
-    height:100dvh;
-
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    overflow:hidden;
-
+position:relative;
+width:95%;
+max-width:700px;
+margin:auto;
 }
-
 
 video{
-
-    display:block;
-
-    background:black;
-
-    width:100%;
-    height:100%;
-
-    object-fit:contain;
-
+width:100%;
+display:block;
+background:black;
+border-radius:12px;
 }
-
 
 #overlay{
-
-    position:absolute;
-
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    pointer-events:auto;
-
-    z-index:5;
-
-    touch-action:none;
-
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:auto;
+z-index:5;
+touch-action:none;
 }
-
 
 #detectCanvas{
 display:none;
@@ -298,8 +270,6 @@ Bottom Toolbar
     left:0;
     width:100%;
     height:70px;
-    padding-bottom:env(safe-area-inset-bottom);
-
 
     background:white;
 
@@ -414,7 +384,7 @@ Settings Panel
 <body>
 
 <h2>
-SI Laser Target Trainer
+SI Laser XX Target Trainer
 </h2>
 
 <div class="container">
@@ -1086,7 +1056,6 @@ function resizeEverything(){
     overlay.width = cameraWidth;
     overlay.height = cameraHeight;
 
-   
     //----------------------------------------
     // Conversion factors
     //----------------------------------------
@@ -1271,13 +1240,6 @@ lastShotTime = 0;
 
 updateDisplays();
 
-//-------------------------------------
-// Match detector to camera resolution
-//-------------------------------------
-
-detectCanvas.width  = preview.videoWidth;
-detectCanvas.height = preview.videoHeight;
-
 mediaRecorder=
 
 new MediaRecorder(
@@ -1381,17 +1343,11 @@ URL.createObjectURL(
 blob
 );
 
-preview.style.display = "none";
-
-playback.style.display = "block";
-
-playback.src = url;
-
-playback.onloadedmetadata = function(){
-
-    resizeEverything();
-
-};
+preview.style.display=
+"none";
+playback.style.display=
+"block";
+playback.src=url;
 
     //----------------------------------------
     // Calculate final group center
@@ -2866,6 +2822,7 @@ deleteTargetsBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
 
 
