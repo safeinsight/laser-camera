@@ -396,7 +396,7 @@ Settings Panel
 
 <body>
 
-<h2 style="color: red;">
+<h2 style="color: blue;">
 Safe Insight Laser Target
 </h2>
 
@@ -1922,11 +1922,13 @@ function scanTarget(target, pixels){
 
     const box = getTargetPixels(target);
 
-    console.log(
-    "BOX",
-    target.id,
-    box
-);
+    console.log({
+    id: target.id,
+    top: target.top,
+    bottom: target.bottom,
+    boxTop: box.top,
+    boxBottom: box.bottom
+});
 
     let totalWeight = 0;
     let totalX = 0;
