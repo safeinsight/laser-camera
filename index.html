@@ -1030,7 +1030,8 @@ overlay.addEventListener(
 //------------------------------------------------
 // RESIZE EVERYTHING -->
 //------------------------------------------------
-
+console.log("resizeEverything() called");
+    
 function resizeEverything(){
 
     const video =
@@ -1121,6 +1122,12 @@ function resizeEverything(){
 
     detectCanvas.style.width = drawWidth + "px";
     detectCanvas.style.height = drawHeight + "px";
+
+    console.log(
+    "detectCanvas after resize:",
+    detectCanvas.width,
+    detectCanvas.height
+);
 
     //----------------------------------------
     // Conversion factors
