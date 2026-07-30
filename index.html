@@ -1086,6 +1086,9 @@ function resizeEverything(){
     overlay.width = cameraWidth;
     overlay.height = cameraHeight;
 
+    detectCanvas.width = cameraWidth;
+    detectCanvas.height = cameraHeight;
+
     //----------------------------------------
     // Conversion factors
     //----------------------------------------
@@ -1373,11 +1376,17 @@ URL.createObjectURL(
 blob
 );
 
-preview.style.display=
-"none";
-playback.style.display=
-"block";
-playback.src=url;
+preview.style.display = "none";
+
+playback.style.display = "block";
+
+playback.src = url;
+
+playback.onloadedmetadata = function(){
+
+    resizeEverything();
+
+};
 
     //----------------------------------------
     // Calculate final group center
