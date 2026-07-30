@@ -9,7 +9,7 @@ name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
-Safe Insight Laser Target
+Laser Target Trainer
 </title>
 
 <style>
@@ -27,43 +27,17 @@ margin-top:15px;
 }
 
 .container{
-
-position:fixed;
-
-top:50%;
-
-left:50%;
-
-transform:translate(-50%,-50%);
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-width:100vw;
-
-height:100vh;
-
-overflow:hidden;
-
+position:relative;
+width:95%;
+max-width:700px;
+margin:auto;
 }
 
 video{
-
+width:100%;
 display:block;
-
 background:black;
-
-border-radius:0;
-
-max-width:100%;
-
-max-height:100%;
-
-object-fit:contain;
-
+border-radius:12px;
 }
 
 #overlay{
@@ -82,54 +56,41 @@ display:none;
 }
 
 #timerOverlay{
-    position:absolute;
-    top:15px;
-    left:15px;
-
-    background:rgba(0,0,0,.55);
-
-    padding:6px 16px;
-
-    border-radius:10px;
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    z-index:20;
+position:absolute;
+top:15px;
+left:50%;
+transform:
+translateX(-50%);
+background:
+rgba(0,0,0,.55);
+padding:
+6px 16px;
+border-radius:
+10px;
+font-size:
+22px;
+font-weight:
+bold;
+z-index:20;
 }
 
 #shotsOverlay{
-
 position:absolute;
-
-top:15px;
-
-right:15px;
-
+bottom:15px;
+left:15px;
 background:
-
 rgba(0,0,0,.55);
-
 padding:
-
 6px 12px;
-
 border-radius:
-
 10px;
-
 font-size:
-
 18px;
-
 font-weight:
-
 bold;
-
 z-index:20;
-
 }
+
 #distanceOverlay{
 position:absolute;
 bottom:15px;
@@ -299,12 +260,9 @@ input:checked + .slider:before{
     position:absolute;
     top:15px;
     left:15px;
-    width:calc(100% - 30px);
-
+    right:15px;
     display:flex;
-
-    justify-content:flex-start;
-
+    justify-content:space-between;
     z-index:40;
 }
 
@@ -320,17 +278,11 @@ Control Buttons
 
 #bottomControls{
     position:absolute;
-
     bottom:15px;
-
     left:15px;
-
-    width:calc(100% - 30px);
-
+    right:15px;
     display:flex;
-
-    justify-content:flex-end;
-
+    justify-content:center;
     z-index:40;
 }
 
@@ -399,7 +351,7 @@ Settings Panel
 
 <body>
 
-<h2 style="color: red;>
+<h2>
 Laser Target Trainer
 </h2>
 
@@ -1054,46 +1006,6 @@ function resizeEverything(){
 
     cameraWidth = video.videoWidth;
     cameraHeight = video.videoHeight;
-
-    //----------------------------------------
-    // Fit video to available screen
-    //----------------------------------------
-
-    const maxWidth = window.innerWidth;
-
-    const maxHeight =
-        window.innerHeight;
-
-    const aspect =
-        cameraWidth / cameraHeight;
-
-    let drawWidth =
-        maxWidth;
-
-    let drawHeight =
-        drawWidth / aspect;
-
-    if(drawHeight > maxHeight){
-
-        drawHeight =
-            maxHeight;
-
-        drawWidth =
-            drawHeight * aspect;
-
-    }
-
-    video.style.width =
-        drawWidth + "px";
-
-    video.style.height =
-        drawHeight + "px";
-
-    overlay.style.width =
-        drawWidth + "px";
-
-    overlay.style.height =
-        drawHeight + "px";
 
     //----------------------------------------
     // Store displayed size
