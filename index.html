@@ -396,7 +396,7 @@ Settings Panel
 
 <body>
 
-<h2 style="color: blue;">
+<h2 style="color: red;">
 Safe Insight Laser Target
 </h2>
 
@@ -1539,6 +1539,12 @@ const rect = overlay.getBoundingClientRect();
         Math.min(calibrationStartY, calibrationCurrentY);
     currentTarget.bottom =
         Math.max(calibrationStartY, calibrationCurrentY);
+    
+    console.log(
+    "Saved Target:",
+    currentTarget
+);
+    
 currentTarget.calibrated = true;
 currentTarget.shape = targetShape;
 
