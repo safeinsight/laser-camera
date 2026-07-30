@@ -2172,14 +2172,15 @@ function scanTarget(target, pixels){
 //------------------------------------------------
 // LASER DETECTION -->
 //------------------------------------------------
-console.log(
-    "Detect canvas:",
+    
+function detectLaser(){
+
+    console.log(
+    "Detect canvas during detection:",
     detectCanvas.width,
     detectCanvas.height
 );
     
-function detectLaser(){
-
     if(
         !mediaRecorder ||
         mediaRecorder.state !== "recording"
