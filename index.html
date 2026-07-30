@@ -444,7 +444,7 @@ Settings Panel
     text-align:center;
 }
 
-
+<div id="shotsOverlay" style="display:none;"></div>
     
 #settingsPanel h4{
     margin-top:20px;
@@ -2796,8 +2796,10 @@ let secs=
 
 timerOverlay.innerHTML=
 `${mins}:${secs}`;
-shotsOverlay?.innerHTML=
-`Shots: ${hits.length}`;
+if (shotsOverlay) {
+    shotsOverlay.innerHTML =
+    `Shots: ${hits.length}`;
+}
 requestAnimationFrame(
 syncPlayback
 );
