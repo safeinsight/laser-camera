@@ -1086,9 +1086,7 @@ function resizeEverything(){
     overlay.width = cameraWidth;
     overlay.height = cameraHeight;
 
-    detectCanvas.width = cameraWidth;
-    detectCanvas.height = cameraHeight;
-
+   
     //----------------------------------------
     // Conversion factors
     //----------------------------------------
@@ -1272,6 +1270,13 @@ learnBackground = true;
 lastShotTime = 0;
 
 updateDisplays();
+
+//-------------------------------------
+// Match detector to camera resolution
+//-------------------------------------
+
+detectCanvas.width  = preview.videoWidth;
+detectCanvas.height = preview.videoHeight;
 
 mediaRecorder=
 
