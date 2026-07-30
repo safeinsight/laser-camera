@@ -396,7 +396,7 @@ Settings Panel
 
 <body>
 
-<h2 style="color: blue;">
+<h2 style="color: red;">
 Safe Insight Laser Target
 </h2>
 
@@ -1115,6 +1115,12 @@ function resizeEverything(){
 
     overlay.width = cameraWidth;
     overlay.height = cameraHeight;
+
+    detectCanvas.width = displayWidth;
+    detectCanvas.height = displayHeight;
+
+    detectCanvas.style.width = drawWidth + "px";
+    detectCanvas.style.height = drawHeight + "px";
 
     //----------------------------------------
     // Conversion factors
