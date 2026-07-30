@@ -44,7 +44,7 @@ align-items:center;
 
 width:100vw;
 
-height:100dvh;
+height:calc(100dvh - 70px);
 
 overflow:hidden;
 
@@ -60,7 +60,7 @@ border-radius:0;
 
 max-width:100%;
 
- max-height:calc(100% - 70px);
+max-height:100%;
 
 object-fit:contain;
 
@@ -1061,8 +1061,17 @@ function resizeEverything(){
 
     const maxWidth = window.innerWidth;
 
+    const toolbar =
+    document.getElementById("toolbar");
+
+    const toolbarHeight =
+    toolbar
+        ? toolbar.offsetHeight
+        : 0;
+
     const maxHeight =
-        window.innerHeight;
+    window.innerHeight -
+    toolbarHeight;
 
     const aspect =
         cameraWidth / cameraHeight;
