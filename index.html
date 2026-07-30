@@ -2430,6 +2430,19 @@ if(laserState === LASER_WAITING){
     if(now - lastShotTime >= DETECTOR.shotDelay){
         lastShotTime = now;
         shots++;
+        
+        console.log(
+    "RAW HIT:",
+    hitX,
+    hitY,
+    "canvas:",
+    detectCanvas.width,
+    detectCanvas.height,
+    "overlay:",
+    overlay.width,
+    overlay.height
+);
+        
         hits.push({
             x: hitX / detectCanvas.width,
             y: hitY / detectCanvas.height,
