@@ -1109,24 +1109,6 @@ overlay.style.height =
 const overlayRect =
     overlay.getBoundingClientRect();
 
-
-console.log(
-    "VIDEO RECT:",
-    rect.left,
-    rect.top,
-    rect.width,
-    rect.height
-);
-
-
-console.log(
-    "OVERLAY RECT:",
-    overlayRect.left,
-    overlayRect.top,
-    overlayRect.width,
-    overlayRect.height
-);
-
     displayWidth =
         rect.width;
 
@@ -1219,16 +1201,7 @@ detectCanvas.height = 360;
     // Resize CSS canvas exactly to video
     //----------------------------------------
 
-
-    console.log(
-        "Video Display:",
-        displayWidth,
-        displayHeight
-    );
-
-
     redrawOverlay();
-
 }
 
 //------------------------------------
