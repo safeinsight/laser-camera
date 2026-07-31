@@ -62,18 +62,16 @@ background:black;
 }
 
 video{
-width:100%;
-height:100%;
+max-width:100%;
+max-height:100%;
+width:auto;
+height:auto;
 object-fit:contain;
 background:black;
 }
 
 #overlay{
 position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
 pointer-events:auto;
 z-index:5;
 touch-action:none;
@@ -418,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SI Trainer
+SI LASER
 </h2>
 
 <div class="app">
@@ -1077,7 +1075,14 @@ function resizeEverything(){
 
     const rect =
         video.getBoundingClientRect();
+overlay.style.left = "0px";
+overlay.style.top = "0px";
 
+overlay.style.width =
+    rect.width + "px";
+
+overlay.style.height =
+    rect.height + "px";
 
     displayWidth =
         rect.width;
