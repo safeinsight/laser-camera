@@ -416,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SI TRAINING
+SI LASER
 </h2>
 
 <div class="app">
@@ -1189,11 +1189,28 @@ overlay.height =
 //----------------------------------------
 
 //----------------------------------------
-// Detection canvas uses reduced resolution
+// Adaptive detection resolution
 //----------------------------------------
 
-detectCanvas.width = 640;
-detectCanvas.height = 360;
+const shortSide =
+    Math.min(
+        window.innerWidth,
+        window.innerHeight
+    );
+
+if(shortSide < 700){
+
+    // Phone
+    detectCanvas.width = 480;
+    detectCanvas.height = 270;
+
+}else{
+
+    // Tablet/Desktop
+    detectCanvas.width = 640;
+    detectCanvas.height = 360;
+
+}
 
 
 
