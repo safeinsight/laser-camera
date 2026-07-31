@@ -418,7 +418,7 @@ z-index:100;
 <body>
 
 <h2>
-SI Laser XX Target Trainer
+SI LaserTarget Trainer
 </h2>
 
 <div class="app">
@@ -2371,6 +2371,19 @@ if(laserState === LASER_WAITING){
     if(now - lastShotTime >= DETECTOR.shotDelay){
         lastShotTime = now;
         shots++;
+
+        console.log(
+    "DETECT:",
+    detectCanvas.width,
+    detectCanvas.height,
+    "OVERLAY:",
+    overlay.width,
+    overlay.height,
+    "HIT:",
+    hitX,
+    hitY
+);
+        
         hits.push({
             x: hitX / detectCanvas.width,
             y: hitY / detectCanvas.height,
