@@ -416,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SI 123
+SI TRAINING
 </h2>
 
 <div class="app">
@@ -928,14 +928,7 @@ let cameraHeight = 0;
 let displayWidth = 0;
 let displayHeight = 0;
 
-//------------------------------------------------
-// LOCKED DISPLAY SIZE
-//------------------------------------------------
 
-let videoLocked = false;
-
-let lockedWidth = 0;
-let lockedHeight = 0;
 
     //-------------------------------------
     // Overlay Scale
@@ -1063,38 +1056,7 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
-//------------------------------------------------
-// LOCK VIDEO SIZE -->
-//------------------------------------------------
-    
-function lockVideoSize(){
 
-    const rect = preview.getBoundingClientRect();
-
-    lockedWidth = rect.width;
-    lockedHeight = rect.height;
-
-    const container = preview.parentElement;
-
-    container.style.flex = "0 0 auto";
-    container.style.width = lockedWidth + "px";
-    container.style.height = lockedHeight + "px";
-
-    preview.style.width = lockedWidth + "px";
-    preview.style.height = lockedHeight + "px";
-
-    overlay.style.width = lockedWidth + "px";
-    overlay.style.height = lockedHeight + "px";
-
-    videoLocked = true;
-
-    console.log(
-        "VIDEO LOCKED:",
-        lockedWidth,
-        lockedHeight
-    );
-
-}
 
 //------------------------------------------------
 // RESIZE EVERYTHING -->
@@ -1102,9 +1064,7 @@ function lockVideoSize(){
 
 function resizeEverything(){
 
-if(videoLocked){
-        return;
-    }
+
     
     const video =
         preview.style.display != "none"
@@ -1328,16 +1288,6 @@ function clearSessionData(){
 
     currentLaserVisible = false;
 
-    videoLocked = false;
-
-const container = preview.parentElement;
-
-container.style.flex = "";
-container.style.width = "";
-container.style.height = "";
-
-preview.style.width = "";
-preview.style.height = "";
 
     updateDisplays();
 
@@ -1364,16 +1314,6 @@ function deleteAllTargets(){
     calibrationStep = 0;
     calibrationDragging = false;
 
-    videoLocked = false;
-
-const container = preview.parentElement;
-
-container.style.flex = "";
-container.style.width = "";
-container.style.height = "";
-
-preview.style.width = "";
-preview.style.height = "";
 
     currentLaserVisible = false;
     resetGrid();
@@ -1718,7 +1658,6 @@ calibrationStep = 0;
 resizeEverything();
 redrawOverlay();
 
-lockVideoSize();
 
 console.log("Normalized Target:", currentTarget);
     alert("Calibration Complete");
