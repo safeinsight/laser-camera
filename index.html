@@ -420,7 +420,7 @@ z-index:100;
 <body>
 
 <h2>
-SI Laser App
+SI x App
 </h2>
 
 <div class="app">
@@ -2499,48 +2499,38 @@ function drawHits(maxTime = Infinity){
     // Draw every saved hit up to maxTime
     //----------------------------------------
 
-    for(const hit of hits){
+   for(const hit of hits){
+
         if(hit.time > maxTime){
             continue;
         }
-    const drawX =
-    (hit.x * cameraWidth) /
-    videoScaleX;
 
-    const drawY =
-    (hit.y * cameraHeight) /
-    videoScaleY;
+        const drawX =
+            hit.x * overlay.width;
 
-    const finalX =
-    drawX + videoOffsetX;
+        const drawY =
+            hit.y * overlay.height;
 
-    const finalY =
-    drawY + videoOffsetY;
+
         ctx.beginPath();
-        
-    const markerSize =
-    Math.max(
-    5,
-    overlay.width * 0.004
-    );
 
+        ctx.arc(
+            drawX,
+            drawY,
+            5,
+            0,
+            Math.PI * 2
+        );
 
-    ctx.arc(
-        finalX,
-        finalY,
-        hitRadius,
-        0,
-        Math.PI * 2
-    );
-        
         ctx.fillStyle = "yellow";
         ctx.fill();
+
         ctx.lineWidth = 1;
         ctx.strokeStyle = "black";
         ctx.stroke();
     }
 }
-
+    
 //------------------------------------------------
 // CALCULATE GROUP CENTER -->
 //------------------------------------------------
@@ -2769,20 +2759,14 @@ function drawCurrentLaser(hitX, hitY){
     // Convert detector coordinates
     //----------------------------------------
 
-    currentLaserX =
-    (
-    hitX / videoScaleX
-    )
-    +
-    videoOffsetX;
+  currentLaserX =
+    (hitX / detectCanvas.width) *
+    overlay.width;
 
 
-    currentLaserY =
-    (
-    hitY / videoScaleY
-    )
-    +
-    videoOffsetY;
+currentLaserY =
+    (hitY / detectCanvas.height) *
+    overlay.height;
 
     //----------------------------------------
     // Laser is now visible
