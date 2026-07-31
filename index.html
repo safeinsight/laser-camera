@@ -420,7 +420,7 @@ z-index:100;
 <body>
 
 <h2>
-SI TRAINING
+SI Laser App
 </h2>
 
 <div class="app">
@@ -769,6 +769,14 @@ let countdownRunning = false;
 let countdownInterval = null;  
 let laserSensitivity = "normal";
 let recordingStartTime = 0;
+
+let videoOffsetX = 0;
+let videoOffsetY = 0;
+
+let videoScaleX = 1;
+let videoScaleY = 1;
+
+    
 let targetDistance = 7;
 
 if(distanceSelect){
@@ -1087,6 +1095,58 @@ function resizeEverything(){
     displayHeight =
         rect.height;
 
+    //----------------------------------------
+    // Calculate actual displayed camera image
+    // inside object-fit:contain video
+    //----------------------------------------
+
+const videoRatio =
+    cameraWidth / cameraHeight;
+
+const elementRatio =
+    rect.width / rect.height;
+
+
+let displayedWidth;
+let displayedHeight;
+
+
+if(elementRatio > videoRatio){
+
+    // black bars left/right
+
+    displayedHeight =
+        rect.height;
+
+    displayedWidth =
+        displayedHeight * videoRatio;
+
+}
+else{
+
+    // black bars top/bottom
+
+    displayedWidth =
+        rect.width;
+
+    displayedHeight =
+        displayedWidth / videoRatio;
+
+}
+
+
+videoOffsetX =
+    (rect.width - displayedWidth) / 2;
+
+videoOffsetY =
+    (rect.height - displayedHeight) / 2;
+
+
+videoScaleX =
+    cameraWidth / displayedWidth;
+
+videoScaleY =
+    cameraHeight / displayedHeight;
 
 
     //----------------------------------------
@@ -2443,25 +2503,36 @@ function drawHits(maxTime = Infinity){
         if(hit.time > maxTime){
             continue;
         }
-        const drawX =
-            hit.x * overlay.width;
-        const drawY =
-            hit.y * overlay.height;
+    const drawX =
+    (hit.x * cameraWidth) /
+    videoScaleX;
+
+    const drawY =
+    (hit.y * cameraHeight) /
+    videoScaleY;
+
+    const finalX =
+    drawX + videoOffsetX;
+
+    const finalY =
+    drawY + videoOffsetY;
         ctx.beginPath();
-const markerSize =
-Math.max(
-5,
-overlay.width * 0.004
-);
+        
+    const markerSize =
+    Math.max(
+    5,
+    overlay.width * 0.004
+    );
 
 
-ctx.arc(
-drawX,
-drawY,
-markerSize,
-            0,
-            Math.PI * 2
-        );
+    ctx.arc(
+        finalX,
+        finalY,
+        hitRadius,
+        0,
+        Math.PI * 2
+    );
+        
         ctx.fillStyle = "yellow";
         ctx.fill();
         ctx.lineWidth = 1;
@@ -2699,12 +2770,19 @@ function drawCurrentLaser(hitX, hitY){
     //----------------------------------------
 
     currentLaserX =
-        (hitX / detectCanvas.width) *
-        overlay.width;
+    (
+    hitX / videoScaleX
+    )
+    +
+    videoOffsetX;
+
 
     currentLaserY =
-        (hitY / detectCanvas.height) *
-        overlay.height;
+    (
+    hitY / videoScaleY
+    )
+    +
+    videoOffsetY;
 
     //----------------------------------------
     // Laser is now visible
