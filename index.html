@@ -420,7 +420,7 @@ z-index:100;
 <body>
 
 <h2>
-SI laser
+SI APP LASER
 </h2>
 
 <div class="app">
@@ -1088,13 +1088,25 @@ function resizeEverything(){
     const rect =
         video.getBoundingClientRect();
 
-    console.log(
-    "VIDEO:",
-    video.videoWidth,
-    video.videoHeight,
-    "RECT:",
+const overlayRect =
+    overlay.getBoundingClientRect();
+
+
+console.log(
+    "VIDEO RECT:",
+    rect.left,
+    rect.top,
     rect.width,
     rect.height
+);
+
+
+console.log(
+    "OVERLAY RECT:",
+    overlayRect.left,
+    overlayRect.top,
+    overlayRect.width,
+    overlayRect.height
 );
 
     displayWidth =
