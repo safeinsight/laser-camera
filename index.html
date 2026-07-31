@@ -416,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SI LASER
+SI LASER app
 </h2>
 
 <div class="app">
@@ -1408,6 +1408,12 @@ mediaRecorder
 showPlayback;
 mediaRecorder.start();
 
+setTimeout(()=>{
+
+    resizeEverything();
+    redrawOverlay();
+
+},250);
 
     //-------------------------------------
     // Start high-precision recording timer
