@@ -420,7 +420,7 @@ z-index:100;
 <body>
 
 <h2>
-SI x App
+SI App
 </h2>
 
 <div class="app">
@@ -1088,6 +1088,14 @@ function resizeEverything(){
     const rect =
         video.getBoundingClientRect();
 
+    console.log(
+    "VIDEO:",
+    video.videoWidth,
+    video.videoHeight,
+    "RECT:",
+    rect.width,
+    rect.height
+);
 
     displayWidth =
         rect.width;
