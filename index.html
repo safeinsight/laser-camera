@@ -416,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SI TRAINING LASER
+SI TRAINING 
 </h2>
 
 <div class="app">
@@ -1054,6 +1054,14 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
+window.addEventListener("resize", () => {
+    resizeEverything();
+});
+
+window.addEventListener("orientationchange", () => {
+    setTimeout(resizeEverything, 250);
+});
+
 //------------------------------------------------
 // RESIZE EVERYTHING -->
 //------------------------------------------------
@@ -1409,6 +1417,10 @@ mediaRecorder
 .onstop=
 showPlayback;
 mediaRecorder.start();
+
+setTimeout(() => {
+    resizeEverything();
+}, 300);
 
     //-------------------------------------
     // Start high-precision recording timer
