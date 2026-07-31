@@ -420,7 +420,7 @@ z-index:100;
 <body>
 
 <h2>
-SI app
+SI laser
 </h2>
 
 <div class="app">
@@ -2525,15 +2525,18 @@ hits.push({
 
 function drawHits(maxTime = Infinity){
 
-    console.log(
+    if(hits.length > 0){
+
+console.log(
     "DRAW HITS:",
     "overlay:",
     overlay.width,
     overlay.height,
-    "CSS:",
-    overlay.style.width,
-    overlay.style.height
+    "hits:",
+    hits.length
 );
+
+}
 
     //----------------------------------------
     // Draw every saved hit up to maxTime
@@ -2560,7 +2563,20 @@ function drawHits(maxTime = Infinity){
     drawY
 );
 
-        ctx.arc(
+       if(hit.time === hits[hits.length-1].time){
+
+console.log(
+    "DRAW MARKER:",
+    drawX,
+    drawY,
+    "NORMALIZED:",
+    hit.x,
+    hit.y
+);
+
+} 
+       
+       ctx.arc(
             drawX,
             drawY,
             5,
