@@ -420,7 +420,7 @@ z-index:100;
 <body>
 
 <h2>
-SI App
+SI LASER
 </h2>
 
 <div class="app">
@@ -2469,11 +2469,33 @@ if(laserState === LASER_WAITING){
     hitY
 );
         
-        hits.push({
-            x: hitX / detectCanvas.width,
-            y: hitY / detectCanvas.height,
-            time: (performance.now() - recordingStartTime) / 1000
-        });
+      const savedX =
+    hitX / detectCanvas.width;
+
+const savedY =
+    hitY / detectCanvas.height;
+
+
+console.log(
+    "SAVE HIT:",
+    "RAW:",
+    hitX,
+    hitY,
+    "NORMALIZED:",
+    savedX,
+    savedY,
+    "LIVE PIXELS:",
+    currentLaserX,
+    currentLaserY
+);
+
+
+hits.push({
+    x: savedX,
+    y: savedY,
+    time:
+        (performance.now() - recordingStartTime) / 1000
+});
 
         updateDisplays();
         playHitSound();
