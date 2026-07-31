@@ -416,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SI LASER app
+SI TRAINING
 </h2>
 
 <div class="app">
@@ -1109,6 +1109,24 @@ overlay.style.height =
 const overlayRect =
     overlay.getBoundingClientRect();
 
+
+console.log(
+    "VIDEO RECT:",
+    rect.left,
+    rect.top,
+    rect.width,
+    rect.height
+);
+
+
+console.log(
+    "OVERLAY RECT:",
+    overlayRect.left,
+    overlayRect.top,
+    overlayRect.width,
+    overlayRect.height
+);
+
     displayWidth =
         rect.width;
 
@@ -1218,7 +1236,16 @@ if(shortSide < 700){
     // Resize CSS canvas exactly to video
     //----------------------------------------
 
+
+    console.log(
+        "Video Display:",
+        displayWidth,
+        displayHeight
+    );
+
+
     redrawOverlay();
+
 }
 
 //------------------------------------
@@ -1408,12 +1435,6 @@ mediaRecorder
 showPlayback;
 mediaRecorder.start();
 
-setTimeout(()=>{
-
-    resizeEverything();
-    redrawOverlay();
-
-},250);
 
     //-------------------------------------
     // Start high-precision recording timer
@@ -3088,6 +3109,7 @@ deleteTargetsBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
 
 
