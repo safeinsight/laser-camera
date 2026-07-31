@@ -416,7 +416,7 @@ z-index:100;
 <body>
 
 <h2>
-SILASER
+SI TRAINING LASER
 </h2>
 
 <div class="app">
@@ -1200,11 +1200,12 @@ overlay.height =
 // Detection canvas matches camera pixels
 //----------------------------------------
 
-detectCanvas.width =
-    cameraWidth;
+//----------------------------------------
+// Detection canvas uses reduced resolution
+//----------------------------------------
 
-detectCanvas.height =
-    cameraHeight;
+detectCanvas.width = 640;
+detectCanvas.height = 360;
 
 
 
