@@ -1091,11 +1091,26 @@ function resizeEverything(){
     // Match canvas to video display ratio
     //----------------------------------------
 
-    overlay.width =
-        cameraWidth;
+//----------------------------------------
+// Overlay matches camera pixels
+//----------------------------------------
 
-    overlay.height =
-        cameraHeight;
+overlay.width =
+    cameraWidth;
+
+overlay.height =
+    cameraHeight;
+
+
+//----------------------------------------
+// Detection canvas matches camera pixels
+//----------------------------------------
+
+detectCanvas.width =
+    cameraWidth;
+
+detectCanvas.height =
+    cameraHeight;
 
 
 
