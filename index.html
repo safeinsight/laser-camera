@@ -227,7 +227,7 @@ color:white;
 }
 
 #startBtn{
-startBtn.innerHTML = "&#9654; Start Recording";
+startBtn.innerHTML = "&#9654; Start";
 background:#00a651;
 color:white;
 }
@@ -1542,7 +1542,7 @@ function stopRecording(){
 
     mediaRecorder.stop();
     clearInterval(timerInterval);
-   startBtn.innerHTML = "&#9654; Start Recording";
+   startBtn.innerHTML = "&#9654; Start";
     startBtn.style.background = "#00a651";
     startBtn.style.color = "white";
     setupControls.hidden = false;
@@ -3033,7 +3033,7 @@ startBtn.onclick = ()=>{
         clearOverlay();
         drawHits();
 
-startBtn.innerHTML = "&#9654; Start Recording";
+startBtn.innerHTML = "&#9654; Start";
 startBtn.style.background = "#2e7d32";
 startBtn.style.color = "white";
 
@@ -3057,7 +3057,7 @@ return;
     console.log("START BUTTON CLICKED");
 
     // Immediately switch button to STOP state
-  startBtn.innerHTML = "&#9632; Stop Recording";
+  startBtn.innerHTML = "&#9632; Stop";
     startBtn.style.background = "#d32f2f";
     startBtn.style.color = "white";
 
