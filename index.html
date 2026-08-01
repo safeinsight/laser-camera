@@ -1790,16 +1790,21 @@ function drawGreenBoxes(){
         if(!target.calibrated){
             continue;
         }
-        const left =
-            target.left * overlay.width;
-        const top =
-            target.top * overlay.height;
-        const width =
-            (target.right - target.left) *
-            overlay.width;
-        const height =
-            (target.bottom - target.top) *
-            overlay.height;
+        
+    const left =
+    normToOverlayX(target.left);
+
+    const top =
+    normToOverlayY(target.top);
+
+    const width =
+    normToOverlayX(target.right)
+    - left;
+
+    const height =
+    normToOverlayY(target.bottom)
+    - top;
+        
         ctx.save();
      
 
@@ -1861,16 +1866,21 @@ ctx.fillText(
     //----------------------------------------
 
     if(calibrationDragging){
-        const left =
-            currentTarget.left * overlay.width;
-        const top =
-            currentTarget.top * overlay.height;
-        const width =
-            (currentTarget.right - currentTarget.left) *
-            overlay.width;
-        const height =
-            (currentTarget.bottom - currentTarget.top) *
-            overlay.height;
+        
+    const left =
+    normToOverlayX(currentTarget.left);
+
+    const top =
+    normToOverlayY(currentTarget.top);
+
+    const width =
+    normToOverlayX(currentTarget.right)
+    - left;
+
+    const height =
+    normToOverlayY(currentTarget.bottom)
+    - top;
+        
         ctx.save();
        
     ctx.strokeStyle = "#00FF00";
@@ -2076,12 +2086,14 @@ function drawCountdown(){
         overlay.width / 2,
         overlay.height / 2
     );
+    
     ctx.fillStyle = "#FFD400";
     ctx.fillText(
         countdownValue,
         overlay.width / 2,
         overlay.height / 2
     );
+    
     ctx.restore();
 }
 
@@ -2806,16 +2818,17 @@ activeTarget = savedActiveTarget;
         ctx.strokeStyle = "black";
         ctx.strokeText(
             countdownValue,
-            overlay.width / 2,
-            overlay.height / 2
+            normToOverlayX(.5)
+            normToOverlayY(.5)
         );
 
         ctx.fillStyle = "#FFD400";
         ctx.fillText(
             countdownValue,
-            overlay.width / 2,
-            overlay.height / 2
+            normToOverlayX(.5)
+            normToOverlayY(.5)
         );
+        
         ctx.restore();
     }
 
@@ -2856,9 +2869,11 @@ if(
     playback.style.display != "none"
 ){
     const centerX =
-        groupCenter.x * overlay.width;
+    normToOverlayX(groupCenter.x);
+
     const centerY =
-        groupCenter.y * overlay.height;
+    normToOverlayY(groupCenter.y);
+    
     ctx.strokeStyle = "red";
     ctx.lineWidth = 2;
 
