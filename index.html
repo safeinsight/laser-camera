@@ -2218,32 +2218,59 @@ function scanTarget(target, pixels){
 
             }
 
-            const laser =
+//----------------------------------------
+// Calculate laser signal
+//----------------------------------------
 
-                redRise > localThreshold &&
+const signal =
 
-                redRise >
+    redRise -
 
-                (greenRise + DETECTOR.colorDifference) &&
+    Math.max(
 
-                redRise >
+        greenRise,
 
-                (blueRise + DETECTOR.colorDifference);
+        blueRise
 
-            if(!laser){
-                continue;
-            }
+    );
 
-            brightPixels++;
 
-totalWeight++;
+//----------------------------------------
+// Reject weak pixels
+//----------------------------------------
 
-totalX += x;
+if(
 
-totalY += y;
+    signal <=
 
+    localThreshold
+
+){
+
+    continue;
+
+}
+
+brightPixels++;
+
+
+//----------------------------------------
+// Weight by laser strength
+//----------------------------------------
+
+const weight =
+
+    signal -
+
+    localThreshold;
+
+
+totalWeight += weight;
+
+totalX += x * weight;
+
+totalY += y * weight;
         }
-
     }
 
     //------------------------------------------------
