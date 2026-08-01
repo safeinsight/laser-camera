@@ -2236,21 +2236,11 @@ function scanTarget(target, pixels){
 
             brightPixels++;
 
-            const weight =
+totalWeight++;
 
-                Math.max(
+totalX += x;
 
-                    brightness,
-
-                    r
-
-                );
-
-            totalWeight += weight;
-
-            totalX += x * weight;
-
-            totalY += y * weight;
+totalY += y;
 
         }
 
