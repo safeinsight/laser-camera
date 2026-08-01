@@ -2843,9 +2843,9 @@ if(currentLaserVisible){
 
 
 ctx.arc(
-    currentLaserX,
-    currentLaserY,
-    laserRadius,
+    normToOverlayX(currentLaserX),
+    normToOverlayY(currentLaserY),
+    8,
     0,
     Math.PI * 2
 );
@@ -2939,22 +2939,14 @@ ctx.stroke();
 function drawCurrentLaser(hitX, hitY){
 
     //----------------------------------------
-    // Convert detector coordinates
+    // Store normalized detector coordinates
     //----------------------------------------
 
-  currentLaserX =
-    normToOverlayX(
-        detectorToNormX(hitX)
-    );
+    currentLaserX =
+        hitX / detectCanvas.width;
 
-currentLaserY =
-    normToOverlayY(
-        detectorToNormY(hitY)
-    );
-
-    //----------------------------------------
-    // Laser is now visible
-    //----------------------------------------
+    currentLaserY =
+        hitY / detectCanvas.height;
 
     currentLaserVisible = true;
 }
