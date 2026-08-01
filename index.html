@@ -102,13 +102,7 @@ touch-action:none;
 }
 
 #detectCanvas{
-    display:block;
-    position:fixed;
-    right:10px;
-    bottom:10px;
-    width:240px;
-    border:2px solid red;
-    z-index:1000;
+display:none;
 }
 
 #timerOverlay{
@@ -1246,8 +1240,19 @@ const shortSide =
         window.innerHeight
     );
 
-detectCanvas.width = 640;
-detectCanvas.height = 360;
+if(shortSide < 700){
+
+    // Phone
+    detectCanvas.width = 480;
+    detectCanvas.height = 270;
+
+}else{
+
+    // Tablet/Desktop
+    detectCanvas.width = 640;
+    detectCanvas.height = 360;
+
+}
 
 
 
@@ -2224,59 +2229,42 @@ function scanTarget(target, pixels){
 
             }
 
-//----------------------------------------
-// Calculate laser signal
-//----------------------------------------
+            const laser =
 
-const signal =
+                redRise > localThreshold &&
 
-    redRise -
+                redRise >
 
-    Math.max(
+                (greenRise + DETECTOR.colorDifference) &&
 
-        greenRise,
+                redRise >
 
-        blueRise
+                (blueRise + DETECTOR.colorDifference);
 
-    );
+            if(!laser){
+                continue;
+            }
 
+            brightPixels++;
 
-//----------------------------------------
-// Reject weak pixels
-//----------------------------------------
+            const weight =
 
-if(
+                Math.max(
 
-    signal <=
+                    brightness,
 
-    localThreshold
+                    r
 
-){
+                );
 
-    continue;
+            totalWeight += weight;
 
-}
+            totalX += x * weight;
 
-brightPixels++;
+            totalY += y * weight;
 
-
-//----------------------------------------
-// Weight by laser strength
-//----------------------------------------
-
-const weight =
-
-    signal -
-
-    localThreshold;
-
-
-totalWeight += weight;
-
-totalX += x * weight;
-
-totalY += y * weight;
         }
+
     }
 
     //------------------------------------------------
@@ -2338,15 +2326,6 @@ if(!hasTarget){
         detectCanvas.width,
         detectCanvas.height
     );
-
-    detectCtx.strokeStyle = "lime";
-detectCtx.lineWidth = 3;
-detectCtx.strokeRect(
-    getTargetPixels(activeTarget).left,
-    getTargetPixels(activeTarget).top,
-    getTargetPixels(activeTarget).right - getTargetPixels(activeTarget).left,
-    getTargetPixels(activeTarget).bottom - getTargetPixels(activeTarget).top
-);
 
     const frame = detectCtx.getImageData(
         0,
@@ -2566,7 +2545,7 @@ if(laserState === LASER_WAITING){
     hitY
 );
         
-const savedX =
+      const savedX =
     hitX / detectCanvas.width;
 
 const savedY =
@@ -3154,6 +3133,7 @@ deleteTargetsBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
 
 
