@@ -102,7 +102,13 @@ touch-action:none;
 }
 
 #detectCanvas{
-display:none;
+    display:block;
+    position:fixed;
+    right:10px;
+    bottom:10px;
+    width:240px;
+    border:2px solid red;
+    z-index:1000;
 }
 
 #timerOverlay{
@@ -2332,6 +2338,15 @@ if(!hasTarget){
         detectCanvas.width,
         detectCanvas.height
     );
+
+    detectCtx.strokeStyle = "lime";
+detectCtx.lineWidth = 3;
+detectCtx.strokeRect(
+    getTargetPixels(activeTarget).left,
+    getTargetPixels(activeTarget).top,
+    getTargetPixels(activeTarget).right - getTargetPixels(activeTarget).left,
+    getTargetPixels(activeTarget).bottom - getTargetPixels(activeTarget).top
+);
 
     const frame = detectCtx.getImageData(
         0,
