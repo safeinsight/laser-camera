@@ -1021,6 +1021,34 @@ let backgroundFrame = null;
 // the background after recording starts.
 let learnBackground = true;
 
+//------------------------------------------------
+// V7 RENDERING HELPERS
+//------------------------------------------------
+
+function normToOverlayX(nx){
+
+    return nx * overlay.width;
+
+}
+
+function normToOverlayY(ny){
+
+    return ny * overlay.height;
+
+}
+
+function detectorToNormX(px){
+
+    return px / detectCanvas.width;
+
+}
+
+function detectorToNormY(py){
+
+    return py / detectCanvas.height;
+
+}
+
 //--------------------------
 // CAMERA -->
 //--------------------------
@@ -2547,11 +2575,11 @@ if(laserState === LASER_WAITING){
     hitY
 );
         
-      const savedX =
-    hitX / detectCanvas.width;
+    const savedX =
+    detectorToNormX(hitX);
 
-const savedY =
-    hitY / detectCanvas.height;
+    const savedY =
+    detectorToNormY(hitY);
 
 
 console.log(
@@ -2627,10 +2655,10 @@ console.log(
         }
 
         const drawX =
-            hit.x * overlay.width;
+        normToOverlayX(hit.x);
 
         const drawY =
-            hit.y * overlay.height;
+        normToOverlayY(hit.y);
 
 
         ctx.beginPath();
@@ -2900,13 +2928,14 @@ function drawCurrentLaser(hitX, hitY){
     //----------------------------------------
 
   currentLaserX =
-    (hitX / detectCanvas.width) *
-    overlay.width;
-
+    normToOverlayX(
+        detectorToNormX(hitX)
+    );
 
 currentLaserY =
-    (hitY / detectCanvas.height) *
-    overlay.height;
+    normToOverlayY(
+        detectorToNormY(hitY)
+    );
 
     //----------------------------------------
     // Laser is now visible
