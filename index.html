@@ -2542,6 +2542,38 @@ function growLaserBlob(
 }
 
 //------------------------------------------------
+// CALCULATE BLOB CENTER
+//------------------------------------------------
+
+function calculateBlobCenter(blob){
+
+    if(blob.length === 0){
+
+        return null;
+
+    }
+
+    let sumX = 0;
+    let sumY = 0;
+
+    for(const p of blob){
+
+        sumX += p.x;
+        sumY += p.y;
+
+    }
+
+    return{
+
+        x: sumX / blob.length,
+
+        y: sumY / blob.length
+
+    };
+
+}
+
+//------------------------------------------------
 // LASER DETECTION -->
 //------------------------------------------------
 
@@ -2689,6 +2721,14 @@ let totalX =
     result?.totalX ?? 0;
 let totalY =
     result?.totalY ?? 0;
+
+let laserMask =
+    result?.laserMask ?? null;
+let brightestX =
+    result?.brightestX ?? 0;
+let brightestY =
+    result?.brightestY ?? 0;
+    
 let gridTotal =
     result?.gridTotal ?? [];
 let gridCount =
@@ -2753,13 +2793,51 @@ currentLaserVisible = false;
     // Find centre
     //---------------------------------------
 
-    const hitX=
-        totalX/
-        totalWeight;
+//---------------------------------------
+// Build connected laser blob
+//---------------------------------------
 
-    const hitY=
-        totalY/
-        totalWeight;
+const blob = growLaserBlob(
+
+    laserMask,
+
+    brightestX,
+
+    brightestY
+
+);
+
+const blobCenter =
+
+    calculateBlobCenter(blob);
+
+//---------------------------------------
+// Use blob center if valid
+//---------------------------------------
+
+const hitX =
+
+    blobCenter
+
+        ? blobCenter.x
+
+        : totalX / totalWeight;
+
+const hitY =
+
+    blobCenter
+
+        ? blobCenter.y
+
+        : totalY / totalWeight;
+
+    console.log(
+
+    "BLOB SIZE:",
+
+    blob.length
+
+);
 
     //---------------------------------------
     // Laser is currently being tracked
