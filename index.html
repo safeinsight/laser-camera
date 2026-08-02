@@ -2121,6 +2121,16 @@ const laserMask = new Uint8Array(
 );
 
     //------------------------------------------------
+    // Brightest laser pixel
+    //------------------------------------------------
+
+let brightestValue = -1;
+
+let brightestX = 0;
+
+let brightestY = 0;
+
+    //------------------------------------------------
     // Reset grid brightness sums
     //------------------------------------------------
 
@@ -2296,11 +2306,17 @@ const laserMask = new Uint8Array(
                 continue;
             }
 
-        brightPixels++;
+    brightPixels++;
 
     laserMask[
     y * detectCanvas.width + x
-] = 1;
+    ] = 1;
+
+    if(r > brightestValue){
+    brightestValue = r;
+    brightestX = x;
+    brightestY = y;
+}
 
     const weight =
 
@@ -2335,12 +2351,17 @@ return{
 
     laserMask,
 
+    brightestX,
+
+    brightestY,
+
+    brightestValue,
+
     gridTotal,
 
     gridCount
 
 };
-
 }
 
 //------------------------------------------------
