@@ -2109,6 +2109,18 @@ function scanTarget(target, pixels){
     let brightPixels = 0;
 
     //------------------------------------------------
+    // Binary laser mask
+    //------------------------------------------------
+
+const laserMask = new Uint8Array(
+
+    detectCanvas.width *
+
+    detectCanvas.height
+
+);
+
+    //------------------------------------------------
     // Reset grid brightness sums
     //------------------------------------------------
 
@@ -2284,23 +2296,24 @@ function scanTarget(target, pixels){
                 continue;
             }
 
-            brightPixels++;
+        brightPixels++;
 
-            const weight =
+    laserMask[
+    y * detectCanvas.width + x
+] = 1;
 
-                Math.max(
+    const weight =
 
-                    brightness,
+    Math.max(
+        brightness,
+        r
+    );
 
-                    r
+totalWeight += weight;
 
-                );
+totalX += x * weight;
 
-            totalWeight += weight;
-
-            totalX += x * weight;
-
-            totalY += y * weight;
+totalY += y * weight;
 
         }
 
@@ -2310,21 +2323,23 @@ function scanTarget(target, pixels){
     // Return scan results
     //------------------------------------------------
 
-    return{
+return{
 
-        brightPixels,
+    brightPixels,
 
-        totalWeight,
+    totalWeight,
 
-        totalX,
+    totalX,
 
-        totalY,
+    totalY,
 
-        gridTotal,
+    laserMask,
 
-        gridCount
+    gridTotal,
 
-    };
+    gridCount
+
+};
 
 }
 
