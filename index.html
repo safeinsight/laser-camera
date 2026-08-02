@@ -2574,6 +2574,62 @@ function calculateBlobCenter(blob){
 }
 
 //------------------------------------------------
+// VALIDATE LASER BLOB
+//------------------------------------------------
+
+function validateBlob(
+
+    blob,
+
+    brightestValue
+
+){
+
+    //----------------------------------------
+    // Reject empty blob
+    //----------------------------------------
+
+    if(blob.length === 0){
+
+        return false;
+
+    }
+
+    //----------------------------------------
+    // Reject blobs that are too small
+    //----------------------------------------
+
+    if(blob.length < 4){
+
+        return false;
+
+    }
+
+    //----------------------------------------
+    // Reject blobs that are too large
+    //----------------------------------------
+
+    if(blob.length > DETECTOR.maxBlobPixels){
+
+        return false;
+
+    }
+
+    //----------------------------------------
+    // Brightest pixel must be reasonably bright
+    //----------------------------------------
+
+    if(brightestValue < 150){
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+//------------------------------------------------
 // LASER DETECTION -->
 //------------------------------------------------
 
@@ -2724,10 +2780,13 @@ let totalY =
 
 let laserMask =
     result?.laserMask ?? null;
+    
 let brightestX =
     result?.brightestX ?? 0;
 let brightestY =
     result?.brightestY ?? 0;
+let brightestValue =
+    result?.brightestValue ?? 0;
     
 let gridTotal =
     result?.gridTotal ?? [];
@@ -2811,13 +2870,32 @@ const blobCenter =
 
     calculateBlobCenter(blob);
 
+const blobValid =
+
+    console.log(
+    "Blob:",
+    blob.length,
+    "Brightest:",
+    brightestValue,
+    "Valid:",
+    blobValid
+);
+
+    validateBlob(
+
+        blob,
+
+        brightestValue
+
+    );
+
 //---------------------------------------
 // Use blob center if valid
 //---------------------------------------
 
 const hitX =
 
-    blobCenter
+    blobValid
 
         ? blobCenter.x
 
@@ -2825,11 +2903,12 @@ const hitX =
 
 const hitY =
 
-    blobCenter
+    blobValid
 
         ? blobCenter.y
 
         : totalY / totalWeight;
+    
 
     console.log(
 
