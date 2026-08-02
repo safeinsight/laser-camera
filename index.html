@@ -2365,6 +2365,183 @@ return{
 }
 
 //------------------------------------------------
+// GROW CONNECTED LASER BLOB
+//------------------------------------------------
+
+function growLaserBlob(
+
+    laserMask,
+
+    startX,
+
+    startY
+
+){
+
+    const width =
+        detectCanvas.width;
+
+    const height =
+        detectCanvas.height;
+
+    //----------------------------------------
+    // Reject invalid seed
+    //----------------------------------------
+
+    if(
+
+        startX < 0 ||
+
+        startY < 0 ||
+
+        startX >= width ||
+
+        startY >= height
+
+    ){
+
+        return [];
+
+    }
+
+    if(
+
+        !laserMask[
+            startY * width + startX
+        ]
+
+    ){
+
+        return [];
+
+    }
+
+    //----------------------------------------
+    // Flood fill
+    //----------------------------------------
+
+    const stack = [];
+
+    const blob = [];
+
+    const visited =
+        new Uint8Array(
+
+            width * height
+
+        );
+
+    stack.push({
+
+        x:startX,
+
+        y:startY
+
+    });
+
+    while(stack.length){
+
+        const p = stack.pop();
+
+        const index =
+
+            p.y * width + p.x;
+
+        if(visited[index]){
+
+            continue;
+
+        }
+
+        visited[index] = 1;
+
+        if(!laserMask[index]){
+
+            continue;
+
+        }
+
+        blob.push(p);
+
+        //------------------------------------
+        // 8-connected neighbours
+        //------------------------------------
+
+        for(
+
+            let dy=-1;
+
+            dy<=1;
+
+            dy++
+
+        ){
+
+            for(
+
+                let dx=-1;
+
+                dx<=1;
+
+                dx++
+
+            ){
+
+                if(
+
+                    dx===0 &&
+
+                    dy===0
+
+                ){
+
+                    continue;
+
+                }
+
+                const nx =
+
+                    p.x + dx;
+
+                const ny =
+
+                    p.y + dy;
+
+                if(
+
+                    nx<0 ||
+
+                    ny<0 ||
+
+                    nx>=width ||
+
+                    ny>=height
+
+                ){
+
+                    continue;
+
+                }
+
+                stack.push({
+
+                    x:nx,
+
+                    y:ny
+
+                });
+
+            }
+
+        }
+
+    }
+
+    return blob;
+
+}
+
+//------------------------------------------------
 // LASER DETECTION -->
 //------------------------------------------------
 
