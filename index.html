@@ -333,7 +333,7 @@ Bottom Toolbar
 ----------------------------------------*/
 
 #toolbar{
-height:40px;
+height:45px;
 flex-shrink:0;
 background:white;
 display:flex;
@@ -964,6 +964,17 @@ const stopBtn=
 document.getElementById(
 "stopBtn"
 );
+
+//--------------------------
+// APP MODES
+//--------------------------
+
+const APP_SETUP = "setup";
+const APP_COUNTDOWN = "countdown";
+const APP_RECORDING = "recording";
+const APP_PLAYBACK = "playback";
+
+let appMode = APP_SETUP;
 
 //--------------------------
 // VARIABLES
@@ -3616,6 +3627,43 @@ function exitRecordingMode(){
 
 }
 
+//--------------------------
+// SET APP MODE
+//--------------------------
+
+function setAppMode(mode){
+
+    appMode = mode;
+
+    switch(mode){
+
+        case APP_SETUP:
+
+            exitRecordingMode();
+
+            break;
+
+        case APP_COUNTDOWN:
+
+            exitRecordingMode();
+
+            break;
+
+        case APP_RECORDING:
+
+            enterRecordingMode();
+
+            break;
+
+        case APP_PLAYBACK:
+
+            exitRecordingMode();
+
+            break;
+
+    }
+
+}
 
 //--------------------------
 // START BUTTON CLICK
@@ -3634,7 +3682,7 @@ startBtn.onclick = ()=>{
         clearOverlay();
         drawHits();
 
-exitRecordingMode();
+setAppMode(APP_SETUP);
 
 console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
 
@@ -3652,7 +3700,7 @@ return;
 
 console.log("START BUTTON CLICKED");
 
-enterRecordingMode();
+setAppMode(APP_RECORDING);
 
 clearSessionData();
     
