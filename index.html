@@ -244,6 +244,14 @@ background:#ffffff;
 color:black;
 }
 
+#playLastBtn{
+
+    background:#00a651;
+
+    color:white;
+
+}
+
 #startBtn{
 startBtn.innerHTML = "&#9654; Start";
 background:#00a651;
@@ -801,6 +809,9 @@ z-index:100;
     Delete Targets
 </button>
 
+<button id="playLastBtn">
+    ▶ Play Last
+</button>
 
 <br><br>
 
@@ -3803,6 +3814,26 @@ deleteTargetsBtn.onclick = ()=>{
         deleteAllTargets();
         settingsPanel.style.display = "none";
     }
+
+};
+
+playLastBtn.onclick = ()=>{
+
+    // Nothing to play yet
+    if(!playback.src){
+
+        console.log("No recording available.");
+
+        return;
+
+    }
+
+    // Start from the beginning
+    playback.currentTime = 0;
+
+    playback.play();
+
+    requestAnimationFrame(syncPlayback);
 
 };
 
