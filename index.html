@@ -504,12 +504,12 @@ z-index:100;
   /* Container for the 2x2 grid layout */
   .settings-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
-    gap: 30px 40px;                        /* 30px vertical gap, 40px horizontal gap */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 40px;
     margin-bottom: 25px;
+    font-family: system-ui, -apple-system, sans-serif;
   }
 
-  /* Style rules for every individual setting section */
   .settings-card h4 {
     margin-top: 0;
     margin-bottom: 12px;
@@ -517,58 +517,92 @@ z-index:100;
     font-size: 1.1rem;
   }
 
-  .settings-card label {
-    display: inline-block;
-    margin-bottom: 8px;
-    color: #555;
-  }
-
-  /* Modernized, wider drop-down menu selectors */
-  .settings-card select {
+  /* Custom dropdown wrapper structure */
+  .custom-select-wrapper {
+    position: relative;
     width: 100%;
     max-width: 240px;
+  }
+
+  /* Visible input trigger block */
+  .select-trigger {
+    width: 100%;
     padding: 10px 14px;
     font-size: 15px;
+    font-weight: bold; /* Bold display style */
     border: 1px solid #ccc;
     border-radius: 6px;
     background-color: #fff;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
   }
 
-  /* Interactive hover and focus state */
-  .settings-card select:hover,
-  .settings-card select:focus {
+  .select-trigger:after {
+    content: '';
+    border: left 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+    display: inline-block;
+    margin-left: 10px;
+  }
+
+  .custom-select-wrapper.open .select-trigger {
     border-color: #ff0000;
     box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
-    outline: none;
   }
 
-  /* --- TARGET OPTION OVERRIDES --- */
-  /* Sets the expanded dropdown list panels to Dark Grey (#808080) */
-  .settings-card select option {
-    background-color: #808080;
-    color: #ffffff; /* White text for perfect contrast against dark grey */
-    padding: 10px;
+  /* Dropdown selection options box panel layout */
+  .custom-options-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #808080; /* Dark Grey background requested */
+    border: 1px solid #666;
+    border-radius: 6px;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
   }
 
-  /* Forces the hover / focus selection highlights to Red (#ff0000) */
-  .settings-card select option:hover,
-  .settings-card select option:focus,
-  .settings-card select option:checked {
+  .custom-select-wrapper.open .custom-options-panel {
+    display: block;
+  }
+
+  /* Individual Option Choice Line elements style rules */
+  .custom-option-item {
+    padding: 10px 14px;
+    font-size: 15px;
+    font-weight: bold; /* Bold text configuration option requested */
+    color: #ffffff;    /* Clear white text overlay */
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+  }
+
+  /* Custom Red Hover Selection Highlight requested (Replaces system blue bar) */
+  .custom-option-item:hover {
     background-color: #ff0000 !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 10px #ff0000 inset;
+    color: #ffffff;
   }
 
-  /* Makes layout stack vertically on narrow mobile devices automatically */
+  /* Style for option when it's actively active */
+  .custom-option-item.selected-active {
+    background-color: #666;
+  }
+
   @media (max-width: 600px) {
     .settings-grid {
       grid-template-columns: 1fr;
       gap: 24px;
     }
-    .settings-card select {
+    .custom-select-wrapper {
       max-width: 100%;
     }
   }
@@ -582,44 +616,63 @@ z-index:100;
   <!-- ROW 1, COL 1: LASER SENSITIVITY -->
   <div class="settings-card">
     <h4>Sensitivity</h4>
-    <div>
-      <select id="sensitivitySelect">
+    <div class="custom-select-wrapper">
+      <!-- Hidden standard dropdown so your old application JavaScript can read .value seamlessly -->
+      <select id="sensitivitySelect" style="display:none;">
         <option value="normal" selected>Normal</option>
         <option value="medium">Medium</option>
         <option value="high">High</option>
       </select>
+      <div class="select-trigger">Normal</div>
+      <div class="custom-options-panel">
+        <div class="custom-option-item" data-value="normal">Normal</div>
+        <div class="custom-option-item" data-value="medium">Medium</div>
+        <div class="custom-option-item" data-value="high">High</div>
+      </div>
     </div>
   </div>
 
   <!-- ROW 1, COL 2: COUNTDOWN -->
   <div class="settings-card">
     <h4>Countdown</h4>
-    <div>
-      <select id="countdownSelect">
+    <div class="custom-select-wrapper">
+      <select id="countdownSelect" style="display:none;">
         <option value="5" selected>5 Seconds</option>
         <option value="3">3 Seconds</option>
         <option value="0">None</option>
         <option value="random">Random (3-7 sec)</option>
       </select>
+      <div class="select-trigger">5 Seconds</div>
+      <div class="custom-options-panel">
+        <div class="custom-option-item" data-value="5">5 Seconds</div>
+        <div class="custom-option-item" data-value="3">3 Seconds</div>
+        <div class="custom-option-item" data-value="0">None</div>
+        <div class="custom-option-item" data-value="random">Random (3-7 sec)</div>
+      </div>
     </div>
   </div>
 
   <!-- ROW 2, COL 1: TARGET SHAPE -->
   <div class="settings-card">
     <h4>Shape</h4>
-    <div>
-      <select id="targetShapeSelect">
+    <div class="custom-select-wrapper">
+      <select id="targetShapeSelect" style="display:none;">
         <option value="rectangle" selected>Rectangle</option>
         <option value="oval">Oval</option>
       </select>
+      <div class="select-trigger">Rectangle</div>
+      <div class="custom-options-panel">
+        <div class="custom-option-item" data-value="rectangle">Rectangle</div>
+        <div class="custom-option-item" data-value="oval">Oval</div>
+      </div>
     </div>
   </div>
 
   <!-- ROW 2, COL 2: TARGET DISTANCE -->
   <div class="settings-card">
     <h4>Distance</h4>
-    <div>
-      <select id="distanceSelect">
+    <div class="custom-select-wrapper">
+      <select id="distanceSelect" style="display:none;">
         <option value="3">3 yards</option>
         <option value="5">5 yards</option>
         <option value="7" selected>7 yards</option>
@@ -627,11 +680,64 @@ z-index:100;
         <option value="15">15 yards</option>
         <option value="25">25 yards</option>
       </select>
+      <div class="select-trigger">7 yards</div>
+      <div class="custom-options-panel">
+        <div class="custom-option-item" data-value="3">3 yards</div>
+        <div class="custom-option-item" data-value="5">5 yards</div>
+        <div class="custom-option-item" data-value="7">7 yards</div>
+        <div class="custom-option-item" data-value="10">10 yards</div>
+        <div class="custom-option-item" data-value="15">15 yards</div>
+        <div class="custom-option-item" data-value="25">25 yards</div>
+      </div>
     </div>
   </div>
 
 </div>
 <hr>
+
+<!-- ==================================================== -->
+<!-- INTERACTION LAYER INTERACTION UTILITY               -->
+<!-- ==================================================== -->
+<script>
+  // Handles clicking open and closing custom menu wrappers
+  document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+    const trigger = wrapper.querySelector('.select-trigger');
+    const nativeSelect = wrapper.querySelector('select');
+    
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Close other dropdowns if open
+      document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+        if(w !== wrapper) w.classList.remove('open');
+      });
+      wrapper.classList.toggle('open');
+    });
+
+    // Handle user selecting an explicit menu value choice option
+    wrapper.querySelectorAll('.custom-option-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const val = item.getAttribute('data-value');
+        const text = item.textContent;
+        
+        // Sync custom UI text values
+        trigger.textContent = text;
+        
+        // Update hidden native menu selector form values 
+        nativeSelect.value = val;
+        
+        // Fire original .onchange event engine systems natively
+        nativeSelect.dispatchEvent(new Event('change'));
+        
+        wrapper.classList.remove('open');
+      });
+    });
+  });
+
+  // Global click checker helper layer to close menus if user clicks elsewhere on page background canvas
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+  });
+</script>
 
 
 
