@@ -499,40 +499,126 @@ z-index:100;
         Settings
     </h3>
     
-<!--=====================================-->
-<!-- LASER & COUNTDOWN CONFIGURATION -->
-<!--=====================================-->
-<hr>
-<div style="display: flex; gap: 40px; margin-bottom: 20px;">
+<!-- Paste this style block in your <head> or at the top of your file -->
+<style>
+  /* Container for the 2x2 grid layout */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
+    gap: 30px 40px;                        /* 30px vertical gap, 40px horizontal gap */
+    margin-bottom: 25px;
+  }
 
-    <!-- LASER SENSITIVITY SECTION -->
-    <div style="flex: 1;">
-        <h4>Sensitivity</h4>
-        <div style="margin-bottom:20px;">
-          <br>
-            <select id="sensitivitySelect" style="width: 100%; max-width: 200px;">
-                <option value="normal" selected>Normal</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-        </div>
-    </div>
+  /* Style rules for every individual setting section */
+  .settings-card h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+  }
 
-    <!-- COUNTDOWN SECTION -->
-    <div style="flex: 1;">
-        <h4>COUNTDOWN</h4>
-        <div style="margin-bottom:20px;">
-            <br>
-            <select id="countdownSelect" style="width: 100%; max-width: 200px;">
-                <option value="5" selected>5 Seconds</option>
-                <option value="3">3 Seconds</option>
-                <option value="0">None</option>
-                <option value="random">Random (3-7 sec)</option>
-            </select>
-        </div>
+  .settings-card label {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #555;
+  }
+
+  /* Modernized, wider drop-down menu selectors */
+  .settings-card select {
+    width: 100%;
+    max-width: 240px;
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  /* Interactive hover and focus state */
+  .settings-card select:hover,
+  .settings-card select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    outline: none;
+  }
+
+  /* Makes layout stack vertically on narrow mobile devices automatically */
+  @media (max-width: 600px) {
+    .settings-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .settings-card select {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<!-- ==================================================== -->
+<!-- MAIN INTERFACE SETTINGS GRID                         -->
+<!-- ==================================================== -->
+<div class="settings-grid">
+
+  <!-- ROW 1, COL 1: TARGET SHAPE -->
+  <div class="settings-card">
+    <h4>Target Shape</h4>
+    <label><strong>Shape</strong></label>
+    <div>
+      <select id="targetShapeSelect">
+        <option value="rectangle" selected>Rectangle</option>
+        <option value="oval">Oval</option>
+      </select>
     </div>
+  </div>
+
+  <!-- ROW 1, COL 2: TARGET DISTANCE -->
+  <div class="settings-card">
+    <h4>Target</h4>
+    <label><strong>Distance</strong></label>
+    <div>
+      <select id="distanceSelect">
+        <option value="3">3 yards</option>
+        <option value="5">5 yards</option>
+        <option value="7" selected>7 yards</option>
+        <option value="10">10 yards</option>
+        <option value="15">15 yards</option>
+        <option value="25">25 yards</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ROW 2, COL 1: LASER SENSITIVITY -->
+  <div class="settings-card">
+    <h4>Laser Sensitivity</h4>
+    <label><strong>Sensitivity</strong></label>
+    <div>
+      <select id="sensitivitySelect">
+        <option value="normal" selected>Normal</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ROW 2, COL 2: COUNTDOWN -->
+  <div class="settings-card">
+    <h4>Countdown</h4>
+    <label><strong>Countdown</strong></label>
+    <div>
+      <select id="countdownSelect">
+        <option value="5" selected>5 Seconds</option>
+        <option value="3">3 Seconds</option>
+        <option value="0">None</option>
+        <option value="random">Random (3-7 sec)</option>
+      </select>
+    </div>
+  </div>
 
 </div>
+<hr>
 
     
     <!--=====================================-->
