@@ -3577,6 +3577,26 @@ syncPlayback
 );
 }
 
+
+//--------------------------
+// ENTER RECORDING MODE
+//--------------------------
+
+function enterRecordingMode(){
+
+    // Change Start button to Stop
+    startBtn.innerHTML = "&#9632; Stop";
+    startBtn.style.background = "#ff0000";
+    startBtn.style.color = "white";
+
+    // Hide setup controls
+    setupControls.hidden = true;
+
+    // Close Settings popup
+    settingsPanel.style.display = "none";
+
+}
+
 startBtn.onclick = ()=>{
 
     // If we're currently counting down, cancel it.
@@ -3613,15 +3633,10 @@ return;
 
 console.log("START BUTTON CLICKED");
 
-// Immediately switch button to STOP state
-startBtn.innerHTML = "&#9632; Stop";
-startBtn.style.background = "#ff0000";
-startBtn.style.color = "white";
-
-// Close the settings panel if it is open
-settingsPanel.style.display = "none";
+enterRecordingMode();
 
 clearSessionData();
+    
 //------------------------------------------------
 // CLEAR ALL TARGETS
 //------------------------------------------------
