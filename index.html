@@ -524,32 +524,41 @@ z-index:100;
     max-width: 240px;
   }
 
-  /* Visible input trigger block */
-  .select-trigger {
-    width: 100%;
-    padding: 10px 14px;
-    font-size: 15px;
-    font-weight: bold; /* Bold display style */
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #fff;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    box-sizing: border-box;
-  }
+/* 1. Update your visible input trigger block */
+.select-trigger {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 1px solid #666;          /* Darker border for grey blending */
+  border-radius: 6px;
+  background-color: #808080;      /* Changed from white to Dark Grey */
+  color: #ffffff;                 /* Changed from dark text to White for visibility */
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  box-sizing: border-box;
+}
 
-  .select-trigger:after {
-    content: '';
-    border: left 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid #333;
-    display: inline-block;
-    margin-left: 10px;
-  }
+/* 2. Change the downward indicator arrow to white so it stands out on grey */
+.select-trigger:after {
+  content: '';
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #ffffff; /* Changed from dark grey to White */
+  display: inline-block;
+  margin-left: 10px;
+}
 
+/* 3. Smooth out the visual behavior when you hover over the gray trigger box */
+.select-trigger:hover {
+  background-color: #737373;      /* Slightly darker gray highlight on hover */
+  border-color: #ff0000;          /* Adds your signature red outline indicator on hover */
+}
+
+    
   .custom-select-wrapper.open .select-trigger {
     border-color: #ff0000;
     box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
