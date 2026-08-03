@@ -557,68 +557,167 @@ z-index:100;
   }
 </style>
 
+<style>
+  /* Base 2x2 layout container */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 40px;
+    margin-bottom: 25px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .settings-card h4 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    color: #222;
+  }
+
+  .settings-card .group-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  /* Flexbox wrapper to align buttons inside each section block */
+  .button-group {
+    display: flex;
+    flex-wrap: wrap; /* Allows buttons to wrap gracefully if space is tight */
+    gap: 10px;
+  }
+
+  /* Individual block button styles (Dark Grey Theme) */
+  .block-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid #333333;       /* Dark grey border */
+    border-radius: 8px;
+    background-color: #333333;   /* Dark grey fill background */
+    color: #e0e0e0;              /* Light grey text for readability */
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+  }
+
+  /* Hover state for inactive choices */
+  .block-btn:hover {
+    border-color: #4f4f4f;
+    background-color: #4f4f4f;   /* Slightly lighter dark grey on hover */
+    color: #ffffff;
+  }
+
+  /* Red active highlight state for the chosen option */
+  .block-btn.active {
+    border-color: #d92323;       /* Deep solid red border */
+    background-color: #d92323;   /* High-contrast red fill background */
+    color: #ffffff;              /* Crisp white text when selected */
+    box-shadow: 0 4px 12px rgba(217, 35, 35, 0.35); /* Soft matching red glow effect */
+  }
+
+  /* Mobile responsiveness: Stack columns vertically but keep buttons side-by-side */
+  @media (max-width: 650px) {
+    .settings-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>
+
 <!-- ==================================================== -->
-<!-- MAIN INTERFACE SETTINGS GRID                         -->
+<!-- INTERFACE SETTINGS SECTION                           -->
 <!-- ==================================================== -->
 <div class="settings-grid">
 
-  <!-- ROW 1, COL 1: TARGET SHAPE -->
-  <div class="settings-card">
+  <!-- TARGET SHAPE -->
+  <div class="settings-card" data-setting="targetShape">
     <h4>Target Shape</h4>
-    <label><strong>Shape</strong></label>
-    <div>
-      <select id="targetShapeSelect">
-        <option value="rectangle" selected>Rectangle</option>
-        <option value="oval">Oval</option>
-      </select>
+    <span class="group-label"><strong>Shape</strong></span>
+    <div class="button-group">
+      <button type="button" class="block-btn active" data-value="rectangle">Rectangle</button>
+      <button type="button" class="block-btn" data-value="oval">Oval</button>
     </div>
   </div>
 
-  <!-- ROW 1, COL 2: TARGET DISTANCE -->
-  <div class="settings-card">
+  <!-- TARGET DISTANCE -->
+  <div class="settings-card" data-setting="distance">
     <h4>Target</h4>
-    <label><strong>Distance</strong></label>
-    <div>
-      <select id="distanceSelect">
-        <option value="3">3 yards</option>
-        <option value="5">5 yards</option>
-        <option value="7" selected>7 yards</option>
-        <option value="10">10 yards</option>
-        <option value="15">15 yards</option>
-        <option value="25">25 yards</option>
-      </select>
+    <span class="group-label"><strong>Distance</strong></span>
+    <div class="button-group">
+      <button type="button" class="block-btn" data-value="3">3 Yds</button>
+      <button type="button" class="block-btn" data-value="5">5 Yds</button>
+      <button type="button" class="block-btn active" data-value="7">7 Yds</button>
+      <button type="button" class="block-btn" data-value="10">10 Yds</button>
+      <button type="button" class="block-btn" data-value="15">15 Yds</button>
+      <button type="button" class="block-btn" data-value="25">25 Yds</button>
     </div>
   </div>
 
-  <!-- ROW 2, COL 1: LASER SENSITIVITY -->
-  <div class="settings-card">
+  <!-- LASER SENSITIVITY -->
+  <div class="settings-card" data-setting="sensitivity">
     <h4>Laser Sensitivity</h4>
-    <label><strong>Sensitivity</strong></label>
-    <div>
-      <select id="sensitivitySelect">
-        <option value="normal" selected>Normal</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
+    <span class="group-label"><strong>Sensitivity</strong></span>
+    <div class="button-group">
+      <button type="button" class="block-btn active" data-value="normal">Normal</button>
+      <button type="button" class="block-btn" data-value="medium">Medium</button>
+      <button type="button" class="block-btn" data-value="high">High</button>
     </div>
   </div>
 
-  <!-- ROW 2, COL 2: COUNTDOWN -->
-  <div class="settings-card">
+  <!-- COUNTDOWN -->
+  <div class="settings-card" data-setting="countdown">
     <h4>Countdown</h4>
-    <label><strong>Countdown</strong></label>
-    <div>
-      <select id="countdownSelect">
-        <option value="5" selected>5 Seconds</option>
-        <option value="3">3 Seconds</option>
-        <option value="0">None</option>
-        <option value="random">Random (3-7 sec)</option>
-      </select>
+    <span class="group-label"><strong>Countdown</strong></span>
+    <div class="button-group">
+      <button type="button" class="block-btn active" data-value="5">5 Sec</button>
+      <button type="button" class="block-btn" data-value="3">3 Sec</button>
+      <button type="button" class="block-btn" data-value="0">None</button>
+      <button type="button" class="block-btn" data-value="random">Random</button>
     </div>
   </div>
 
 </div>
 <hr>
+
+<!-- ==================================================== -->
+<!-- INTERACTION ENGINE (JAVASCRIPT)                      -->
+<!-- ==================================================== -->
+<script>
+  // Global configuration object to track user choices
+  const currentSettings = {
+    targetShape: 'rectangle',
+    distance: '7',
+    sensitivity: 'normal',
+    countdown: '5'
+  };
+
+  // Attach event listener tracking click inputs across the entire container
+  document.querySelector('.settings-grid').addEventListener('click', function(event) {
+    const clickedBtn = event.target.closest('.block-btn');
+    if (!clickedBtn) return; // Disregard clicks outside actual setting buttons
+
+    const parentCard = clickedBtn.closest('.settings-card');
+    const settingName = parentCard.dataset.setting;
+    const chosenValue = clickedBtn.dataset.value;
+
+    // Remove active styles from previous selections within this panel column
+    parentCard.querySelectorAll('.block-btn').forEach(btn => btn.classList.remove('active'));
+
+    // Highlight the new selection visually
+    clickedBtn.classList.add('active');
+
+    // Save choice to your active global settings tracker configuration data
+    currentSettings[settingName] = chosenValue;
+    
+    // Diagnostic visual checking tool: Shows values dynamically updating live inside log console
+    console.log("Updated Application Engine Settings:", currentSettings);
+  });
+</script>
 
     
     <!--=====================================-->
