@@ -105,16 +105,28 @@ touch-action:none;
 display:none;
 }
 
+#logoOverlay{
+    position:absolute;
+    top:16px;
+    left:16px;
+    z-index:30;
+    pointer-events:none;
+}
+
+#logoOverlay img{
+    height:42px;
+    width:auto;
+    opacity:.95;
+}
+
 #timerOverlay{
 
     position:absolute;
 
     top:16px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
+    right:16px;
+    left:auto;
+    transform:none;
     display:flex;
 
     align-items:center;
@@ -464,16 +476,15 @@ z-index:100;
 
 
 <body>
-<h2>
-    <a href="https://www.safeinsight.net" target="_blank" rel="noopener noreferrer">
-  <img src="SI Logo Border.png" alt="Safe Insight" style="max-height: 50px; max-width: 100%;">
-    </a>
-</h2>
 
 
 <div class="app">
 
     <div class="videoContainer">
+
+    <div id="logoOverlay">
+    <img src="SI Logo Border.png" alt="Safe Insight">
+    </div>
 
         <video
         id="preview"
@@ -810,7 +821,7 @@ z-index:100;
 </button>
 
 <button id="playLastBtn">
-    ▶ Play Last
+    ▶ Replay Last
 </button>
 
 <br><br>
