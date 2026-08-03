@@ -540,9 +540,26 @@ z-index:100;
   /* Interactive hover and focus state */
   .settings-card select:hover,
   .settings-card select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    border-color: #ff0000;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
     outline: none;
+  }
+
+  /* --- TARGET OPTION OVERRIDES --- */
+  /* Sets the expanded dropdown list panels to Dark Grey (#808080) */
+  .settings-card select option {
+    background-color: #808080;
+    color: #ffffff; /* White text for perfect contrast against dark grey */
+    padding: 10px;
+  }
+
+  /* Forces the hover / focus selection highlights to Red (#ff0000) */
+  .settings-card select option:hover,
+  .settings-card select option:focus,
+  .settings-card select option:checked {
+    background-color: #ff0000 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px #ff0000 inset;
   }
 
   /* Makes layout stack vertically on narrow mobile devices automatically */
@@ -562,10 +579,10 @@ z-index:100;
 <!-- ==================================================== -->
 <div class="settings-grid">
 
-    <!-- ROW 1, COL 1: LASER SENSITIVITY -->
+  <!-- ROW 1, COL 1: LASER SENSITIVITY -->
   <div class="settings-card">
     <h4>Sensitivity</h4>
-        <div>
+    <div>
       <select id="sensitivitySelect">
         <option value="normal" selected>Normal</option>
         <option value="medium">Medium</option>
@@ -577,7 +594,7 @@ z-index:100;
   <!-- ROW 1, COL 2: COUNTDOWN -->
   <div class="settings-card">
     <h4>Countdown</h4>
-        <div>
+    <div>
       <select id="countdownSelect">
         <option value="5" selected>5 Seconds</option>
         <option value="3">3 Seconds</option>
@@ -587,10 +604,10 @@ z-index:100;
     </div>
   </div>
 
-    <!-- ROW 2, COL 1: TARGET SHAPE -->
+  <!-- ROW 2, COL 1: TARGET SHAPE -->
   <div class="settings-card">
     <h4>Shape</h4>
-        <div>
+    <div>
       <select id="targetShapeSelect">
         <option value="rectangle" selected>Rectangle</option>
         <option value="oval">Oval</option>
@@ -601,7 +618,7 @@ z-index:100;
   <!-- ROW 2, COL 2: TARGET DISTANCE -->
   <div class="settings-card">
     <h4>Distance</h4>
-       <div>
+    <div>
       <select id="distanceSelect">
         <option value="3">3 yards</option>
         <option value="5">5 yards</option>
@@ -612,7 +629,6 @@ z-index:100;
       </select>
     </div>
   </div>
-
 
 </div>
 <hr>
