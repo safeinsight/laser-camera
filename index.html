@@ -3611,14 +3611,17 @@ return;
         return;
     }
 
-    console.log("START BUTTON CLICKED");
+console.log("START BUTTON CLICKED");
 
-    // Immediately switch button to STOP state
-  startBtn.innerHTML = "&#9632; Stop";
-    startBtn.style.background = "#ff0000";
-    startBtn.style.color = "white";
+// Immediately switch button to STOP state
+startBtn.innerHTML = "&#9632; Stop";
+startBtn.style.background = "#ff0000";
+startBtn.style.color = "white";
 
-   clearSessionData();
+// Close the settings panel if it is open
+settingsPanel.style.display = "none";
+
+clearSessionData();
 //------------------------------------------------
 // CLEAR ALL TARGETS
 //------------------------------------------------
