@@ -106,25 +106,43 @@ display:none;
 }
 
 #timerOverlay{
-    position:static;      /* No longer absolutely positioned */
-    display:inline-flex;
+
+    position:absolute;
+
+    top:16px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    display:flex;
+
     align-items:center;
+
     justify-content:center;
 
-    min-width:110px;
-    height:42px;
+    min-width:120px;
 
-    background:#000;
-    color:#fff;
+    height:44px;
 
-    padding:0 18px;
+    padding:0 20px;
 
-    border-radius:8px;
+    background:rgba(0,0,0,.60);
 
-    font-size:22px;
+    color:white;
+
+    border-radius:10px;
+
+    font-size:24px;
+
     font-weight:bold;
 
+    z-index:30;
+
+    pointer-events:none;
+
     box-sizing:border-box;
+
 }
 
 
@@ -462,15 +480,19 @@ z-index:100;
         style="display:none;">
         </video>
 
-        <canvas id="overlay"></canvas>
+    <canvas id="overlay"></canvas>
 
-        <canvas id="detectCanvas"></canvas>
+    <canvas id="detectCanvas"></canvas>
 
+    <div id="timerOverlay">
+        00:00
     </div>
 
+</div>
 
-    <div id="toolbar">
-    <div class="toolbar-section left">
+<div id="toolbar">
+
+        <div class="toolbar-section left">
         <div id="setupControls">
             <button id="settingsBtn">
                 ⚙ Settings
@@ -484,12 +506,6 @@ z-index:100;
             ▶ Start 
         </button>
     </div>
-
-    <div class="toolbar-section">
-    <div id="timerOverlay">
-        00:00
-    </div>
-</div>
 
 </div>
 
