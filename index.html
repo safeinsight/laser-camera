@@ -3597,6 +3597,30 @@ function enterRecordingMode(){
 
 }
 
+//--------------------------
+// EXIT RECORDING MODE
+//--------------------------
+
+function exitRecordingMode(){
+
+    // Change Stop button back to Start
+    startBtn.innerHTML = "&#9654; Start";
+    startBtn.style.background = "#00a651";
+    startBtn.style.color = "white";
+
+    // Restore setup controls
+    setupControls.hidden = false;
+
+    // Always leave Settings popup closed
+    settingsPanel.style.display = "none";
+
+}
+
+
+//--------------------------
+// START BUTTON CLICK
+//--------------------------
+
 startBtn.onclick = ()=>{
 
     // If we're currently counting down, cancel it.
@@ -3610,12 +3634,7 @@ startBtn.onclick = ()=>{
         clearOverlay();
         drawHits();
 
-startBtn.innerHTML = "&#9654; Start";
-startBtn.style.background = "#00a651";
-startBtn.style.color = "white";
-
-// Restore setup buttons
-setupControls.hidden = false;
+exitRecordingMode();
 
 console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
 
