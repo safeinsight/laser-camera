@@ -562,7 +562,32 @@ z-index:100;
 <!-- ==================================================== -->
 <div class="settings-grid">
 
-  <!-- ROW 1, COL 1: TARGET SHAPE -->
+    <!-- ROW 1, COL 1: LASER SENSITIVITY -->
+  <div class="settings-card">
+    <h4>Sensitivity</h4>
+        <div>
+      <select id="sensitivitySelect">
+        <option value="normal" selected>Normal</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ROW 1, COL 2: COUNTDOWN -->
+  <div class="settings-card">
+    <h4>Countdown</h4>
+        <div>
+      <select id="countdownSelect">
+        <option value="5" selected>5 Seconds</option>
+        <option value="3">3 Seconds</option>
+        <option value="0">None</option>
+        <option value="random">Random (3-7 sec)</option>
+      </select>
+    </div>
+  </div>
+
+    <!-- ROW 2, COL 1: TARGET SHAPE -->
   <div class="settings-card">
     <h4>Shape</h4>
         <div>
@@ -573,7 +598,7 @@ z-index:100;
     </div>
   </div>
 
-  <!-- ROW 1, COL 2: TARGET DISTANCE -->
+  <!-- ROW 2, COL 2: TARGET DISTANCE -->
   <div class="settings-card">
     <h4>Distance</h4>
     <label><strong>Distance</strong></label>
@@ -589,30 +614,6 @@ z-index:100;
     </div>
   </div>
 
-  <!-- ROW 2, COL 1: LASER SENSITIVITY -->
-  <div class="settings-card">
-    <h4>Sensitivity</h4>
-        <div>
-      <select id="sensitivitySelect">
-        <option value="normal" selected>Normal</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- ROW 2, COL 2: COUNTDOWN -->
-  <div class="settings-card">
-    <h4>Countdown</h4>
-        <div>
-      <select id="countdownSelect">
-        <option value="5" selected>5 Seconds</option>
-        <option value="3">3 Seconds</option>
-        <option value="0">None</option>
-        <option value="random">Random (3-7 sec)</option>
-      </select>
-    </div>
-  </div>
 
 </div>
 <hr>
