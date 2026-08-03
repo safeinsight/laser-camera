@@ -329,7 +329,7 @@ Bottom Toolbar
 ----------------------------------------*/
 
 #toolbar{
-height:45px;
+height:50px;
 flex-shrink:0;
 background:white;
 display:flex;
@@ -1295,6 +1295,44 @@ console.log(err);
 
 startCamera();
 liveOverlayLoop();
+
+//------------------------------------------------
+// FULLSCREEN
+//------------------------------------------------
+
+async function enterFullscreen(){
+
+    if(document.fullscreenElement){
+        return;
+    }
+
+    const container =
+        document.querySelector(".videoContainer");
+
+    try{
+
+        await container.requestFullscreen();
+
+    }catch(err){
+
+        console.log("Fullscreen failed:", err);
+
+    }
+
+}
+
+document.addEventListener(
+    "fullscreenchange",
+    ()=>{
+
+        setTimeout(()=>{
+
+            resizeEverything();
+
+        },100);
+
+    }
+);
 
 overlay.addEventListener(
     "pointerdown",
@@ -3674,6 +3712,8 @@ function setAppMode(mode){
 
 startBtn.onclick = ()=>{
 
+    enterFullscreen();
+
     // If we're currently counting down, cancel it.
     if(countdownRunning){
 
@@ -3782,6 +3822,7 @@ distanceSelect.onchange = ()=>{
 };
 
 settingsBtn.onclick=()=>{
+    enterFullscreen();
     if(settingsPanel.style.display=="block"){
         settingsPanel.style.display="none";
     }
