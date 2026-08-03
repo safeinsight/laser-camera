@@ -105,6 +105,38 @@ touch-action:none;
 display:none;
 }
 
+#videoHUD{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:11%;
+    min-height:34px;
+    max-height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 2.5%;
+
+    background:rgba(0,0,0,.45);
+
+    box-sizing:border-box;
+
+    z-index:35;
+
+    pointer-events:none;
+}
+
+#videoHUD img{
+    height:70%;
+    width:auto;
+    opacity:.95;
+}
+
+
+
 #logoOverlay{
     position:absolute;
     top:16px;
@@ -121,39 +153,24 @@ display:none;
 
 #timerOverlay{
 
-    position:absolute;
+    position:static;
 
-    top:16px;
-    right:16px;
-    left:auto;
     transform:none;
-    display:flex;
 
-    align-items:center;
+    background:none;
 
-    justify-content:center;
+    padding:0;
 
-    min-width:120px;
+    min-width:auto;
 
-    height:44px;
+    height:auto;
 
-    padding:0 20px;
+    font-size:clamp(20px,3vw,28px);
 
-    background:rgba(0,0,0,.60);
+    font-weight:700;
 
-    color:white;
-
-    border-radius:10px;
-
-    font-size:24px;
-
-    font-weight:bold;
-
-    z-index:30;
-
-    pointer-events:none;
-
-    box-sizing:border-box;
+    text-shadow:
+        0 0 6px black;
 
 }
 
