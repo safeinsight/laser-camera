@@ -382,6 +382,20 @@ z-index:50;
 
 }
 
+    #stopBtn{
+
+    background:#ff0000;
+
+    color:white;
+
+}
+
+#stopBtn .toolbarIcon{
+
+    fill:white;
+
+}
+
     .toolbarIcon{
 
     width:18px;
@@ -574,6 +588,7 @@ z-index:100;
 
         
     <div class="toolbar-section middle">
+        
         <button id="startBtn">
           <svg class="toolbarIcon"
          viewBox="0 0 24 24"
@@ -582,6 +597,18 @@ z-index:100;
     </svg>
     <span>Start</span>
         </button>
+
+        <button id="stopBtn" hidden>
+    <svg class="toolbarIcon"
+         viewBox="0 0 24 24"
+         aria-hidden="true">
+        <rect x="6" y="6"
+              width="12"
+              height="12"/>
+    </svg>
+    <span>Stop</span>
+</button>
+        
     </div>
 
  <div class="toolbar-section right">
@@ -994,6 +1021,11 @@ document.getElementById(
 const startBtn=
 document.getElementById(
 "startBtn"
+);
+
+const stopBtn =
+document.getElementById(
+"stopBtn"
 );
 
 const analysisBtn =
@@ -1742,6 +1774,13 @@ function deleteAllTargets(){
 function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
+
+    startBtn.hidden = true;
+
+    stopBtn.hidden = false;
+
+    setupControls.hidden = true;
+    
     countdownRunning = true;
   let count;
 if(countdownSeconds === "random"){
@@ -1884,13 +1923,9 @@ function stopRecording(){
 
     mediaRecorder.stop();
     clearInterval(timerInterval);
-   startBtn.innerHTML = "&#9654; Start";
-    startBtn.style.background = "#00a651";
-    startBtn.style.color = "white";
+    startBtn.hidden = false;
+    stopBtn.hidden = true;
     setupControls.hidden = false;
-
-    // Show setup controls again
-setupControls.hidden = false;
 }
 
 //--------------------------
@@ -3820,20 +3855,24 @@ startBtn.onclick = ()=>{
     // If we're currently counting down, cancel it.
     if(countdownRunning){
 
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-        countdownRunning = false;
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    countdownRunning = false;
 
-        countdownValue = null;
-        clearOverlay();
-        drawHits();
+    countdownValue = null;
+    clearOverlay();
+    drawHits();
 
-setAppMode(APP_SETUP);
+    // Restore Start button
+    startBtn.hidden = false;
+    stopBtn.hidden = true;
 
-console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
+    setAppMode(APP_SETUP);
 
-return;
-    }
+    console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
+
+    return;
+}
 
     // If already recording, stop recording.
     if(
