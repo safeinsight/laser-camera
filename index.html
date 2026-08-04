@@ -500,12 +500,19 @@ z-index:100;
         </div>
     </div>
 
+        <div class="toolbar-section midlle">
+         <button id="drillsBtn">
+             Drills
+         </button>
+    </div>
 
     <div class="toolbar-section right">
         <button id="startBtn">
             ▶ Start 
         </button>
     </div>
+
+ 
 
 </div>
 
@@ -881,7 +888,11 @@ document.getElementById(
 "timerOverlay"
 );
 
-
+const drillsBtn =
+    document.getElementById(
+        "drillsBtn"
+    );
+    
 const drawTargetBtn=
 document.getElementById(
 "drawTargetBtn"
@@ -3831,6 +3842,11 @@ settingsBtn.onclick=()=>{
     }
 };
 
+    drillsBtn.onclick = () => {
+    alert(
+        "Drills coming soon!"
+    );
+};
 
 clearTargetBtn.onclick = () => {
 
