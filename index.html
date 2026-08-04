@@ -561,8 +561,6 @@ Settings Panel
     <h4 style="color: #ffffff;text-align: center; font-size: 24px;">SETTINGS
 </h4> 
 
-    
-<!-- Paste this style block in your <head> or at the top of your file -->
 <style>
   /* Container for the 2x2 grid layout */
   .settings-grid {
@@ -591,8 +589,6 @@ Settings Panel
   width: 100% !important;
   max-width: 240px !important; 
 }
-
-
 
   /* Custom dropdown wrapper structure */
   .custom-select-wrapper {
@@ -695,7 +691,7 @@ Settings Panel
 </style>
 
 <!-- ==================================================== -->
-<!-- MAIN INTERFACE SETTINGS GRID                         -->
+<!-- MAIN SETTINGS GRID                         -->
 <!-- ==================================================== -->
 <div class="settings-grid">
 
@@ -2678,6 +2674,25 @@ return{
 }
 
 //------------------------------------------------
+// SCAN ENTIRE FRAME
+//------------------------------------------------
+
+function scanEntireFrame(pixels){
+
+    return scanTarget(
+        {
+            left:0,
+            top:0,
+            right:1,
+            bottom:1,
+            shape:"rectangle"
+        },
+        pixels
+    );
+
+}
+
+//------------------------------------------------
 // GROW CONNECTED LASER BLOB
 //------------------------------------------------
 
@@ -2955,18 +2970,6 @@ function detectLaser(){
         return;
     }
 
-//------------------------------------------------
-// Make sure at least one target exists
-//------------------------------------------------
-
-const hasTarget = targets.some(
-    target => target.calibrated
-);
-
-if(!hasTarget){
-    requestAnimationFrame(detectLaser);
-    return;
-}
 
     //---------------------------------------
     // Copy current frame
@@ -3007,31 +3010,51 @@ if(!backgroundFrame){
 }
 
 //------------------------------------------------
-// Scan active target only
+// Scan entire frame if no targets exist.
+// Otherwise scan only the active target.
 //------------------------------------------------
 
 let result = null;
 let hitTarget = null;
 
-if(
-    activeTarget &&
-    activeTarget.calibrated
-){
-    result = scanTarget(
-        activeTarget,
-        pixels
-    );
+const hasTarget = targets.some(
+    target => target.calibrated
+);
+
+if(hasTarget){
 
     //----------------------------------------
-    // Laser found in active target
+    // Existing behavior
     //----------------------------------------
 
     if(
-        result.brightPixels >= DETECTOR.minBlobPixels &&
-        result.brightPixels <= DETECTOR.maxBlobPixels
+        activeTarget &&
+        activeTarget.calibrated
     ){
-        hitTarget = activeTarget;
+
+        result = scanTarget(
+            activeTarget,
+            pixels
+        );
+
+        if(
+            result.brightPixels >= DETECTOR.minBlobPixels &&
+            result.brightPixels <= DETECTOR.maxBlobPixels
+        ){
+            hitTarget = activeTarget;
+        }
+
     }
+
+}else{
+
+    //----------------------------------------
+    // NEW:
+    // Treat the whole camera image as one target
+    //----------------------------------------
+
+    result = scanEntireFrame(pixels);
+
 }
     
 if(hitTarget){
