@@ -1852,6 +1852,16 @@ function stopRecording(){
 }
 
 //--------------------------
+// Close Settings Panel -->
+//--------------------------
+    
+function closeSettingsPanel(){
+
+    settingsPanel.style.display = "none";
+
+}
+    
+//--------------------------
 // PLAYBACK -->
 //--------------------------
 
@@ -3697,6 +3707,8 @@ syncPlayback
 
 function enterRecordingMode(){
 
+    closeSettingsPanel();
+    
     // Hide Start button
     startBtn.hidden = true;
 
@@ -3838,7 +3850,7 @@ function clearTargets(){
     playback.src = "";
     preview.style.display = "block";
     playback.style.display = "none";
-setupControls.hidden = true;
+    setupControls.hidden = true;
 
 beginCountdown();
 };
@@ -3907,7 +3919,9 @@ settingsBtn.onclick=()=>{
 };
 
     drillsBtn.onclick = () => {
-    alert(
+    closeSettingsPanel();
+        
+        alert(
         "Drills coming soon!"
     );
 };
@@ -3930,16 +3944,16 @@ deleteTargetsBtn.onclick = ()=>{
 };
 
 playLastBtn.onclick = ()=>{
-
+    closeSettingsPanel();
     // Nothing to play yet
     if(!playback.src){
 
         console.log("No recording available.");
-
         return;
-
     }
 
+
+    
     // Start from the beginning
     playback.currentTime = 0;
 
