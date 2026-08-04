@@ -3775,6 +3775,9 @@ function enterRecordingMode(){
     // Hide setup controls
     setupControls.hidden = true;
 
+    // Hide Drills button
+    drillsBtn.hidden = true;
+
     // Close Settings popup
     settingsPanel.style.display = "none";
 
@@ -3794,6 +3797,9 @@ function exitRecordingMode(){
 
     // Restore setup controls
     setupControls.hidden = false;
+
+    // Restore Drills button
+    drillsBtn.hidden = false;
 
     // Always leave Settings popup closed
     settingsPanel.style.display = "none";
