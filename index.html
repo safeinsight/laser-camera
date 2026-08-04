@@ -3846,26 +3846,7 @@ startBtn.onclick = ()=>{
 
     enterFullscreen();
 
-    // If we're currently counting down, cancel it.
-    if(countdownRunning){
-
-    clearInterval(countdownInterval);
-    countdownInterval = null;
-    countdownRunning = false;
-
-    countdownValue = null;
-    clearOverlay();
-    drawHits();
-
-
-
-    setAppMode(APP_SETUP);
-
-    console.log("COUNTDOWN CANCELLED - BUTTONS RESTORED");
-
-    return;
-}
-
+  
 
 console.log("START BUTTON CLICKED");
 
@@ -3881,6 +3862,23 @@ stopBtn.onclick = ()=>{
 
     console.log("STOP BUTTON CLICKED");
 
+
+    // If countdown is running, cancel countdown only
+    if(countdownRunning){
+
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        countdownRunning = false;
+        countdownValue = null;
+        clearOverlay();
+        drawHits();
+        exitRecordingMode();
+        console.log("COUNTDOWN CANCELLED");
+        return;
+    }
+
+
+    // Otherwise stop active recording
     stopRecording();
 
 };
