@@ -251,9 +251,13 @@ background:#00a651;
 color:white;
 }
 
-#stopBtn{
-background:#d62828;
-color:white;
+    #stopBtn{
+    background:#ff0000;
+    color:white;
+}
+
+    #stopBtn .toolbarIcon{
+    fill:white;
 }
 
 #countdown{
@@ -370,6 +374,10 @@ z-index:50;
 
     font-size:16px;
 
+}
+
+#toolbar button:not([hidden]){
+
     display:flex;
 
     flex-direction:column;
@@ -382,19 +390,6 @@ z-index:50;
 
 }
 
-    #stopBtn{
-
-    background:#ff0000;
-
-    color:white;
-
-}
-
-#stopBtn .toolbarIcon{
-
-    fill:white;
-
-}
 
     .toolbarIcon{
 
@@ -1771,14 +1766,11 @@ function deleteAllTargets(){
 function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
-
     startBtn.hidden = true;
-
     stopBtn.hidden = false;
-
     setupControls.hidden = true;
-    
     countdownRunning = true;
+    
   let count;
 if(countdownSeconds === "random"){
    // Random whole number from 3 to 7 seconds
