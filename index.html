@@ -1910,7 +1910,9 @@ updateDisplays();
 
 function stopRecording(){
 
+    if(mediaRecorder && mediaRecorder.state === "recording"){
     mediaRecorder.stop();
+}
     clearInterval(timerInterval);
     startBtn.hidden = false;
     stopBtn.hidden = true;
@@ -3861,20 +3863,25 @@ startBtn.onclick = ()=>{
     return;
 }
 
-    // If already recording, stop recording.
-    if(
-        mediaRecorder &&
-        mediaRecorder.state === "recording"
-    ){
-        stopRecording();
-        return;
-    }
 
 console.log("START BUTTON CLICKED");
 
 setAppMode(APP_RECORDING);
 
 clearSessionData();
+
+//--------------------------
+// STOP BUTTON CLICK
+//--------------------------
+
+stopBtn.onclick = ()=>{
+
+    console.log("STOP BUTTON CLICKED");
+
+    stopRecording();
+
+};
+
     
 //------------------------------------------------
 // CLEAR ALL TARGETS
