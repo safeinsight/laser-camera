@@ -245,12 +245,6 @@ color:black;
     color:white;
 }
     
-#startBtn{
-startBtn.innerHTML = "&#9654; Start";
-background:#00a651;
-color:white;
-}
-
     #stopBtn{
     background:#ff0000;
     color:white;
@@ -1766,8 +1760,6 @@ function deleteAllTargets(){
 function beginCountdown(){
 
     console.log("COUNTDOWN STARTED");
-    startBtn.hidden = true;
-    stopBtn.hidden = false;
     setupControls.hidden = true;
     countdownRunning = true;
     
@@ -1914,8 +1906,6 @@ function stopRecording(){
     mediaRecorder.stop();
 }
     clearInterval(timerInterval);
-    startBtn.hidden = false;
-    stopBtn.hidden = true;
     setupControls.hidden = false;
 }
 
@@ -3765,10 +3755,11 @@ syncPlayback
 
 function enterRecordingMode(){
 
-    // Change Start button to Stop
-    startBtn.innerHTML = "&#9632; Stop";
-    startBtn.style.background = "#ff0000";
-    startBtn.style.color = "white";
+    // Hide Start button
+    startBtn.hidden = true;
+
+    // Show Stop button
+    stopBtn.hidden = false;
 
     // Hide setup controls
     setupControls.hidden = true;
@@ -3784,10 +3775,11 @@ function enterRecordingMode(){
 
 function exitRecordingMode(){
 
-    // Change Stop button back to Start
-    startBtn.innerHTML = "&#9654; Start";
-    startBtn.style.background = "#00a651";
-    startBtn.style.color = "white";
+    // Show Start button
+    startBtn.hidden = false;
+
+    // Hide Stop button
+    stopBtn.hidden = true;
 
     // Restore setup controls
     setupControls.hidden = false;
