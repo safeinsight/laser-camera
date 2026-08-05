@@ -3841,15 +3841,7 @@ function createPDFSummary(){
 
     const { jsPDF } = window.jspdf;
 
-    const pdf = new jsPDF({
-
-    orientation: "portrait",
-
-    unit: "mm",
-
-    format: "letter"
-
-});
+    const pdf = new jsPDF();
 
 
     //--------------------------------
