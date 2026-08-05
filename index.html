@@ -1022,25 +1022,22 @@ document.getElementById(
 "timerOverlay"
 );
 
-const drillsBtn =
-    document.getElementById(
-        "drillsBtn"
-    );
-    
-const drawTargetBtn=
+const drawTargetBtn =
 document.getElementById(
 "drawTargetBtn"
 );
 
-const startBtn=
-document.getElementById(
-"startBtn"
-);
+const startBtn =
+document.getElementById("startBtn");
 
 const stopBtn =
-document.getElementById(
-"stopBtn"
-);
+document.getElementById("stopBtn");
+
+const drillsBtn =
+document.getElementById("drillsBtn");
+
+const summaryBtn =
+document.getElementById("summaryBtn");
 
 const analysisBtn =
 document.getElementById(
@@ -4006,6 +4003,12 @@ settingsBtn.onclick=()=>{
         alert(
         "Drills coming soon!"
     );
+};
+
+summaryBtn.onclick = () => {
+
+    alert("PDF Summary button works");
+
 };
 
 clearTargetBtn.onclick = () => {
