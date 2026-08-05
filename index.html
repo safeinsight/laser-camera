@@ -3881,8 +3881,46 @@ function createPDFSummary(){
 // ADD TARGET IMAGE
 //-----------------------------
 
+//--------------------------------
+// CREATE COMBINED TARGET IMAGE
+//--------------------------------
+
+const exportCanvas =
+    document.createElement("canvas");
+
+exportCanvas.width =
+    overlay.width;
+
+exportCanvas.height =
+    overlay.height;
+
+
+const exportCtx =
+    exportCanvas.getContext("2d");
+
+
+// Draw the video image first
+
+exportCtx.drawImage(
+    playback,
+    0,
+    0,
+    exportCanvas.width,
+    exportCanvas.height
+);
+
+
+// Draw the shot overlay on top
+
+exportCtx.drawImage(
+    overlay,
+    0,
+    0
+);
+
+
 const targetImage =
-    overlay.toDataURL(
+    exportCanvas.toDataURL(
         "image/png"
     );
 
