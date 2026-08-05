@@ -827,7 +827,7 @@ Settings Panel
 </div>
 <hr>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- ==================================================== -->
 <!-- INTERACTION LAYER INTERACTION UTILITY               -->
@@ -3834,6 +3834,58 @@ function exitRecordingMode(){
 }
 
 //--------------------------
+// CREATE PDF SUMMARY
+//--------------------------
+
+function createPDFSummary(){
+
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF();
+
+
+    pdf.setFontSize(20);
+
+    pdf.text(
+        "SAFE INSIGHT LASER TRAINER",
+        20,
+        20
+    );
+
+
+    pdf.setFontSize(12);
+
+    pdf.text(
+        "Training Session Summary",
+        20,
+        32
+    );
+
+
+    pdf.text(
+        "Date: " +
+        new Date().toLocaleString(),
+        20,
+        45
+    );
+
+
+    pdf.text(
+        "Shots Fired: " +
+        savedHits.length,
+        20,
+        58
+    );
+
+
+    pdf.save(
+        "Safe_Insight_Training_Summary.pdf"
+    );
+
+}
+
+
+//--------------------------
 // SET APP MODE
 //--------------------------
 
@@ -4005,11 +4057,7 @@ settingsBtn.onclick=()=>{
     );
 };
 
-summaryBtn.onclick = () => {
-
-    alert("PDF Summary button works");
-
-};
+summaryBtn.onclick = createPDFSummary;
 
 clearTargetBtn.onclick = () => {
 
