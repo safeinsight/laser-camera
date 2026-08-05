@@ -4023,13 +4023,66 @@ const targetImage =
     );
 
 
+//--------------------------------
+// TARGET IMAGE
+//--------------------------------
+
+pdf.setDrawColor(0);
+
+pdf.setLineWidth(0.4);
+
+pdf.roundedRect(
+
+    18,
+
+    113,
+
+    174,
+
+    99,
+
+    2,
+
+    2
+
+);
+
+
 pdf.addImage(
+
     targetImage,
+
     "PNG",
+
     20,
+
     115,
+
     170,
+
     95
+
+);
+
+
+pdf.setFontSize(11);
+
+pdf.setFont(
+
+    "helvetica",
+
+    "bold"
+
+);
+
+pdf.text(
+
+    "Target Image",
+
+    20,
+
+    110
+
 );
 
 //--------------------------------
