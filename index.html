@@ -1345,7 +1345,42 @@ console.log(err);
 startCamera();
 liveOverlayLoop();
 
+//------------------------------------------------
+// FULLSCREEN
+//------------------------------------------------
 
+async function enterFullscreen(){
+
+    if(document.fullscreenElement){
+        return;
+    }
+
+    const container = document.body;
+
+    try{
+
+        await container.requestFullscreen();
+
+    }catch(err){
+
+        console.log("Fullscreen failed:", err);
+
+    }
+
+}
+
+document.addEventListener(
+    "fullscreenchange",
+    ()=>{
+
+        setTimeout(()=>{
+
+            resizeEverything();
+
+        },100);
+
+    }
+);
 
 overlay.addEventListener(
     "pointerdown",
@@ -3793,6 +3828,10 @@ function setAppMode(mode){
 
 startBtn.onclick = ()=>{
 
+    enterFullscreen();
+
+  
+
 console.log("START BUTTON CLICKED");
 
 setAppMode(APP_RECORDING);
@@ -3904,7 +3943,8 @@ distanceSelect.onchange = ()=>{
 };
 
 settingsBtn.onclick=()=>{
-       if(settingsPanel.style.display=="block"){
+    enterFullscreen();
+    if(settingsPanel.style.display=="block"){
         settingsPanel.style.display="none";
     }
 
