@@ -1047,7 +1047,9 @@ let videoOffsetY = 0;
 
 let videoScaleX = 1;
 let videoScaleY = 1;
-
+    
+let cropLeft = 0;
+let visibleCameraWidth = 0;
     
 let targetDistance = 7;
 
@@ -1277,7 +1279,14 @@ let learnBackground = true;
 
 function normToOverlayX(nx){
 
-    return nx * overlay.width;
+    const cameraX =
+        nx * cameraWidth;
+
+    const screenX =
+        (cameraX / videoScaleX) +
+        videoOffsetX;
+
+    return screenX;
 
 }
 
