@@ -55,12 +55,12 @@ min-height:0;
 }
 
 video{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:contain;
-background:black;
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    background:black;
 }
 
 #overlay{
@@ -1450,41 +1450,30 @@ const videoRatio =
 const elementRatio =
     rect.width / rect.height;
 
-
 let displayedWidth;
 let displayedHeight;
 
-
 if(elementRatio > videoRatio){
 
-    // black bars left/right
+    // cover crops top/bottom
 
-    displayedHeight =
-        rect.height;
+    displayedWidth = rect.width;
+    displayedHeight = displayedWidth / videoRatio;
 
-    displayedWidth =
-        displayedHeight * videoRatio;
+}else{
 
-}
-else{
+    // cover crops left/right
 
-    // black bars top/bottom
-
-    displayedWidth =
-        rect.width;
-
-    displayedHeight =
-        displayedWidth / videoRatio;
+    displayedHeight = rect.height;
+    displayedWidth = displayedHeight * videoRatio;
 
 }
-
 
 videoOffsetX =
     (rect.width - displayedWidth) / 2;
 
 videoOffsetY =
     (rect.height - displayedHeight) / 2;
-
 
 videoScaleX =
     cameraWidth / displayedWidth;
