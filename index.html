@@ -3049,11 +3049,23 @@ if(hasTarget){
 }else{
 
     //----------------------------------------
-    // NEW:
     // Treat the whole camera image as one target
     //----------------------------------------
 
     result = scanEntireFrame(pixels);
+
+    if(
+        result.brightPixels >= DETECTOR.minBlobPixels &&
+        result.brightPixels <= DETECTOR.maxBlobPixels
+    ){
+
+        hitTarget = {
+
+            id: "FULL_FRAME"
+
+        };
+
+    }
 
 }
     
