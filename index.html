@@ -3844,37 +3844,45 @@ function createPDFSummary(){
     const pdf = new jsPDF();
 
 
-    pdf.setFontSize(20);
+    //--------------------------------
+// REPORT HEADER
+//--------------------------------
 
-    pdf.text(
-        "SAFE INSIGHT LASER TRAINER",
-        20,
-        20
-    );
+pdf.setFontSize(20);
 
-
-    pdf.setFontSize(12);
-
-    pdf.text(
-        "Training Session Summary",
-        20,
-        32
-    );
+pdf.text(
+    "SAFE INSIGHT",
+    20,
+    20
+);
 
 
-    pdf.text(
-        "Date: " +
-        new Date().toLocaleString(),
-        20,
-        45
-    );
+pdf.setFontSize(14);
+
+pdf.text(
+    "Laser Training Session Report",
+    20,
+    32
+);
+
+
+pdf.setFontSize(10);
+
+pdf.text(
+    "Generated: " +
+    new Date().toLocaleString(),
+    20,
+    42
+);
+
+
 
 
     pdf.text(
         "Shots Fired: " +
        hits.length,
         20,
-        58
+        60
     );
 
 //--------------------------------
