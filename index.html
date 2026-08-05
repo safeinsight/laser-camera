@@ -3841,7 +3841,15 @@ function createPDFSummary(){
 
     const { jsPDF } = window.jspdf;
 
-    const pdf = new jsPDF();
+    const pdf = new jsPDF({
+
+    orientation: "portrait",
+
+    unit: "mm",
+
+    format: "letter"
+
+});
 
 
     //--------------------------------
@@ -4018,6 +4026,20 @@ const targetImage =
 pdf.addImage(
     targetImage,
     "PNG",
+    20,
+    115,
+    170,
+    95
+);
+
+//--------------------------------
+// TEST VECTOR DRAWING
+//--------------------------------
+
+pdf.setDrawColor(255,0,0);
+pdf.setLineWidth(0.75);
+
+pdf.rect(
     20,
     115,
     170,
