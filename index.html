@@ -3877,13 +3877,95 @@ function createPDFSummary(){
         58
     );
 
-//-----------------------------
-// ADD TARGET IMAGE
-//-----------------------------
+//--------------------------------
+// SESSION STATISTICS
+//--------------------------------
 
-//--------------------------------
-// CREATE COMBINED TARGET IMAGE
-//--------------------------------
+let totalTime = 0;
+let averageSplit = 0;
+let fastestSplit = 0;
+let slowestSplit = 0;
+
+
+if(hits.length > 0){
+
+    totalTime =
+        hits[hits.length - 1].time;
+
+
+    if(hits.length > 1){
+
+        let splits = [];
+
+        for(let i = 1; i < hits.length; i++){
+
+            splits.push(
+                hits[i].time -
+                hits[i-1].time
+            );
+
+        }
+
+
+        averageSplit =
+            splits.reduce(
+                (a,b)=>a+b,
+                0
+            ) / splits.length;
+
+
+        fastestSplit =
+            Math.min(...splits);
+
+
+        slowestSplit =
+            Math.max(...splits);
+
+    }
+
+}
+
+
+// Add statistics to PDF
+
+pdf.text(
+    "Total Time: " +
+    totalTime.toFixed(2) +
+    " sec",
+    20,
+    70
+);
+
+
+pdf.text(
+    "Average Split: " +
+    averageSplit.toFixed(2) +
+    " sec",
+    20,
+    80
+);
+
+
+pdf.text(
+    "Fastest Split: " +
+    fastestSplit.toFixed(2) +
+    " sec",
+    20,
+    90
+);
+
+
+pdf.text(
+    "Slowest Split: " +
+    slowestSplit.toFixed(2) +
+    " sec",
+    20,
+    100
+);
+
+//-----------------------------
+// ADD COMBINED TARGET IMAGE
+//-----------------------------
 
 const exportCanvas =
     document.createElement("canvas");
@@ -3929,7 +4011,7 @@ pdf.addImage(
     targetImage,
     "PNG",
     20,
-    70,
+    115,
     170,
     95
 );
