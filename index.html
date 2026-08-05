@@ -4016,6 +4016,107 @@ pdf.addImage(
     95
 );
 
+//--------------------------------
+// SHOT DETAILS TABLE
+//--------------------------------
+
+let tableY = 220;
+
+
+// Header
+
+pdf.setFontSize(11);
+
+pdf.text(
+    "Shot",
+    20,
+    tableY
+);
+
+pdf.text(
+    "Time",
+    45,
+    tableY
+);
+
+pdf.text(
+    "Split",
+    75,
+    tableY
+);
+
+pdf.text(
+    "X",
+    110,
+    tableY
+);
+
+pdf.text(
+    "Y",
+    140,
+    tableY
+);
+
+
+// Rows
+
+pdf.setFontSize(10);
+
+
+hits.forEach((hit,index)=>{
+
+    tableY += 8;
+
+
+    let split = 0;
+
+
+    if(index > 0){
+
+        split =
+            hit.time -
+            hits[index-1].time;
+
+    }
+
+
+    pdf.text(
+        String(index + 1),
+        20,
+        tableY
+    );
+
+
+    pdf.text(
+        hit.time.toFixed(2),
+        45,
+        tableY
+    );
+
+
+    pdf.text(
+        split.toFixed(2),
+        75,
+        tableY
+    );
+
+
+    pdf.text(
+        hit.x.toFixed(3),
+        110,
+        tableY
+    );
+
+
+    pdf.text(
+        hit.y.toFixed(3),
+        140,
+        tableY
+    );
+
+
+});
+
 
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
