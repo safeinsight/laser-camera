@@ -3877,6 +3877,25 @@ function createPDFSummary(){
         58
     );
 
+//-----------------------------
+// ADD TARGET IMAGE
+//-----------------------------
+
+const targetImage =
+    overlay.toDataURL(
+        "image/png"
+    );
+
+
+pdf.addImage(
+    targetImage,
+    "PNG",
+    20,
+    70,
+    170,
+    95
+);
+
 
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
