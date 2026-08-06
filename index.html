@@ -308,31 +308,53 @@ input:checked + .slider:before{
 }
 
 #summaryControl{
+
     margin-top:20px;
+
     display:flex;
+
     justify-content:center;
+
 }
 
 #summaryBtn{
+
     width:100%;
+
     max-width:320px;
+
     padding:12px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     gap:10px;
+
     background:#ff0000;
+
     color:#ffffff;
+
     border:none;
+
     border-radius:6px;
+
     font-size:16px;
+
     font-weight:bold;
+
     cursor:pointer;
+
     transition:.2s;
+
 }
 
 #summaryBtn:hover{
+
     background:#cc0000;
+
 }
 
 /*----------------------------------------
@@ -1014,18 +1036,6 @@ document.getElementById("stopBtn");
 const drillsBtn =
 document.getElementById("drillsBtn");
 
-const drillSelect =
-    document.getElementById("drillSelect");
-
-const viewDrillBtn =
-    document.getElementById("viewDrillBtn");
-
-const closeDrillsBtn =
-    document.getElementById("closeDrillsBtn");
-
-const drillsPanel =
-    document.getElementById("drillsPanel");
-
 const summaryBtn =
 document.getElementById("summaryBtn");
 
@@ -1099,130 +1109,7 @@ const targetShapeSelect =
 document.getElementById(
 "targetShapeSelect"
 );
-
-//------------------------------------------------
-// DRILLS TO USE
-//------------------------------------------------
-
-const drills = [
-
-        {
-            name: "Single Shot Accuracy",
-            setup:
-                "Place one target in the center of the screen.",
-            execution:
-                "Fire one deliberate shot. Reset and repeat for 10 shots.",
-            goal:
-                "Build precision and consistent trigger control."
-        },
-
-        {
-            name: "Five Shot Group",
-            setup:
-                "Use one target at your normal practice distance.",
-            execution:
-                "Fire five slow, controlled shots without rushing.",
-            goal:
-                "Produce the smallest possible shot group."
-        },
-
-        {
-            name: "Controlled Pair",
-            setup:
-                "Use one target.",
-            execution:
-                "Fire two accurate shots as quickly as you can maintain control.",
-            goal:
-                "Improve recoil management and follow-up shot speed."
-        },
-
-        {
-            name: "Failure Drill",
-            setup:
-                "Imagine upper chest and head zones on one target.",
-            execution:
-                "Fire two shots to center mass followed by one shot to the head.",
-            goal:
-                "Develop rapid target transitions and shot placement."
-        },
-
-        {
-            name: "Target Transition",
-            setup:
-                "Place three targets evenly spaced.",
-            execution:
-                "Fire one shot on each target from left to right. Reverse direction on the next run.",
-            goal:
-                "Improve eye speed and muzzle transitions."
-        },
-
-        {
-            name: "Near to Far",
-            setup:
-                "Place one close target and one farther target.",
-            execution:
-                "Alternate shots between the near and far target.",
-            goal:
-                "Improve sight adjustment between different target sizes."
-        },
-
-        {
-            name: "Box Drill",
-            setup:
-                "Place four targets in a square.",
-            execution:
-                "Fire one shot on each target in clockwise order.",
-            goal:
-                "Develop smooth movement between multiple targets."
-        },
-
-        {
-            name: "Reload Drill",
-            setup:
-                "Use one target.",
-            execution:
-                "Fire until your planned reload point, perform a reload, then continue firing.",
-            goal:
-                "Increase reload efficiency without sacrificing accuracy."
-        },
-
-        {
-            name: "Draw to First Shot",
-            setup:
-                "Begin from your normal ready position.",
-            execution:
-                "Draw and fire one accurate shot as quickly as possible.",
-            goal:
-                "Reduce first-shot time while maintaining accuracy."
-        },
-
-        {
-            name: "Dot Torture",
-            setup:
-                "Use a target with multiple small aiming points.",
-            execution:
-                "Fire the prescribed number of shots at each dot without rushing.",
-            goal:
-                "Develop extreme precision and trigger control."
-        }
-
-    ];
-
-
-
-drills.forEach((drill, index) => {
-
-    const option =
-        document.createElement("option");
-
-    option.value = index;
-    option.textContent = drill.name;
-
-    drillSelect.appendChild(option);
-
-});
-
-
+        
 
 //--------------------------
 // APP MODES
@@ -1480,43 +1367,7 @@ let backgroundFrame = null;
 let learnBackground = true;
 
 //------------------------------------------------
-// VIEW DRILLS FUNCTION
-//------------------------------------------------
-
-viewDrillBtn.onclick = () => {
-
-    if (drillSelect.value === "") {
-        alert("Please choose a drill.");
-        return;
-    }
-
-    const d = drills[drillSelect.value];
-
-    alert(
-`${d.name}
-
-SETUP
-${d.setup}
-
-EXECUTION
-${d.execution}
-
-GOAL
-${d.goal}`
-    );
-
-};
-
-//------------------------------------------------
-// VIEW DRILLS FUNCTION
-//------------------------------------------------
-
-closeDrillsBtn.onclick = () => {
-    drillsPanel.hidden = true;
-};
-
-//------------------------------------------------
-// RENDERING HELPERS
+// V7 RENDERING HELPERS
 //------------------------------------------------
 
 function normToOverlayX(nx){
@@ -3986,49 +3837,54 @@ function exitRecordingMode(){
 // CREATE PDF SUMMARY
 //--------------------------
 
-function createPDFSummary(logo){
+function createPDFSummary(){
+
     const { jsPDF } = window.jspdf;
+
     const pdf = new jsPDF({
+
     orientation: "portrait",
+
     unit: "mm",
+
     format: "letter"
+
 });
-  
-//--------------------------------
+
+
+    //--------------------------------
 // REPORT HEADER
 //--------------------------------
 
-// Draw logo
-pdf.addImage(
-    logo,
-    "PNG",
-    15,
-    10,
-    55,
-    12
-);
-
-// Report title
-pdf.setFont(
-    "helvetica",
-    "bold"
-);
-
 pdf.setFontSize(20);
+
+pdf.text(
+    "SAFE INSIGHT",
+    20,
+    20
+);
+
+
+pdf.setFontSize(14);
+
 pdf.text(
     "Laser Training Session Report",
-    75,
-    18
+    20,
+    32
 );
 
-// Divider line
-pdf.setLineWidth(0.5);
-pdf.line(
-    15,
-    42,
-    195,
+
+pdf.setFontSize(10);
+
+pdf.text(
+    "Generated: " +
+    new Date().toLocaleString(),
+    20,
     42
 );
+
+
+
 
     pdf.text(
         "Shots Fired: " +
@@ -4046,19 +3902,26 @@ let averageSplit = 0;
 let fastestSplit = 0;
 let slowestSplit = 0;
 
+
 if(hits.length > 0){
+
     totalTime =
         hits[hits.length - 1].time;
 
+
     if(hits.length > 1){
+
         let splits = [];
+
         for(let i = 1; i < hits.length; i++){
 
             splits.push(
                 hits[i].time -
                 hits[i-1].time
             );
+
         }
+
 
         averageSplit =
             splits.reduce(
@@ -4066,12 +3929,16 @@ if(hits.length > 0){
                 0
             ) / splits.length;
 
+
         fastestSplit =
             Math.min(...splits);
 
+
         slowestSplit =
             Math.max(...splits);
+
     }
+
 }
 
 
@@ -4085,6 +3952,7 @@ pdf.text(
     70
 );
 
+
 pdf.text(
     "Average Split: " +
     averageSplit.toFixed(2) +
@@ -4093,6 +3961,7 @@ pdf.text(
     80
 );
 
+
 pdf.text(
     "Fastest Split: " +
     fastestSplit.toFixed(2) +
@@ -4100,6 +3969,7 @@ pdf.text(
     20,
     90
 );
+
 
 pdf.text(
     "Slowest Split: " +
@@ -4122,8 +3992,10 @@ exportCanvas.width =
 exportCanvas.height =
     overlay.height;
 
+
 const exportCtx =
     exportCanvas.getContext("2d");
+
 
 // Draw the video image first
 
@@ -4151,22 +4023,6 @@ const targetImage =
     );
 
 
-//--------------------------------
-// TARGET IMAGE
-//--------------------------------
-
-pdf.setDrawColor(0);
-pdf.setLineWidth(0.4);
-pdf.roundedRect(
-    18,
-    113,
-    174,
-    99,
-    2,
-    2
-);
-
-
 pdf.addImage(
     targetImage,
     "PNG",
@@ -4174,19 +4030,6 @@ pdf.addImage(
     115,
     170,
     95
-);
-
-
-pdf.setFontSize(11);
-pdf.setFont(
-    "helvetica",
-    "bold"
-);
-
-pdf.text(
-    "Target Image",
-    20,
-    110
 );
 
 //--------------------------------
@@ -4209,8 +4052,11 @@ pdf.rect(
 
 let tableY = 220;
 
+
 // Header
+
 pdf.setFontSize(11);
+
 pdf.text(
     "Shot",
     20,
@@ -4243,16 +4089,24 @@ pdf.text(
 
 
 // Rows
+
 pdf.setFontSize(10);
 
+
 hits.forEach((hit,index)=>{
+
     tableY += 8;
+
+
     let split = 0;
 
+
     if(index > 0){
+
         split =
             hit.time -
             hits[index-1].time;
+
     }
 
 
@@ -4290,85 +4144,14 @@ hits.forEach((hit,index)=>{
         tableY
     );
 
+
 });
 
-//--------------------------------
-// FOOTER
-//--------------------------------
-
-const pageWidth =
-    pdf.internal.pageSize.getWidth();
-
-const pageHeight =
-    pdf.internal.pageSize.getHeight();
-
-
-// Footer divider
-
-pdf.setLineWidth(0.3);
-
-pdf.line(
-
-    15,
-
-    pageHeight - 12,
-
-    pageWidth - 15,
-
-    pageHeight - 12
-
-);
-
-
-// Footer text
-
-pdf.setFont(
-
-    "helvetica",
-
-    "normal"
-
-);
-
-pdf.setFontSize(9);
-
-
-// Left side
-
-pdf.text(
-
-    "Generated: " +
-
-    new Date().toLocaleString(),
-
-    15,
-
-    pageHeight - 6
-
-);
-
-
-// Right side
-
-pdf.text(
-
-    "Page 1",
-
-    pageWidth - 15,
-
-    pageHeight - 6,
-
-    {
-
-        align:"right"
-
-    }
-
-);
 
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
     );
+
 }
 
 
@@ -4536,72 +4319,15 @@ settingsBtn.onclick=()=>{
     }
 };
 
-  drillsBtn.onclick = () => {
-
+    drillsBtn.onclick = () => {
     closeSettingsPanel();
-
-    document.getElementById("drillsPanel").hidden = false;
-
-};
-
-    let menu = "SELECT A DRILL\n\n";
-
-    drills.forEach((d, i) => {
-        menu += `${i + 1}. ${d.name}\n`;
-    });
-
-    const choice = prompt(menu);
-
-    if (choice === null) return;
-
-    const index = parseInt(choice) - 1;
-
-    if (index < 0 || index >= drills.length) return;
-
-    const d = drills[index];
-
-    alert(
-`${d.name}
-
-SETUP
-${d.setup}
-
-EXECUTION
-${d.execution}
-
-GOAL
-${d.goal}`
+        
+        alert(
+        "Drills coming soon!"
     );
-
 };
 
-summaryBtn.onclick = () => {
-
-    const logo = new Image();
-
-logo.onload = () => {
-
-    console.log("LOGO LOADED",
-        logo.width,
-        logo.height
-    );
-
-    createPDFSummary(logo);
-
-};
-
-logo.onerror = (e) => {
-
-    console.error(
-        "LOGO FAILED TO LOAD",
-        e
-    );
-
-};
-
-logo.src = "Logo High Res.png";
-
-};
+summaryBtn.onclick = createPDFSummary;
 
 clearTargetBtn.onclick = () => {
 
@@ -4648,6 +4374,7 @@ playLastBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
 
 
