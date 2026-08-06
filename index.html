@@ -3850,41 +3850,101 @@ function createPDFSummary(){
     format: "letter"
 
 });
+    
+//--------------------------------
+// LOAD LOGO
+//--------------------------------
 
+const logo = new Image();
 
-    //--------------------------------
+logo.src = "Logo High Res.png";
+
+//--------------------------------
 // REPORT HEADER
 //--------------------------------
+
+// Draw logo
+
+pdf.addImage(
+
+    logo,
+
+    "PNG",
+
+    15,
+
+    10,
+
+    28,
+
+    28
+
+);
+
+
+// Report title
+
+pdf.setFont(
+
+    "helvetica",
+
+    "bold"
+
+);
 
 pdf.setFontSize(20);
 
 pdf.text(
-    "SAFE INSIGHT",
-    20,
-    20
-);
 
-
-pdf.setFontSize(14);
-
-pdf.text(
     "Laser Training Session Report",
-    20,
-    32
+
+    50,
+
+    20
+
 );
 
+
+// Subtitle
+
+pdf.setFont(
+
+    "helvetica",
+
+    "normal"
+
+);
 
 pdf.setFontSize(10);
 
 pdf.text(
+
     "Generated: " +
+
     new Date().toLocaleString(),
-    20,
-    42
+
+    50,
+
+    28
+
 );
 
 
+// Divider line
 
+pdf.setLineWidth(0.5);
+
+pdf.line(
+
+    15,
+
+    42,
+
+    195,
+
+    42
+
+);
 
     pdf.text(
         "Shots Fired: " +
