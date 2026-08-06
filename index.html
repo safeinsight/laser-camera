@@ -3837,7 +3837,7 @@ function exitRecordingMode(){
 // CREATE PDF SUMMARY
 //--------------------------
 
-function createPDFSummary(){
+function createPDFSummary(logo){
 
     const { jsPDF } = window.jspdf;
 
@@ -3851,13 +3851,7 @@ function createPDFSummary(){
 
 });
     
-//--------------------------------
-// LOAD LOGO
-//--------------------------------
 
-const logo = new Image();
-
-logo.src = "Logo High Res.png";
 
 //--------------------------------
 // REPORT HEADER
@@ -4571,7 +4565,19 @@ ${d.goal}`
 
 };
 
-summaryBtn.onclick = createPDFSummary;
+summaryBtn.onclick = () => {
+
+    const logo = new Image();
+
+    logo.onload = () => {
+
+        createPDFSummary(logo);
+
+    };
+
+    logo.src = "Logo High Res.png";
+
+};
 
 clearTargetBtn.onclick = () => {
 
