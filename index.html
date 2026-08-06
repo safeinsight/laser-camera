@@ -3837,54 +3837,49 @@ function exitRecordingMode(){
 // CREATE PDF SUMMARY
 //--------------------------
 
-function createPDFSummary(){
-
+function createPDFSummary(logo){
     const { jsPDF } = window.jspdf;
-
     const pdf = new jsPDF({
-
     orientation: "portrait",
-
     unit: "mm",
-
     format: "letter"
-
 });
-
-
-    //--------------------------------
+  
+//--------------------------------
 // REPORT HEADER
 //--------------------------------
 
-pdf.setFontSize(20);
-
-pdf.text(
-    "SAFE INSIGHT",
-    20,
-    20
+// Draw logo
+pdf.addImage(
+    logo,
+    "PNG",
+    15,
+    10,
+    55,
+    12
 );
 
+// Report title
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
 
-pdf.setFontSize(14);
-
+pdf.setFontSize(20);
 pdf.text(
     "Laser Training Session Report",
-    20,
-    32
+    75,
+    18
 );
 
-
-pdf.setFontSize(10);
-
-pdf.text(
-    "Generated: " +
-    new Date().toLocaleString(),
-    20,
+// Divider line
+pdf.setLineWidth(0.5);
+pdf.line(
+    15,
+    42,
+    195,
     42
 );
-
-
-
 
     pdf.text(
         "Shots Fired: " +
@@ -3902,26 +3897,19 @@ let averageSplit = 0;
 let fastestSplit = 0;
 let slowestSplit = 0;
 
-
 if(hits.length > 0){
-
     totalTime =
         hits[hits.length - 1].time;
 
-
     if(hits.length > 1){
-
         let splits = [];
-
         for(let i = 1; i < hits.length; i++){
 
             splits.push(
                 hits[i].time -
                 hits[i-1].time
             );
-
         }
-
 
         averageSplit =
             splits.reduce(
@@ -3929,16 +3917,12 @@ if(hits.length > 0){
                 0
             ) / splits.length;
 
-
         fastestSplit =
             Math.min(...splits);
 
-
         slowestSplit =
             Math.max(...splits);
-
     }
-
 }
 
 
@@ -3952,7 +3936,6 @@ pdf.text(
     70
 );
 
-
 pdf.text(
     "Average Split: " +
     averageSplit.toFixed(2) +
@@ -3961,7 +3944,6 @@ pdf.text(
     80
 );
 
-
 pdf.text(
     "Fastest Split: " +
     fastestSplit.toFixed(2) +
@@ -3969,7 +3951,6 @@ pdf.text(
     20,
     90
 );
-
 
 pdf.text(
     "Slowest Split: " +
@@ -3992,10 +3973,8 @@ exportCanvas.width =
 exportCanvas.height =
     overlay.height;
 
-
 const exportCtx =
     exportCanvas.getContext("2d");
-
 
 // Draw the video image first
 
@@ -4023,6 +4002,22 @@ const targetImage =
     );
 
 
+//--------------------------------
+// TARGET IMAGE
+//--------------------------------
+
+pdf.setDrawColor(0);
+pdf.setLineWidth(0.4);
+pdf.roundedRect(
+    18,
+    113,
+    174,
+    99,
+    2,
+    2
+);
+
+
 pdf.addImage(
     targetImage,
     "PNG",
@@ -4030,6 +4025,19 @@ pdf.addImage(
     115,
     170,
     95
+);
+
+
+pdf.setFontSize(11);
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
+
+pdf.text(
+    "Target Image",
+    20,
+    110
 );
 
 //--------------------------------
@@ -4052,11 +4060,8 @@ pdf.rect(
 
 let tableY = 220;
 
-
 // Header
-
 pdf.setFontSize(11);
-
 pdf.text(
     "Shot",
     20,
@@ -4089,24 +4094,16 @@ pdf.text(
 
 
 // Rows
-
 pdf.setFontSize(10);
 
-
 hits.forEach((hit,index)=>{
-
     tableY += 8;
-
-
     let split = 0;
 
-
     if(index > 0){
-
         split =
             hit.time -
             hits[index-1].time;
-
     }
 
 
@@ -4144,15 +4141,87 @@ hits.forEach((hit,index)=>{
         tableY
     );
 
-
 });
 
+//--------------------------------
+// FOOTER
+//--------------------------------
+
+const pageWidth =
+    pdf.internal.pageSize.getWidth();
+
+const pageHeight =
+    pdf.internal.pageSize.getHeight();
+
+
+// Footer divider
+
+pdf.setLineWidth(0.3);
+
+pdf.line(
+
+    15,
+
+    pageHeight - 12,
+
+    pageWidth - 15,
+
+    pageHeight - 12
+
+);
+
+
+// Footer text
+
+pdf.setFont(
+
+    "helvetica",
+
+    "normal"
+
+);
+
+pdf.setFontSize(9);
+
+
+// Left side
+
+pdf.text(
+
+    "Generated: " +
+
+    new Date().toLocaleString(),
+
+    15,
+
+    pageHeight - 6
+
+);
+
+
+// Right side
+
+pdf.text(
+
+    "Page 1",
+
+    pageWidth - 15,
+
+    pageHeight - 6,
+
+    {
+
+        align:"right"
+
+    }
+
+);
 
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
     );
-
 }
+
 
 
 //--------------------------
@@ -4327,7 +4396,34 @@ settingsBtn.onclick=()=>{
     );
 };
 
-summaryBtn.onclick = createPDFSummary;
+summaryBtn.onclick = () => {
+
+    const logo = new Image();
+
+logo.onload = () => {
+
+    console.log("LOGO LOADED",
+        logo.width,
+        logo.height
+    );
+
+    createPDFSummary(logo);
+
+};
+
+logo.onerror = (e) => {
+
+    console.error(
+        "LOGO FAILED TO LOAD",
+        e
+    );
+
+};
+
+logo.src = "Logo High Res.png";
+
+};
+
 
 clearTargetBtn.onclick = () => {
 
