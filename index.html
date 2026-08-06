@@ -4021,21 +4021,6 @@ pdf.text(
     18
 );
 
-// Subtitle
-pdf.setFont(
-    "helvetica",
-    "normal"
-);
-
-pdf.setFontSize(10);
-pdf.text(
-    "Generated: " +
-    new Date().toLocaleString(),
-    75,
-    28
-);
-
-
 // Divider line
 pdf.setLineWidth(0.5);
 pdf.line(
@@ -4307,6 +4292,79 @@ hits.forEach((hit,index)=>{
 
 });
 
+//--------------------------------
+// FOOTER
+//--------------------------------
+
+const pageWidth =
+    pdf.internal.pageSize.getWidth();
+
+const pageHeight =
+    pdf.internal.pageSize.getHeight();
+
+
+// Footer divider
+
+pdf.setLineWidth(0.3);
+
+pdf.line(
+
+    15,
+
+    pageHeight - 12,
+
+    pageWidth - 15,
+
+    pageHeight - 12
+
+);
+
+
+// Footer text
+
+pdf.setFont(
+
+    "helvetica",
+
+    "normal"
+
+);
+
+pdf.setFontSize(9);
+
+
+// Left side
+
+pdf.text(
+
+    "Generated: " +
+
+    new Date().toLocaleString(),
+
+    15,
+
+    pageHeight - 6
+
+);
+
+
+// Right side
+
+pdf.text(
+
+    "Page 1",
+
+    pageWidth - 15,
+
+    pageHeight - 6,
+
+    {
+
+        align:"right"
+
+    }
+
+);
 
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
