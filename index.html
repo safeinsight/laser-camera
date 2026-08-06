@@ -3838,89 +3838,52 @@ function exitRecordingMode(){
 //--------------------------
 
 function createPDFSummary(logo){
-
     const { jsPDF } = window.jspdf;
-
     const pdf = new jsPDF({
-
     orientation: "portrait",
-
     unit: "mm",
-
     format: "letter"
-
 });
-    
-
-
+  
 //--------------------------------
 // REPORT HEADER
 //--------------------------------
 
 // Draw logo
-
 pdf.addImage(
-
     logo,
-
     "PNG",
-
     15,
-
     10,
-
     28,
-
     28
-
 );
 
-
 // Report title
-
 pdf.setFont(
-
     "helvetica",
-
     "bold"
-
 );
 
 pdf.setFontSize(20);
-
 pdf.text(
-
     "Laser Training Session Report",
-
     50,
-
     20
-
 );
 
-
 // Subtitle
-
 pdf.setFont(
-
     "helvetica",
-
     "normal"
-
 );
 
 pdf.setFontSize(10);
-
 pdf.text(
-
     "Generated: " +
-
     new Date().toLocaleString(),
-
     50,
-
     28
-
 );
 
 
@@ -4569,13 +4532,27 @@ summaryBtn.onclick = () => {
 
     const logo = new Image();
 
-    logo.onload = () => {
+logo.onload = () => {
 
-        createPDFSummary(logo);
+    console.log("LOGO LOADED",
+        logo.width,
+        logo.height
+    );
 
-    };
+    createPDFSummary(logo);
 
-    logo.src = "Logo High Res.png";
+};
+
+logo.onerror = (e) => {
+
+    console.error(
+        "LOGO FAILED TO LOAD",
+        e
+    );
+
+};
+
+logo.src = "Logo High Res.png";
 
 };
 
