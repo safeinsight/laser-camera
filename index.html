@@ -412,6 +412,7 @@ z-index:50;
     width:22px;
     height:22px;
     fill:#ffffff;
+    stroke:#ffffff;
     flex-shrink:0;
 }
 
@@ -885,8 +886,14 @@ Settings Panel
 </h4> 
 
 <button id="drawTargetBtn">
-    Draw Target
+    <svg class="toolbarIcon"
+         viewBox="0 0 24 24"
+         aria-hidden="true">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm14.71-9.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.29 1.29 3.75 3.75 1.46-1.12z"/>
+    </svg>
+    <span>Draw Target</span>
 </button>
+
 
 <button id="clearTargetBtn">
     Clear Target Hits
@@ -1367,7 +1374,7 @@ let backgroundFrame = null;
 let learnBackground = true;
 
 //------------------------------------------------
-// V7 RENDERING HELPERS
+// RENDERING HELPERS
 //------------------------------------------------
 
 function normToOverlayX(nx){
@@ -4044,21 +4051,16 @@ if(
     let averageX = 0;
     let averageY = 0;
 
-
     for(const hit of hits){
-
         averageX += hit.x;
         averageY += hit.y;
-
     }
-
 
     averageX =
         averageX / hits.length;
 
     averageY =
         averageY / hits.length;
-
 
     //------------------------------------
     // Convert normalized coordinates
@@ -4073,7 +4075,6 @@ if(
         115 +
         (averageY * 95);
 
-
     //------------------------------------
     // Draw Average Point of Impact marker
     //------------------------------------
@@ -4086,51 +4087,29 @@ if(
 
     pdf.setLineWidth(0.7);
 
-
     // Horizontal line
-
     pdf.line(
-
         poiX - 5,
-
         poiY,
-
         poiX + 5,
-
         poiY
-
     );
-
 
     // Vertical line
-
     pdf.line(
-
         poiX,
-
         poiY - 5,
-
         poiX,
-
         poiY + 5
-
     );
-
 
     // Center circle
-
     pdf.circle(
-
         poiX,
-
         poiY,
-
         2,
-
         "S"
-
     );
-
 
     //------------------------------------
     // Label
@@ -4142,17 +4121,11 @@ if(
     );
 
     pdf.setFontSize(8);
-
     pdf.text(
-
         "Average Point of Impact",
-
         poiX + 6,
-
         poiY - 4
-
     );
-
 }
 
 
