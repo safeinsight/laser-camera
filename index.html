@@ -4183,13 +4183,11 @@ function drawShotTableHeader(){
 
     pdf.setFontSize(11);
 
-
     pdf.text(
         "Shot",
         20,
         tableY
     );
-
 
     pdf.text(
         "Time",
@@ -4197,13 +4195,11 @@ function drawShotTableHeader(){
         tableY
     );
 
-
     pdf.text(
         "Split",
         75,
         tableY
     );
-
 
     pdf.text(
         "X",
@@ -4211,21 +4207,17 @@ function drawShotTableHeader(){
         tableY
     );
 
-
     pdf.text(
         "Y",
         140,
         tableY
     );
 
-
     pdf.setFont(
         "helvetica",
         "normal"
     );
-
 }
-
 
 //--------------------------------
 // DRAW FIRST TABLE HEADER
@@ -4239,8 +4231,6 @@ drawShotTableHeader();
 //--------------------------------
 
 pdf.setFontSize(10);
-
-
 hits.forEach((hit,index)=>{
 
 
@@ -4277,13 +4267,11 @@ hits.forEach((hit,index)=>{
         );
 
         pdf.setFontSize(14);
-
         pdf.text(
             "Shot Details — Continued",
             20,
             tableY
         );
-
 
         tableY += 12;
 
@@ -4293,7 +4281,6 @@ hits.forEach((hit,index)=>{
         //--------------------------------
 
         drawShotTableHeader();
-
     }
 
 
@@ -4310,13 +4297,10 @@ hits.forEach((hit,index)=>{
 
     let split = 0;
 
-
     if(index > 0){
-
         split =
             hit.time -
             hits[index-1].time;
-
     }
 
 
@@ -4373,8 +4357,6 @@ hits.forEach((hit,index)=>{
         140,
         tableY
     );
-
-
 });
 
 //--------------------------------
@@ -4460,37 +4442,21 @@ for(
 //--------------------------
 
 function setAppMode(mode){
-
     appMode = mode;
-
     switch(mode){
-
         case APP_SETUP:
-
             exitRecordingMode();
-
             break;
-
         case APP_COUNTDOWN:
-
             exitRecordingMode();
-
             break;
-
         case APP_RECORDING:
-
             enterRecordingMode();
-
             break;
-
         case APP_PLAYBACK:
-
             exitRecordingMode();
-
             break;
-
     }
-
 }
 
 //--------------------------
@@ -4498,11 +4464,8 @@ function setAppMode(mode){
 //--------------------------
 
 startBtn.onclick = ()=>{
-
 console.log("START BUTTON CLICKED");
-
 setAppMode(APP_RECORDING);
-
 clearSessionData();
 
 //--------------------------
@@ -4510,9 +4473,7 @@ clearSessionData();
 //--------------------------
 
 stopBtn.onclick = ()=>{
-
     console.log("STOP BUTTON CLICKED");
-
 
     // If countdown is running, cancel countdown only
     if(countdownRunning){
@@ -4528,10 +4489,8 @@ stopBtn.onclick = ()=>{
         return;
     }
 
-
     // Otherwise stop active recording
     stopRecording();
-
 };
 
     
