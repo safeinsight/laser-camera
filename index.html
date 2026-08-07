@@ -4027,6 +4027,134 @@ pdf.addImage(
     95
 );
 
+//----------------------------------------
+// AVERAGE POINT OF IMPACT
+//----------------------------------------
+
+if(
+    analysisBtn &&
+    analysisBtn.checked &&
+    hits.length > 0
+){
+
+    //------------------------------------
+    // Calculate average normalized X/Y
+    //------------------------------------
+
+    let averageX = 0;
+    let averageY = 0;
+
+
+    for(const hit of hits){
+
+        averageX += hit.x;
+        averageY += hit.y;
+
+    }
+
+
+    averageX =
+        averageX / hits.length;
+
+    averageY =
+        averageY / hits.length;
+
+
+    //------------------------------------
+    // Convert normalized coordinates
+    // to PDF target coordinates
+    //------------------------------------
+
+    const poiX =
+        20 +
+        (averageX * 170);
+
+    const poiY =
+        115 +
+        (averageY * 95);
+
+
+    //------------------------------------
+    // Draw Average Point of Impact marker
+    //------------------------------------
+
+    pdf.setDrawColor(
+        255,
+        0,
+        0
+    );
+
+    pdf.setLineWidth(0.7);
+
+
+    // Horizontal line
+
+    pdf.line(
+
+        poiX - 5,
+
+        poiY,
+
+        poiX + 5,
+
+        poiY
+
+    );
+
+
+    // Vertical line
+
+    pdf.line(
+
+        poiX,
+
+        poiY - 5,
+
+        poiX,
+
+        poiY + 5
+
+    );
+
+
+    // Center circle
+
+    pdf.circle(
+
+        poiX,
+
+        poiY,
+
+        2,
+
+        "S"
+
+    );
+
+
+    //------------------------------------
+    // Label
+    //------------------------------------
+
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(8);
+
+    pdf.text(
+
+        "Average Point of Impact",
+
+        poiX + 6,
+
+        poiY - 4
+
+    );
+
+}
+
 
 pdf.setFontSize(11);
 pdf.setFont(
