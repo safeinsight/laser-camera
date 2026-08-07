@@ -824,6 +824,63 @@ Settings Panel
   </div>
 
 </div>
+
+<!-- ==================================================== -->
+<!-- DRILLS PANEL                                         -->
+<!-- ==================================================== -->
+
+<div id="drillsPanel" hidden>
+
+  <h4 style="color: #ffffff; text-align: center; font-size: 24px;">
+    DRILLS
+  </h4>
+
+  <div class="settings-grid">
+
+    <!-- DRILL SELECTION -->
+    <div class="settings-card">
+
+      <h4>Choose Drill</h4>
+
+      <div class="custom-select-wrapper">
+
+        <!-- Hidden native select -->
+        <select id="drillSelect" style="display:none;">
+          <option value="" selected>CHOOSE DRILL</option>
+        </select>
+
+        <!-- Visible dropdown trigger -->
+        <div class="select-trigger">
+          CHOOSE DRILL
+        </div>
+
+        <!-- Dropdown options are added by JavaScript -->
+        <div class="custom-options-panel">
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- DRILL INFORMATION -->
+  <div id="drillInfo"
+       style="
+         display:none;
+         color:#ffffff;
+         font-family:system-ui,-apple-system,sans-serif;
+         font-size:16px;
+         line-height:1.6;
+         margin-top:25px;
+         padding:15px;
+         background:#333333;
+         border-radius:6px;
+       ">
+  </div>
+
+</div>
+    
 <hr>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1133,6 +1190,270 @@ const targetShapeSelect =
 document.getElementById(
 "targetShapeSelect"
 );
+
+//------------------------------------------------
+// DRILLS TO USE
+//------------------------------------------------
+
+const drills = [
+
+    {
+        name: "Single Shot Accuracy",
+        setup:
+            "Place one target in the center of the screen.",
+        execution:
+            "Fire one deliberate shot. Reset and repeat for 10 shots.",
+        goal:
+            "Build precision and consistent trigger control."
+    },
+
+    {
+        name: "Five Shot Group",
+        setup:
+            "Use one target at your normal practice distance.",
+        execution:
+            "Fire five slow, controlled shots without rushing.",
+        goal:
+            "Produce the smallest possible shot group."
+    },
+
+    {
+        name: "Controlled Pair",
+        setup:
+            "Use one target.",
+        execution:
+            "Fire two accurate shots as quickly as you can maintain control.",
+        goal:
+            "Improve recoil management and follow-up shot speed."
+    },
+
+    {
+        name: "Failure Drill",
+        setup:
+            "Imagine upper chest and head zones on one target.",
+        execution:
+            "Fire two shots to center mass followed by one shot to the head.",
+        goal:
+            "Develop rapid target transitions and shot placement."
+    },
+
+    {
+        name: "Target Transition",
+        setup:
+            "Place three targets evenly spaced.",
+        execution:
+            "Fire one shot on each target from left to right. Reverse direction on the next run.",
+        goal:
+            "Improve eye speed and muzzle transitions."
+    },
+
+    {
+        name: "Near to Far",
+        setup:
+            "Place one close target and one farther target.",
+        execution:
+            "Alternate shots between the near and far target.",
+        goal:
+            "Improve sight adjustment between different target sizes."
+    },
+
+    {
+        name: "Box Drill",
+        setup:
+            "Place four targets in a square.",
+        execution:
+            "Fire one shot on each target in clockwise order.",
+        goal:
+            "Develop smooth movement between multiple targets."
+    },
+
+    {
+        name: "Reload Drill",
+        setup:
+            "Use one target.",
+        execution:
+            "Fire until your planned reload point, perform a reload, then continue firing.",
+        goal:
+            "Increase reload efficiency without sacrificing accuracy."
+    },
+
+    {
+        name: "Draw to First Shot",
+        setup:
+            "Begin from your normal ready position.",
+        execution:
+            "Draw and fire one accurate shot as quickly as possible.",
+        goal:
+            "Reduce first-shot time while maintaining accuracy."
+    },
+
+    {
+        name: "Dot Torture",
+        setup:
+            "Use a target with multiple small aiming points.",
+        execution:
+            "Fire the prescribed number of shots at each dot without rushing.",
+        goal:
+            "Develop extreme precision and trigger control."
+    }
+
+];
+
+
+//------------------------------------------------
+// BUILD DRILL DROPDOWN
+//------------------------------------------------
+
+const drillSelect =
+    document.getElementById("drillSelect");
+
+const drillOptionsPanel =
+    document.querySelector(
+        "#drillsPanel .custom-options-panel"
+    );
+
+const drillTrigger =
+    document.querySelector(
+        "#drillsPanel .select-trigger"
+    );
+
+const drillInfo =
+    document.getElementById("drillInfo");
+
+
+drills.forEach((drill, index) => {
+
+    //--------------------------------------------
+    // Add option to hidden native select
+    //--------------------------------------------
+
+    const option =
+        document.createElement("option");
+
+    option.value = index;
+    option.textContent = drill.name;
+
+    drillSelect.appendChild(option);
+
+
+    //--------------------------------------------
+    // Add option to visible custom dropdown
+    //--------------------------------------------
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "custom-option-item";
+
+    item.dataset.value =
+        index;
+
+    item.textContent =
+        drill.name;
+
+    drillOptionsPanel.appendChild(item);
+
+
+    //--------------------------------------------
+    // When this drill is selected
+    //--------------------------------------------
+
+    item.addEventListener("click", () => {
+
+        drillSelect.value = index;
+
+        drillTrigger.textContent =
+            drill.name;
+
+        drillSelect.dispatchEvent(
+            new Event("change")
+        );
+
+        drillOptionsPanel
+            .parentElement
+            .classList
+            .remove("open");
+
+    });
+
+});
+
+
+//------------------------------------------------
+// SHOW SELECTED DRILL INFORMATION
+//------------------------------------------------
+
+drillSelect.addEventListener("change", () => {
+
+    const index =
+        drillSelect.value;
+
+    if(index === "") {
+
+        drillInfo.style.display =
+            "none";
+
+        drillInfo.innerHTML =
+            "";
+
+        return;
+
+    }
+
+    const drill =
+        drills[index];
+
+    drillInfo.innerHTML = `
+
+        <div style="
+            color:#ff0000;
+            font-size:20px;
+            font-weight:bold;
+            margin-bottom:8px;
+        ">
+            ${drill.name}
+        </div>
+
+        <div style="
+            font-weight:bold;
+            margin-top:12px;
+        ">
+            SETUP
+        </div>
+
+        <div>
+            ${drill.setup}
+        </div>
+
+        <div style="
+            font-weight:bold;
+            margin-top:12px;
+        ">
+            EXECUTION
+        </div>
+
+        <div>
+            ${drill.execution}
+        </div>
+
+        <div style="
+            font-weight:bold;
+            margin-top:12px;
+        ">
+            GOAL
+        </div>
+
+        <div>
+            ${drill.goal}
+        </div>
+
+    `;
+
+    drillInfo.style.display =
+        "block";
+
+});
         
 
 //--------------------------
@@ -2481,13 +2802,10 @@ function drawCountdown(){
 //------------------------------------------------
 
 function scanTarget(target, pixels){
-
     const box = getTargetPixels(target);
-
     let totalWeight = 0;
     let totalX = 0;
     let totalY = 0;
-
     let brightPixels = 0;
 
     //------------------------------------------------
@@ -2495,11 +2813,8 @@ function scanTarget(target, pixels){
     //------------------------------------------------
 
 const laserMask = new Uint8Array(
-
     detectCanvas.width *
-
     detectCanvas.height
-
 );
 
     //------------------------------------------------
@@ -2507,9 +2822,7 @@ const laserMask = new Uint8Array(
     //------------------------------------------------
 
 let brightestValue = -1;
-
 let brightestX = 0;
-
 let brightestY = 0;
 
     //------------------------------------------------
@@ -2518,178 +2831,111 @@ let brightestY = 0;
 
     let gridTotal = [];
     let gridCount = [];
-
     for(let gy=0; gy<GRID_ROWS; gy++){
-
         gridTotal[gy] = [];
         gridCount[gy] = [];
-
-        for(let gx=0; gx<GRID_COLS; gx++){
-
-            gridTotal[gy][gx] = 0;
-            gridCount[gy][gx] = 0;
-
-        }
-
+    for(let gx=0; gx<GRID_COLS; gx++){
+        gridTotal[gy][gx] = 0;
+        gridCount[gy][gx] = 0;
     }
+}
 
     //------------------------------------------------
     // Scan target
     //------------------------------------------------
 
     for(
-
         let y = Math.floor(box.top);
-
         y < Math.floor(box.bottom);
-
         y += DETECTOR.pixelStep
-
     ){
 
-        const gridY = Math.max(
+    const gridY = Math.max(
+        0,
+        Math.min(
+        GRID_ROWS - 1,
+        Math.floor(
+            ((y - box.top) * GRID_ROWS) /
+            (box.bottom - box.top)
+        )
+    )
+);
 
-            0,
+    for(
+        let x = Math.floor(box.left);
+        x < Math.floor(box.right);
+        x += DETECTOR.pixelStep
+    ){
 
-            Math.min(
+    //----------------------------------------
+    // Ignore pixels outside an oval target
+    //----------------------------------------
 
-                GRID_ROWS - 1,
+    if(target.shape === "oval"){
+    const centerX =
+        (box.left + box.right) / 2;
+    const centerY =
+        (box.top + box.bottom) / 2;
+    const radiusX =
+        (box.right - box.left) / 2;
+    const radiusY =
+        (box.bottom - box.top) / 2;
+    const dx =
+        (x - centerX) / radiusX;
+    const dy =
+        (y - centerY) / radiusY;
+    if((dx * dx + dy * dy) > 1){
+        continue;
+    }
+}
+    const i =
+        (y * detectCanvas.width + x) * 4;
+    const r = pixels[i];
+    const g = pixels[i+1];
+    const b = pixels[i+2];
+    const brightness =
+        (r + g + b) / 3;
+    const gridX = Math.max(
+        0,
+        Math.min(
+        GRID_COLS - 1,
+        Math.floor(
+            ((x - box.left) * GRID_COLS) /
+            (box.right - box.left)
+        )
+    )
+);
 
-                Math.floor(
+    gridTotal[gridY][gridX] += brightness;
+    gridCount[gridY][gridX]++;
+    const bgR = backgroundFrame[i];
+    const bgG = backgroundFrame[i+1];
+    const bgB = backgroundFrame[i+2];
+    const redRise   = r - bgR;
+    const greenRise = g - bgG;
+    const blueRise  = b - bgB;
+    const localBrightness =
+        gridBrightness[gridY]?.[gridX] ?? 150;
+    let localThreshold = DETECTOR.baseThreshold;
+    if(localBrightness > 190){
+        localThreshold += 6;
+    }else if(localBrightness > 170){
+        localThreshold += 3;
+    }else if(localBrightness < 120){
+        localThreshold -= 4;
+    }
 
-                    ((y - box.top) * GRID_ROWS) /
-
-                    (box.bottom - box.top)
-
-                )
-
-            )
-
-        );
-
-        for(
-
-            let x = Math.floor(box.left);
-
-            x < Math.floor(box.right);
-
-            x += DETECTOR.pixelStep
-
-        ){
-
-            //----------------------------------------
-            // Ignore pixels outside an oval target
-            //----------------------------------------
-
-            if(target.shape === "oval"){
-
-                const centerX =
-                    (box.left + box.right) / 2;
-
-                const centerY =
-                    (box.top + box.bottom) / 2;
-
-                const radiusX =
-                    (box.right - box.left) / 2;
-
-                const radiusY =
-                    (box.bottom - box.top) / 2;
-
-                const dx =
-                    (x - centerX) / radiusX;
-
-                const dy =
-                    (y - centerY) / radiusY;
-
-                if((dx * dx + dy * dy) > 1){
-
-                    continue;
-
-                }
-
-            }
-
-            const i =
-
-                (y * detectCanvas.width + x) * 4;
-
-            const r = pixels[i];
-            const g = pixels[i+1];
-            const b = pixels[i+2];
-
-            const brightness =
-
-                (r + g + b) / 3;
-
-            const gridX = Math.max(
-
-                0,
-
-                Math.min(
-
-                    GRID_COLS - 1,
-
-                    Math.floor(
-
-                        ((x - box.left) * GRID_COLS) /
-
-                        (box.right - box.left)
-
-                    )
-
-                )
-
-            );
-
-            gridTotal[gridY][gridX] += brightness;
-            gridCount[gridY][gridX]++;
-
-            const bgR = backgroundFrame[i];
-            const bgG = backgroundFrame[i+1];
-            const bgB = backgroundFrame[i+2];
-
-            const redRise   = r - bgR;
-            const greenRise = g - bgG;
-            const blueRise  = b - bgB;
-
-            const localBrightness =
-
-                gridBrightness[gridY]?.[gridX] ?? 150;
-
-            let localThreshold = DETECTOR.baseThreshold;
-
-            if(localBrightness > 190){
-
-                localThreshold += 6;
-
-            }else if(localBrightness > 170){
-
-                localThreshold += 3;
-
-            }else if(localBrightness < 120){
-
-                localThreshold -= 4;
-
-            }
-
-            const laser =
-
-                redRise > localThreshold &&
-
-                redRise >
-
-                (greenRise + DETECTOR.colorDifference) &&
-
-                redRise >
-
-                (blueRise + DETECTOR.colorDifference);
-
-            if(!laser){
-                continue;
-            }
+    const laser =
+        redRise > localThreshold &&
+        redRise >
+        (greenRise + DETECTOR.colorDifference) &&
+        redRise >
+        (blueRise + DETECTOR.colorDifference);
+    if(!laser){
+        continue;
+    }
 
     brightPixels++;
-
     laserMask[
     y * detectCanvas.width + x
     ] = 1;
@@ -2701,49 +2947,33 @@ let brightestY = 0;
 }
 
     const weight =
-
     Math.max(
         brightness,
         r
     );
 
 totalWeight += weight;
-
 totalX += x * weight;
-
 totalY += y * weight;
-
-        }
-
     }
+}
 
     //------------------------------------------------
     // Return scan results
     //------------------------------------------------
 
 return{
-
     brightPixels,
-
     totalWeight,
-
     totalX,
-
     totalY,
-
     laserMask,
-
     brightestX,
-
     brightestY,
-
     brightestValue,
-
     gridTotal,
-
     gridCount
-
-};
+    };
 }
 
 //------------------------------------------------
@@ -2762,7 +2992,6 @@ function scanEntireFrame(pixels){
         },
         pixels
     );
-
 }
 
 //------------------------------------------------
@@ -2770,18 +2999,13 @@ function scanEntireFrame(pixels){
 //------------------------------------------------
 
 function growLaserBlob(
-
     laserMask,
-
     startX,
-
     startY
-
 ){
 
     const width =
         detectCanvas.width;
-
     const height =
         detectCanvas.height;
 
@@ -2790,153 +3014,98 @@ function growLaserBlob(
     //----------------------------------------
 
     if(
-
         startX < 0 ||
-
         startY < 0 ||
-
         startX >= width ||
-
         startY >= height
-
     ){
-
         return [];
-
     }
 
     if(
-
         !laserMask[
             startY * width + startX
         ]
-
     ){
-
-        return [];
-
-    }
+    return [];
+}
 
     //----------------------------------------
     // Flood fill
     //----------------------------------------
 
     const stack = [];
-
     const blob = [];
-
     const visited =
         new Uint8Array(
-
             width * height
-
         );
 
     stack.push({
-
         x:startX,
-
         y:startY
-
     });
 
     while(stack.length){
-
         const p = stack.pop();
-
         const index =
-
             p.y * width + p.x;
-
         if(visited[index]){
-
             continue;
-
         }
 
         visited[index] = 1;
-
         if(!laserMask[index]){
-
             continue;
-
         }
-
+        
         blob.push(p);
 
-        //------------------------------------
-        // 8-connected neighbours
-        //------------------------------------
+    //------------------------------------
+    // 8-connected neighbours
+    //------------------------------------
 
-        for(
+    for(
+        let dy=-1;
+        dy<=1;
+        dy++
+    ){
 
-            let dy=-1;
+    for(
+        let dx=-1;
+        dx<=1;
+        dx++
+    ){
 
-            dy<=1;
+    if(
+        dx===0 &&
+        dy===0
+    ){
+    continue;
+    }
+    const nx =
+        p.x + dx;
+    const ny =
+        p.y + dy;
 
-            dy++
+    if(
+        nx<0 ||
+        ny<0 ||
+        nx>=width ||
+        ny>=height
+    ){
 
-        ){
-
-            for(
-
-                let dx=-1;
-
-                dx<=1;
-
-                dx++
-
-            ){
-
-                if(
-
-                    dx===0 &&
-
-                    dy===0
-
-                ){
-
-                    continue;
-
-                }
-
-                const nx =
-
-                    p.x + dx;
-
-                const ny =
-
-                    p.y + dy;
-
-                if(
-
-                    nx<0 ||
-
-                    ny<0 ||
-
-                    nx>=width ||
-
-                    ny>=height
-
-                ){
-
-                    continue;
-
-                }
-
-                stack.push({
-
-                    x:nx,
-
-                    y:ny
-
-                });
-
-            }
-
-        }
+    continue;
 
     }
+
+        stack.push({
+            x:nx,
+            y:ny
+        });
+    }
+}
+}
 
     return blob;
 
@@ -2947,31 +3116,21 @@ function growLaserBlob(
 //------------------------------------------------
 
 function calculateBlobCenter(blob){
-
     if(blob.length === 0){
-
         return null;
-
     }
 
     let sumX = 0;
     let sumY = 0;
-
     for(const p of blob){
-
         sumX += p.x;
         sumY += p.y;
-
     }
 
     return{
-
         x: sumX / blob.length,
-
         y: sumY / blob.length
-
     };
-
 }
 
 //------------------------------------------------
@@ -2979,11 +3138,8 @@ function calculateBlobCenter(blob){
 //------------------------------------------------
 
 function validateBlob(
-
     blob,
-
     brightestValue
-
 ){
 
     //----------------------------------------
@@ -2991,9 +3147,7 @@ function validateBlob(
     //----------------------------------------
 
     if(blob.length === 0){
-
         return false;
-
     }
 
     //----------------------------------------
@@ -3001,9 +3155,7 @@ function validateBlob(
     //----------------------------------------
 
     if(blob.length < 4){
-
         return false;
-
     }
 
     //----------------------------------------
@@ -3011,9 +3163,7 @@ function validateBlob(
     //----------------------------------------
 
     if(blob.length > DETECTOR.maxBlobPixels){
-
         return false;
-
     }
 
     //----------------------------------------
@@ -3021,13 +3171,10 @@ function validateBlob(
     //----------------------------------------
 
     if(brightestValue < 150){
-
         return false;
-
     }
 
     return true;
-
 }
 
 //------------------------------------------------
@@ -3042,7 +3189,6 @@ function detectLaser(){
     ){
         return;
     }
-
 
     //---------------------------------------
     // Copy current frame
@@ -3082,14 +3228,13 @@ if(!backgroundFrame){
     return;
 }
 
-//------------------------------------------------
-// Scan entire frame if no targets exist.
-// Otherwise scan only the active target.
-//------------------------------------------------
+    //------------------------------------------------
+    // Scan entire frame if no targets exist.
+    // Otherwise scan only the active target.
+    //------------------------------------------------
 
 let result = null;
 let hitTarget = null;
-
 const hasTarget = targets.some(
     target => target.calibrated
 );
@@ -3143,47 +3288,26 @@ if(hasTarget){
 }
     
 if(hitTarget){
-
     console.log(
-
         "Hit Target:",
-
         hitTarget.id
-
     );
-
-    //----------------------------------------
-    // Advance to the next target
-    //----------------------------------------
-
-    //----------------------------------------
-    // Wait before calling next target
-    //----------------------------------------
 
 //----------------------------------------
 // Schedule next target only once
 //----------------------------------------
 
 if(!waitingForNextTarget){
-
     waitingForNextTarget = true;
-
     setTimeout(
-
         ()=>{
-
             nextTarget();
-
             waitingForNextTarget = false;
-
         },
 
         250
-
     );
-
 }
-
 }
 
 //------------------------------------------------
@@ -3198,17 +3322,14 @@ let totalX =
     result?.totalX ?? 0;
 let totalY =
     result?.totalY ?? 0;
-
 let laserMask =
     result?.laserMask ?? null;
-    
 let brightestX =
     result?.brightestX ?? 0;
 let brightestY =
     result?.brightestY ?? 0;
 let brightestValue =
     result?.brightestValue ?? 0;
-    
 let gridTotal =
     result?.gridTotal ?? [];
 let gridCount =
@@ -3278,27 +3399,17 @@ currentLaserVisible = false;
 //---------------------------------------
 
 const blob = growLaserBlob(
-
     laserMask,
-
     brightestX,
-
     brightestY
-
 );
 
 const blobCenter =
-
     calculateBlobCenter(blob);
-
 const blobValid =
-
     validateBlob(
-
         blob,
-
         brightestValue
-
     );
 
     console.log(
@@ -3315,28 +3426,18 @@ const blobValid =
 //---------------------------------------
 
 const hitX =
-
     blobValid
-
         ? blobCenter.x
-
         : totalX / totalWeight;
 
 const hitY =
-
     blobValid
-
         ? blobCenter.y
-
         : totalY / totalWeight;
     
-
     console.log(
-
     "BLOB SIZE:",
-
     blob.length
-
 );
 
     //---------------------------------------
@@ -4587,12 +4688,12 @@ settingsBtn.onclick=()=>{
     }
 };
 
-    drillsBtn.onclick = () => {
+drillsBtn.onclick = () => {
+
     closeSettingsPanel();
-        
-        alert(
-        "Drills coming soon!"
-    );
+
+    document.getElementById("drillsPanel").hidden = false;
+
 };
 
 summaryBtn.onclick = () => {
