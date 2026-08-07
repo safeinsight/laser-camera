@@ -4694,7 +4694,12 @@ drillsBtn.onclick = () => {
 
     closeSettingsPanel();
 
-    document.getElementById("drillsPanel").style.display = "block";
+    const drillsPanel =
+        document.getElementById("drillsPanel");
+
+    drillsPanel.removeAttribute("hidden");
+
+    drillsPanel.style.display = "block";
 
 };
 
