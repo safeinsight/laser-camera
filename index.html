@@ -439,45 +439,87 @@ z-index:50;
     font-size:16px;
 }
 
-/*----------------------------------------
-Settings Panel
-----------------------------------------*/
+/*----------------------------------------*
+* Settings Panel
+*----------------------------------------*/
 
 #settingsPanel{
-    display:none;
-    position:absolute;
-    top:10px;
-    left:10px;
-    right:10px;
-    bottom:80px;
-    overflow-y:auto;
-    background:rgba(255, 255, 255,.80);
-    border:2px solid #555;
-    border-radius:10px;
-    padding:20px;
-    color:white;
-    text-align:left;
-    z-index:100;
+display:none;
+position:absolute;
+top:10px;
+left:10px;
+right:10px;
+bottom:80px;
+overflow-y:auto;
+background:rgba(255,255,255,.80);
+border:2px solid #555;
+border-radius:10px;
+padding:20px;
+color:white;
+text-align:left;
+z-index:100;
 }
 
 #settingsPanel h3{
-    margin-top:0;
-    text-align:center;
+margin-top:0;
+text-align:center;
 }
 
 #settingsPanel h4{
-    margin-top:20px;
-    margin-bottom:10px;
-    color:#000000;
-    border-bottom:1px solid #555;
-    padding-bottom:5px;
-    text-transform:uppercase;
-    letter-spacing:1px;
+margin-top:20px;
+margin-bottom:10px;
+color:#000000;
+border-bottom:1px solid #555;
+padding-bottom:5px;
+text-transform:uppercase;
+letter-spacing:1px;
 }
 
+
+/*----------------------------------------*
+* Drills Panel
+*----------------------------------------*/
+
+#drillsPanel{
+display:none;
+position:absolute;
+top:10px;
+left:10px;
+right:10px;
+bottom:80px;
+overflow-y:auto;
+background:rgba(255,255,255,.80);
+border:2px solid #555;
+border-radius:10px;
+padding:20px;
+color:white;
+text-align:left;
+z-index:100;
+}
+
+#drillsPanel h3{
+margin-top:0;
+text-align:center;
+}
+
+#drillsPanel h4{
+margin-top:20px;
+margin-bottom:10px;
+color:#000000;
+border-bottom:1px solid #555;
+padding-bottom:5px;
+text-transform:uppercase;
+letter-spacing:1px;
+}
+
+
+/*----------------------------------------*
+* Countdown Options
+*----------------------------------------*/
+
 #countdownOptions{
-    margin-left:15px;
-    line-height:1.8;
+margin-left:15px;
+line-height:1.8;
 }
 
 </style>
@@ -830,7 +872,7 @@ Settings Panel
 <!-- DRILLS PANEL                                         -->
 <!-- ==================================================== -->
 
-<div id="drillsPanel" hidden>
+<div id="drillsPanel">
 
   <h4 style="color: #ffffff; text-align: center; font-size: 24px;">
     DRILLS
@@ -4638,6 +4680,7 @@ distanceSelect.onchange = ()=>{
 };
 
 settingsBtn.onclick=()=>{
+    document.getElementById("drillsPanel").style.display = "none";
        if(settingsPanel.style.display=="block"){
         settingsPanel.style.display="none";
     }
@@ -4650,7 +4693,9 @@ settingsBtn.onclick=()=>{
 drillsBtn.onclick = () => {
 
     closeSettingsPanel();
-       document.getElementById("drillsPanel").hidden = false;
+
+    document.getElementById("drillsPanel").style.display = "block";
+
 };
 
 summaryBtn.onclick = () => {
