@@ -874,18 +874,6 @@ line-height:1.8;
 
 <div id="drillsPanel">
 
-  <h4 style="color: #ffffff; text-align: center; font-size: 24px;">
-    DRILLS
-  </h4>
-
-  <div class="settings-grid">
-
-<!-- ==================================================== -->
-<!-- SEPARATE DRILLS PANEL                                -->
-<!-- ==================================================== -->
-
-<div id="drillsPanel">
-
   <h4 style="
       color:#ffffff;
       text-align:center;
@@ -905,15 +893,19 @@ line-height:1.8;
 
         <!-- Hidden native select -->
         <select id="drillSelect" style="display:none;">
-          <option value="" selected>CHOOSE DRILL</option>
+
+          <option value="" selected>
+            CHOOSE DRILL
+          </option>
+
         </select>
 
-        <!-- Visible dropdown trigger -->
+        <!-- Visible dropdown -->
         <div class="select-trigger">
           CHOOSE DRILL
         </div>
 
-        <!-- Dropdown options are added by JavaScript -->
+        <!-- Drill choices will be inserted here -->
         <div class="custom-options-panel">
         </div>
 
@@ -924,26 +916,7 @@ line-height:1.8;
   </div>
 
   <!-- DRILL INFORMATION -->
-  <div id="drillInfo"
-       style="
-         display:none;
-         color:#ffffff;
-         font-family:system-ui,-apple-system,sans-serif;
-         font-size:16px;
-         line-height:1.6;
-         margin-top:25px;
-         padding:15px;
-         background:#333333;
-         border-radius:6px;
-       ">
-  </div>
-
-</div>
-
-  </div>
-
-  <!-- DRILL INFORMATION -->
-  <div id="drillInfo"
+  <div id="drillInfo">
        style="
          display:none;
          color:#ffffff;
