@@ -260,7 +260,8 @@ color:#ffcc00;
 
 .switch{
     position:relative;
-    display:inline-block;
+    display:inline-block !important;  
+    margin: 0 auto !important; 
     width:60px;
     height:34px;
     vertical-align:middle;
@@ -305,17 +306,23 @@ input:checked + .slider:before{
 }
 
 #analysisControl{
-    display:inline-flex !important;
-    justify-content: center !important;
+    display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important;
     gap:6px !important;
+
+    margin: 30px auto !important; 
+    width: 100% !important;
+    max-width: 300px !important;
     text-align: center !important;
 }
 
 #analysisLabel{
     color:black;
     font-weight:bold;
+    text-align: center !important;
+    width: 100% !important;
     user-select:none;
 }
 
