@@ -1300,7 +1300,7 @@ const drills = [
 
 
 //------------------------------------------------
-// BUILD DRILL DROPDOWN
+// BUILD DRILLS DROPDOWN
 //------------------------------------------------
 
 const drillSelect =
@@ -1320,24 +1320,18 @@ const drillInfo =
     document.getElementById("drillInfo");
 
 
-drills.forEach((drill, index) => {
-
-    //--------------------------------------------
-    // Add option to hidden native select
-    //--------------------------------------------
+drills.forEach((drill,index) => {
 
     const option =
         document.createElement("option");
 
     option.value = index;
-    option.textContent = drill.name;
+
+    option.textContent =
+        drill.name;
 
     drillSelect.appendChild(option);
 
-
-    //--------------------------------------------
-    // Add option to visible custom dropdown
-    //--------------------------------------------
 
     const item =
         document.createElement("div");
@@ -1354,103 +1348,69 @@ drills.forEach((drill, index) => {
     drillOptionsPanel.appendChild(item);
 
 
-    //--------------------------------------------
-    // When this drill is selected
-    //--------------------------------------------
-
     item.addEventListener("click", () => {
 
-        drillSelect.value = index;
+        drillSelect.value =
+            index;
 
         drillTrigger.textContent =
             drill.name;
-
-        drillSelect.dispatchEvent(
-            new Event("change")
-        );
 
         drillOptionsPanel
             .parentElement
             .classList
             .remove("open");
 
-    });
+        const selectedDrill =
+            drills[index];
 
-});
+        drillInfo.innerHTML = `
 
+            <div style="
+                color:#ff0000;
+                font-size:20px;
+                font-weight:bold;
+                margin-bottom:10px;
+            ">
+                ${selectedDrill.name}
+            </div>
 
-//------------------------------------------------
-// SHOW SELECTED DRILL INFORMATION
-//------------------------------------------------
+            <div style="font-weight:bold;">
+                SETUP
+            </div>
 
-drillSelect.addEventListener("change", () => {
+            <div>
+                ${selectedDrill.setup}
+            </div>
 
-    const index =
-        drillSelect.value;
+            <div style="
+                font-weight:bold;
+                margin-top:12px;
+            ">
+                EXECUTION
+            </div>
 
-    if(index === "") {
+            <div>
+                ${selectedDrill.execution}
+            </div>
+
+            <div style="
+                font-weight:bold;
+                margin-top:12px;
+            ">
+                GOAL
+            </div>
+
+            <div>
+                ${selectedDrill.goal}
+            </div>
+
+        `;
 
         drillInfo.style.display =
-            "none";
+            "block";
 
-        drillInfo.innerHTML =
-            "";
-
-        return;
-
-    }
-
-    const drill =
-        drills[index];
-
-    drillInfo.innerHTML = `
-
-        <div style="
-            color:#ff0000;
-            font-size:20px;
-            font-weight:bold;
-            margin-bottom:8px;
-        ">
-            ${drill.name}
-        </div>
-
-        <div style="
-            font-weight:bold;
-            margin-top:12px;
-        ">
-            SETUP
-        </div>
-
-        <div>
-            ${drill.setup}
-        </div>
-
-        <div style="
-            font-weight:bold;
-            margin-top:12px;
-        ">
-            EXECUTION
-        </div>
-
-        <div>
-            ${drill.execution}
-        </div>
-
-        <div style="
-            font-weight:bold;
-            margin-top:12px;
-        ">
-            GOAL
-        </div>
-
-        <div>
-            ${drill.goal}
-        </div>
-
-    `;
-
-    drillInfo.style.display =
-        "block";
+    });
 
 });
         
