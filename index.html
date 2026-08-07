@@ -4147,75 +4147,100 @@ hits.forEach((hit,index)=>{
 // FOOTER
 //--------------------------------
 
+const totalPages =
+    pdf.internal.getNumberOfPages();
+
 const pageWidth =
     pdf.internal.pageSize.getWidth();
 
 const pageHeight =
     pdf.internal.pageSize.getHeight();
 
-
-// Footer divider
-
-pdf.setLineWidth(0.3);
-
-pdf.line(
-
-    15,
-
-    pageHeight - 12,
-
-    pageWidth - 15,
-
-    pageHeight - 12
-
-);
+const generatedDate =
+    new Date().toLocaleString();
 
 
-// Footer text
+// Add footer to EVERY page
 
-pdf.setFont(
+for(
+    let page = 1;
+    page <= totalPages;
+    page++
+){
 
-    "helvetica",
-
-    "normal"
-
-);
-
-pdf.setFontSize(9);
+    pdf.setPage(page);
 
 
-// Left side
+    // Footer divider
 
-pdf.text(
+    pdf.setLineWidth(0.3);
 
-    "Generated: " +
+    pdf.line(
 
-    new Date().toLocaleString(),
+        15,
 
-    15,
+        pageHeight - 12,
 
-    pageHeight - 6
+        pageWidth - 15,
 
-);
+        pageHeight - 12
+
+    );
 
 
-// Right side
+    // Footer text
 
-pdf.text(
+    pdf.setFont(
 
-    "Page 1",
+        "helvetica",
 
-    pageWidth - 15,
+        "normal"
 
-    pageHeight - 6,
+    );
 
-    {
+    pdf.setFontSize(9);
 
-        align:"right"
 
-    }
+    // Generated date - left
 
-);
+    pdf.text(
+
+        "Generated: " +
+        generatedDate,
+
+        15,
+
+        pageHeight - 6
+
+    );
+
+
+    // Page number - right
+
+    pdf.text(
+
+        "Page " +
+        page +
+        " of " +
+        totalPages,
+
+        pageWidth - 15,
+
+        pageHeight - 6,
+
+        {
+
+            align:"right"
+
+        }
+
+    );
+
+}
+
+//--------------------------
+// SAVE PDF
+//--------------------------    
 
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
