@@ -4060,52 +4060,160 @@ pdf.rect(
 
 let tableY = 220;
 
-// Header
-pdf.setFontSize(11);
-pdf.text(
-    "Shot",
-    20,
-    tableY
-);
 
-pdf.text(
-    "Time",
-    45,
-    tableY
-);
+//--------------------------------
+// FUNCTION TO DRAW TABLE HEADER
+//--------------------------------
 
-pdf.text(
-    "Split",
-    75,
-    tableY
-);
+function drawShotTableHeader(){
 
-pdf.text(
-    "X",
-    110,
-    tableY
-);
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
 
-pdf.text(
-    "Y",
-    140,
-    tableY
-);
+    pdf.setFontSize(11);
 
 
-// Rows
+    pdf.text(
+        "Shot",
+        20,
+        tableY
+    );
+
+
+    pdf.text(
+        "Time",
+        45,
+        tableY
+    );
+
+
+    pdf.text(
+        "Split",
+        75,
+        tableY
+    );
+
+
+    pdf.text(
+        "X",
+        110,
+        tableY
+    );
+
+
+    pdf.text(
+        "Y",
+        140,
+        tableY
+    );
+
+
+    pdf.setFont(
+        "helvetica",
+        "normal"
+    );
+
+}
+
+
+//--------------------------------
+// DRAW FIRST TABLE HEADER
+//--------------------------------
+
+drawShotTableHeader();
+
+
+//--------------------------------
+// DRAW SHOT ROWS
+//--------------------------------
+
 pdf.setFontSize(10);
 
+
 hits.forEach((hit,index)=>{
+
+
+    //--------------------------------
+    // CHECK FOR PAGE BOTTOM
+    //--------------------------------
+
+    if(
+        tableY >=
+        pdf.internal.pageSize.getHeight() - 25
+    ){
+
+        //--------------------------------
+        // CREATE NEW PAGE
+        //--------------------------------
+
+        pdf.addPage();
+
+
+        //--------------------------------
+        // RESET TABLE POSITION
+        //--------------------------------
+
+        tableY = 25;
+
+
+        //--------------------------------
+        // PAGE 2+ TITLE
+        //--------------------------------
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(14);
+
+        pdf.text(
+            "Shot Details — Continued",
+            20,
+            tableY
+        );
+
+
+        tableY += 12;
+
+
+        //--------------------------------
+        // DRAW COLUMN HEADERS AGAIN
+        //--------------------------------
+
+        drawShotTableHeader();
+
+    }
+
+
+    //--------------------------------
+    // MOVE TO NEXT ROW
+    //--------------------------------
+
     tableY += 8;
+
+
+    //--------------------------------
+    // CALCULATE SPLIT
+    //--------------------------------
+
     let split = 0;
 
+
     if(index > 0){
+
         split =
             hit.time -
             hits[index-1].time;
+
     }
 
+
+    //--------------------------------
+    // DRAW SHOT NUMBER
+    //--------------------------------
 
     pdf.text(
         String(index + 1),
@@ -4114,12 +4222,20 @@ hits.forEach((hit,index)=>{
     );
 
 
+    //--------------------------------
+    // DRAW TIME
+    //--------------------------------
+
     pdf.text(
         hit.time.toFixed(2),
         45,
         tableY
     );
 
+
+    //--------------------------------
+    // DRAW SPLIT
+    //--------------------------------
 
     pdf.text(
         split.toFixed(2),
@@ -4128,6 +4244,10 @@ hits.forEach((hit,index)=>{
     );
 
 
+    //--------------------------------
+    // DRAW X
+    //--------------------------------
+
     pdf.text(
         hit.x.toFixed(3),
         110,
@@ -4135,11 +4255,16 @@ hits.forEach((hit,index)=>{
     );
 
 
+    //--------------------------------
+    // DRAW Y
+    //--------------------------------
+
     pdf.text(
         hit.y.toFixed(3),
         140,
         tableY
     );
+
 
 });
 
@@ -4159,7 +4284,6 @@ const pageHeight =
 const generatedDate =
     new Date().toLocaleString();
 
-
 // Add footer to EVERY page
 
 for(
@@ -4170,72 +4294,45 @@ for(
 
     pdf.setPage(page);
 
-
     // Footer divider
-
     pdf.setLineWidth(0.3);
-
     pdf.line(
-
         15,
-
         pageHeight - 12,
-
         pageWidth - 15,
-
         pageHeight - 12
-
     );
-
 
     // Footer text
 
     pdf.setFont(
-
         "helvetica",
-
         "normal"
-
     );
 
     pdf.setFontSize(9);
 
-
     // Generated date - left
-
     pdf.text(
-
         "Generated: " +
         generatedDate,
-
         15,
-
         pageHeight - 6
-
     );
 
 
     // Page number - right
-
     pdf.text(
-
         "Page " +
         page +
         " of " +
         totalPages,
-
         pageWidth - 15,
-
         pageHeight - 6,
-
         {
-
             align:"right"
-
         }
-
     );
-
 }
 
 //--------------------------
