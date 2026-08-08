@@ -474,6 +474,42 @@ Settings Panel
     letter-spacing:1px;
 }
 
+/*----------------------------------------
+Drills Panel
+----------------------------------------*/
+
+#drillsPanel{
+    display:none;
+    position:absolute;
+    top:10px;
+    left:10px;
+    right:10px;
+    bottom:80px;
+    overflow-y:auto;
+    background:rgba(255, 255, 255,.80);
+    border:2px solid #555;
+    border-radius:10px;
+    padding:20px;
+    color:white;
+    text-align:left;
+    z-index:100;
+}
+
+#drillsPanel h3{
+    margin-top:0;
+    text-align:center;
+}
+
+#drillsPanel h4{
+    margin-top:20px;
+    margin-bottom:10px;
+    color:#000000;
+    border-bottom:1px solid #555;
+    padding-bottom:5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+    
 #countdownOptions{
     margin-left:15px;
     line-height:1.8;
@@ -825,6 +861,64 @@ Settings Panel
 </div>
 <hr>
 
+<!-- ==================================================== -->
+<!-- DRILLS PANEL                                         -->
+<!-- ==================================================== -->
+
+<div id="drillsPanel">
+
+    <h4 style="
+        color:#000000;
+        text-align:center;
+        font-size:24px;
+    ">
+        DRILLS
+    </h4>
+
+    <div class="settings-grid">
+
+        <div class="settings-card">
+
+            <h4>Choose Drill</h4>
+
+            <div class="custom-select-wrapper">
+
+                <select id="drillSelect" style="display:none;">
+                    <option value="" selected>
+                        CHOOSE DRILL
+                    </option>
+                </select>
+
+                <div class="select-trigger">
+                    CHOOSE DRILL
+                </div>
+
+                <div class="custom-options-panel">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="drillInfo"
+         style="
+             display:none;
+             color:#000000;
+             font-family:system-ui,-apple-system,sans-serif;
+             font-size:16px;
+             line-height:1.6;
+             margin-top:25px;
+             padding:15px;
+             background:#ffffff;
+             border:1px solid #555;
+             border-radius:6px;
+         ">
+    </div>
+
+</div>
+    
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- ==================================================== -->
@@ -4586,12 +4680,243 @@ settingsBtn.onclick=()=>{
     }
 };
 
-    drillsBtn.onclick = () => {
-    closeSettingsPanel();
-        
-        alert(
-        "Drills coming soon!"
+//------------------------------------------------
+// DRILLS
+//------------------------------------------------
+
+const drills = [
+
+    {
+        name: "Single Shot Accuracy",
+        setup:
+            "Place one target in the center of the screen.",
+        execution:
+            "Fire one deliberate shot. Reset and repeat for 10 shots.",
+        goal:
+            "Build precision and consistent trigger control."
+    },
+
+    {
+        name: "Five Shot Group",
+        setup:
+            "Use one target at your normal practice distance.",
+        execution:
+            "Fire five slow, controlled shots without rushing.",
+        goal:
+            "Produce the smallest possible shot group."
+    },
+
+    {
+        name: "Controlled Pair",
+        setup:
+            "Use one target.",
+        execution:
+            "Fire two accurate shots as quickly as you can maintain control.",
+        goal:
+            "Improve recoil management and follow-up shot speed."
+    },
+
+    {
+        name: "Failure Drill",
+        setup:
+            "Imagine upper chest and head zones on one target.",
+        execution:
+            "Fire two shots to center mass followed by one shot to the head.",
+        goal:
+            "Develop rapid target transitions and shot placement."
+    },
+
+    {
+        name: "Target Transition",
+        setup:
+            "Place three targets evenly spaced.",
+        execution:
+            "Fire one shot on each target from left to right. Reverse direction on the next run.",
+        goal:
+            "Improve eye speed and muzzle transitions."
+    },
+
+    {
+        name: "Near to Far",
+        setup:
+            "Place one close target and one farther target.",
+        execution:
+            "Alternate shots between the near and far target.",
+        goal:
+            "Improve sight adjustment between different target sizes."
+    },
+
+    {
+        name: "Box Drill",
+        setup:
+            "Place four targets in a square.",
+        execution:
+            "Fire one shot on each target in clockwise order.",
+        goal:
+            "Develop smooth movement between multiple targets."
+    },
+
+    {
+        name: "Reload Drill",
+        setup:
+            "Use one target.",
+        execution:
+            "Fire until your planned reload point, perform a reload, then continue firing.",
+        goal:
+            "Increase reload efficiency without sacrificing accuracy."
+    },
+
+    {
+        name: "Draw to First Shot",
+        setup:
+            "Begin from your normal ready position.",
+        execution:
+            "Draw and fire one accurate shot as quickly as possible.",
+        goal:
+            "Reduce first-shot time while maintaining accuracy."
+    },
+
+    {
+        name: "Dot Torture",
+        setup:
+            "Use a target with multiple small aiming points.",
+        execution:
+            "Fire the prescribed number of shots at each dot without rushing.",
+        goal:
+            "Develop extreme precision and trigger control."
+    }
+
+];
+
+
+//------------------------------------------------
+// BUILD DRILL DROPDOWN
+//------------------------------------------------
+
+const drillSelect =
+    document.getElementById("drillSelect");
+
+const drillWrapper =
+    document.querySelector(
+        "#drillsPanel .custom-select-wrapper"
     );
+
+const drillTrigger =
+    drillWrapper.querySelector(
+        ".select-trigger"
+    );
+
+const drillOptionsPanel =
+    drillWrapper.querySelector(
+        ".custom-options-panel"
+    );
+
+const drillInfo =
+    document.getElementById("drillInfo");
+
+
+// Create all 10 drill choices
+
+drills.forEach((drill, index) => {
+
+    // Add to hidden native select
+
+    const option =
+        document.createElement("option");
+
+    option.value = index;
+    option.textContent = drill.name;
+
+    drillSelect.appendChild(option);
+
+
+    // Add to visible custom dropdown
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "custom-option-item";
+
+    item.dataset.value =
+        index;
+
+    item.textContent =
+        drill.name;
+
+    drillOptionsPanel.appendChild(item);
+
+
+    // When a drill is selected
+
+    item.addEventListener("click", () => {
+
+        drillSelect.value =
+            index;
+
+        drillTrigger.textContent =
+            drill.name;
+
+        drillWrapper.classList.remove(
+            "open"
+        );
+
+
+        drillInfo.innerHTML = `
+
+            <div style="
+                font-size:20px;
+                font-weight:bold;
+                color:#ff0000;
+                margin-bottom:15px;
+            ">
+                ${drill.name}
+            </div>
+
+            <div>
+                <strong>SETUP</strong>
+            </div>
+
+            <div>
+                ${drill.setup}
+            </div>
+
+            <div style="margin-top:15px;">
+                <strong>EXECUTION</strong>
+            </div>
+
+            <div>
+                ${drill.execution}
+            </div>
+
+            <div style="margin-top:15px;">
+                <strong>GOAL</strong>
+            </div>
+
+            <div>
+                ${drill.goal}
+            </div>
+
+        `;
+
+        drillInfo.style.display =
+            "block";
+
+    });
+
+});
+    
+drillsBtn.onclick = () => {
+
+    // CLOSE SETTINGS PANEL
+    closeSettingsPanel();
+
+    // OPEN DRILLS PANEL
+    const drillsPanel =
+        document.getElementById("drillsPanel");
+
+    drillsPanel.style.display = "block";
+
 };
 
 summaryBtn.onclick = () => {
