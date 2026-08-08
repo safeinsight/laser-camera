@@ -1397,6 +1397,20 @@ let lastShotTime = 0;
 let targets = [];
 
 //------------------------------------------------
+// TARGET SELECTION SETTINGS
+//------------------------------------------------
+
+let targetSelectionMode = "RANDOM";
+
+// Number of shots required on each target
+// when using CONSECUTIVE mode.
+let consecutiveShotsPerTarget = 1;
+
+// Number of shots already made on the
+// current target.
+let consecutiveShotCount = 0;
+
+//------------------------------------------------
 // ACTIVE TARGET
 //------------------------------------------------
 
@@ -3304,43 +3318,24 @@ if(!backgroundFrame){
 }
 
 //------------------------------------------------
-// Scan entire frame if no targets exist.
-// Otherwise scan only the active target.
+// TARGET SELECTION
 //------------------------------------------------
 
 let result = null;
 let hitTarget = null;
 
-const hasTarget = targets.some(
+const availableTargets = targets.filter(
     target => target.calibrated
 );
 
-if(hasTarget){
+const hasTarget = availableTargets.length > 0;
 
-    //----------------------------------------
-    // Existing behavior
-    //----------------------------------------
 
-    if(
-        activeTarget &&
-        activeTarget.calibrated
-    ){
+//------------------------------------------------
+// NO TARGETS
+//------------------------------------------------
 
-        result = scanTarget(
-            activeTarget,
-            pixels
-        );
-
-        if(
-            result.brightPixels >= DETECTOR.minBlobPixels &&
-            result.brightPixels <= DETECTOR.maxBlobPixels
-        ){
-            hitTarget = activeTarget;
-        }
-
-    }
-
-}else{
+if(!hasTarget){
 
     //----------------------------------------
     // Treat the whole camera image as one target
@@ -3354,10 +3349,85 @@ if(hasTarget){
     ){
 
         hitTarget = {
-
             id: "FULL_FRAME"
-
         };
+
+    }
+
+}
+
+
+//------------------------------------------------
+// TARGETS EXIST
+//------------------------------------------------
+
+else{
+
+
+    //----------------------------------------
+    // ALL MODE
+    //
+    // Every calibrated target is active.
+    //----------------------------------------
+
+    if(targetSelectionMode === "ALL"){
+
+        for(const target of availableTargets){
+
+            const scanResult = scanTarget(
+                target,
+                pixels
+            );
+
+            if(
+                scanResult.brightPixels >=
+                    DETECTOR.minBlobPixels &&
+                scanResult.brightPixels <=
+                    DETECTOR.maxBlobPixels
+            ){
+
+                hitTarget = target;
+                result = scanResult;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    //----------------------------------------
+    // CONSECUTIVE or RANDOM
+    //
+    // Only the current active target is scanned.
+    //----------------------------------------
+
+    else{
+
+        if(
+            activeTarget &&
+            activeTarget.calibrated
+        ){
+
+            result = scanTarget(
+                activeTarget,
+                pixels
+            );
+
+            if(
+                result.brightPixels >=
+                    DETECTOR.minBlobPixels &&
+                result.brightPixels <=
+                    DETECTOR.maxBlobPixels
+            ){
+
+                hitTarget = activeTarget;
+
+            }
+
+        }
 
     }
 
@@ -3373,39 +3443,6 @@ if(hitTarget){
 
     );
 
-    //----------------------------------------
-    // Advance to the next target
-    //----------------------------------------
-
-    //----------------------------------------
-    // Wait before calling next target
-    //----------------------------------------
-
-//----------------------------------------
-// Schedule next target only once
-//----------------------------------------
-
-if(!waitingForNextTarget){
-
-    waitingForNextTarget = true;
-
-    setTimeout(
-
-        ()=>{
-
-            nextTarget();
-
-            waitingForNextTarget = false;
-
-        },
-
-        250
-
-    );
-
-}
-
-}
 
 //------------------------------------------------
 // Copy scan results
