@@ -500,55 +500,6 @@ Drills Panel
     z-index:100;
 }
 
-/*----------------------------------------
-Center Drills Panel Contents
-----------------------------------------*/
-
-#drillsPanel{
-    text-align:center;
-}
-
-#drillsPanel .settings-grid{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
-}
-
-#drillsPanel .settings-card{
-    width:100%;
-    max-width:240px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-#drillsPanel .settings-card h4{
-    width:100% !important;
-    max-width:240px !important;
-    text-align:center;
-}
-
-#drillsPanel .custom-select-wrapper{
-    width:100%;
-    max-width:240px;
-}
-
-#drillsPanel #drillInfo{
-    width:100%;
-    max-width:500px;
-    margin-left:auto !important;
-    margin-right:auto !important;
-    text-align:left;
-}
-
-#drillsPanel #drillDrawTargetBtn{
-    display:flex;
-    margin:20px auto 0 auto;
-    align-items:center;
-    justify-content:center;
-}
-
 #drillsPanel h3{
     margin-top:0;
     text-align:center;
@@ -1393,20 +1344,6 @@ if(targetShapeSelect){
         targetShape;
 
 }
-
-//------------------------------------------------
-// TARGET SELECTION SETTINGS
-//------------------------------------------------
-
-let targetSelectionMode = "RANDOM";
-
-// Number of shots required on each target
-// when using CONSECUTIVE mode.
-let consecutiveShotsPerTarget = 1;
-
-// Number of shots already made on the
-// current target.
-let consecutiveShotCount = 0;
     
 
 //-------------------------------------
@@ -2585,12 +2522,15 @@ overlay.width * 0.003
 function nextTarget(){
 
     //----------------------------------------
-    // Build list of usable targets
+    // Build a list of usable targets
     //----------------------------------------
 
     const availableTargets =
+
         targets.filter(
+
             target => target.calibrated
+
         );
 
     if(availableTargets.length === 0){
@@ -2599,17 +2539,13 @@ function nextTarget(){
 
     }
 
-
     //----------------------------------------
     // Only one target
     //----------------------------------------
 
     if(availableTargets.length === 1){
 
-        activeTarget =
-            availableTargets[0];
-
-        consecutiveShotCount = 0;
+        activeTarget = availableTargets[0];
 
         redrawOverlay();
 
@@ -2617,133 +2553,50 @@ function nextTarget(){
 
     }
 
-
     //----------------------------------------
-    // RANDOM
+    // Pick a different target
     //----------------------------------------
 
-    if(targetSelectionMode === "RANDOM"){
+    let newTarget;
 
-        let newTarget;
+    do{
 
-        do{
+        const randomIndex = Math.floor(
 
-            const randomIndex =
-                Math.floor(
-                    Math.random() *
-                    availableTargets.length
-                );
+            Math.random() *
 
-            newTarget =
-                availableTargets[randomIndex];
+            availableTargets.length
 
-        }
-
-        while(
-            newTarget === activeTarget
         );
 
-        activeTarget = newTarget;
+        newTarget =
+
+            availableTargets[randomIndex];
 
     }
 
+    while(newTarget === activeTarget);
 
     //----------------------------------------
-    // CONSECUTIVE
-    //
-    // Find the current target's position
-    // and move to the next target.
+    // Activate it
     //----------------------------------------
 
-    else if(
-        targetSelectionMode === "CONSECUTIVE"
-    ){
+    activeTarget = newTarget;
 
-        const currentIndex =
-            availableTargets.indexOf(
-                activeTarget
-            );
+//----------------------------------------
+// Save target change for playback
+//----------------------------------------
 
-        let nextIndex;
+targetHistory.push({
 
-        if(currentIndex === -1){
+    id: activeTarget.id,
 
-            nextIndex = 0;
+    time:
+        (performance.now() - recordingStartTime) / 1000
 
-        }else{
+});
 
-            nextIndex =
-                currentIndex + 1;
-
-            //--------------------------------
-            // Wrap back to first target
-            //--------------------------------
-
-            if(
-                nextIndex >=
-                availableTargets.length
-            ){
-
-                nextIndex = 0;
-
-            }
-
-        }
-
-        activeTarget =
-            availableTargets[nextIndex];
-
-        consecutiveShotCount = 0;
-
-    }
-
-
-    //----------------------------------------
-    // ALL
-    //
-    // ALL does not normally call nextTarget,
-    // but if it does, simply keep the current
-    // target.
-    //----------------------------------------
-
-    else if(
-        targetSelectionMode === "ALL"
-    ){
-
-        if(!activeTarget){
-
-            activeTarget =
-                availableTargets[0];
-
-        }
-
-    }
-
-
-    //----------------------------------------
-    // Save target change for playback
-    //----------------------------------------
-
-    if(
-        activeTarget
-    ){
-
-        targetHistory.push({
-
-            id: activeTarget.id,
-
-            time:
-                (
-                    performance.now() -
-                    recordingStartTime
-                ) / 1000
-
-        });
-
-    }
-
-
-    redrawOverlay();
+redrawOverlay();
 
 }
 
@@ -3451,24 +3304,43 @@ if(!backgroundFrame){
 }
 
 //------------------------------------------------
-// TARGET SELECTION
+// Scan entire frame if no targets exist.
+// Otherwise scan only the active target.
 //------------------------------------------------
 
 let result = null;
 let hitTarget = null;
 
-const availableTargets = targets.filter(
+const hasTarget = targets.some(
     target => target.calibrated
 );
 
-const hasTarget = availableTargets.length > 0;
+if(hasTarget){
 
+    //----------------------------------------
+    // Existing behavior
+    //----------------------------------------
 
-//------------------------------------------------
-// NO TARGETS
-//------------------------------------------------
+    if(
+        activeTarget &&
+        activeTarget.calibrated
+    ){
 
-if(!hasTarget){
+        result = scanTarget(
+            activeTarget,
+            pixels
+        );
+
+        if(
+            result.brightPixels >= DETECTOR.minBlobPixels &&
+            result.brightPixels <= DETECTOR.maxBlobPixels
+        ){
+            hitTarget = activeTarget;
+        }
+
+    }
+
+}else{
 
     //----------------------------------------
     // Treat the whole camera image as one target
@@ -3482,85 +3354,10 @@ if(!hasTarget){
     ){
 
         hitTarget = {
+
             id: "FULL_FRAME"
+
         };
-
-    }
-
-}
-
-
-//------------------------------------------------
-// TARGETS EXIST
-//------------------------------------------------
-
-else{
-
-
-    //----------------------------------------
-    // ALL MODE
-    //
-    // Every calibrated target is active.
-    //----------------------------------------
-
-    if(targetSelectionMode === "ALL"){
-
-        for(const target of availableTargets){
-
-            const scanResult = scanTarget(
-                target,
-                pixels
-            );
-
-            if(
-                scanResult.brightPixels >=
-                    DETECTOR.minBlobPixels &&
-                scanResult.brightPixels <=
-                    DETECTOR.maxBlobPixels
-            ){
-
-                hitTarget = target;
-                result = scanResult;
-
-                break;
-
-            }
-
-        }
-
-    }
-
-
-    //----------------------------------------
-    // CONSECUTIVE or RANDOM
-    //
-    // Only the current active target is scanned.
-    //----------------------------------------
-
-    else{
-
-        if(
-            activeTarget &&
-            activeTarget.calibrated
-        ){
-
-            result = scanTarget(
-                activeTarget,
-                pixels
-            );
-
-            if(
-                result.brightPixels >=
-                    DETECTOR.minBlobPixels &&
-                result.brightPixels <=
-                    DETECTOR.maxBlobPixels
-            ){
-
-                hitTarget = activeTarget;
-
-            }
-
-        }
 
     }
 
@@ -3575,6 +3372,40 @@ if(hitTarget){
         hitTarget.id
 
     );
+
+    //----------------------------------------
+    // Advance to the next target
+    //----------------------------------------
+
+    //----------------------------------------
+    // Wait before calling next target
+    //----------------------------------------
+
+//----------------------------------------
+// Schedule next target only once
+//----------------------------------------
+
+if(!waitingForNextTarget){
+
+    waitingForNextTarget = true;
+
+    setTimeout(
+
+        ()=>{
+
+            nextTarget();
+
+            waitingForNextTarget = false;
+
+        },
+
+        250
+
+    );
+
+}
+
+}
 
 //------------------------------------------------
 // Copy scan results
@@ -3787,133 +3618,22 @@ console.log(
 
 
 hits.push({
-
     x: savedX,
-
     y: savedY,
-
     time:
         (performance.now() - recordingStartTime) / 1000
-
 });
 
+        updateDisplays();
+        playHitSound();
 
-updateDisplays();
-
-playHitSound();
-
-
-console.log(
-    "SHOT",
-    shots,
-    Math.round(hitX),
-    Math.round(hitY)
-);
-
-
-//------------------------------------------------
-// TARGET SELECTION ADVANCEMENT
-//------------------------------------------------
-
-// ALL
-//
-// Every target remains active.
-// Do not change activeTarget.
-//
-if(targetSelectionMode === "ALL"){
-
-    console.log(
-        "TARGET MODE: ALL"
-    );
-
-}
-
-
-//------------------------------------------------
-// RANDOM
-//
-// Pick another target after every shot.
-//
-else if(targetSelectionMode === "RANDOM"){
-
-    console.log(
-        "TARGET MODE: RANDOM"
-    );
-
-    if(!waitingForNextTarget){
-
-        waitingForNextTarget = true;
-
-        setTimeout(
-
-            ()=>{
-
-                nextTarget();
-
-                waitingForNextTarget = false;
-
-            },
-
-            250
-
+        console.log(
+            "SHOT",
+            shots,
+            Math.round(hitX),
+            Math.round(hitY)
         );
-
     }
-
-}
-
-
-//------------------------------------------------
-// CONSECUTIVE
-//
-// Stay on the current target until the
-// required number of shots has been made.
-//
-else if(targetSelectionMode === "CONSECUTIVE"){
-
-    consecutiveShotCount++;
-
-    console.log(
-        "CONSECUTIVE:",
-        consecutiveShotCount,
-        "/",
-        consecutiveShotsPerTarget
-    );
-
-
-    if(
-        consecutiveShotCount >=
-        consecutiveShotsPerTarget
-    ){
-
-        consecutiveShotCount = 0;
-
-
-        if(!waitingForNextTarget){
-
-            waitingForNextTarget = true;
-
-            setTimeout(
-
-                ()=>{
-
-                    nextTarget();
-
-                    waitingForNextTarget = false;
-
-                },
-
-                250
-
-            );
-
-        }
-
-    }
-
-}
-        
-}
 
 }else{
 
@@ -5104,7 +4824,7 @@ if (drillsPanel) {
 };
 
 //------------------------------------------------
-// DRILLS TO USE
+// DRILLS
 //------------------------------------------------
 
 const drills = [
@@ -5112,7 +4832,7 @@ const drills = [
     {
         name: "Single Shot Accuracy",
         setup:
-            "Draw one target on the screen.",
+            "Place one target in the center of the screen.",
         execution:
             "Fire one deliberate shot. Reset and repeat for 10 shots.",
         goal:
@@ -5122,7 +4842,7 @@ const drills = [
     {
         name: "Five Shot Group",
         setup:
-            "Draw one small target on the screen.",
+            "Use one target at your normal practice distance.",
         execution:
             "Fire five slow, controlled shots without rushing.",
         goal:
@@ -5132,7 +4852,7 @@ const drills = [
     {
         name: "Controlled Pair",
         setup:
-            "Draw one target on the screen.",
+            "Use one target.",
         execution:
             "Fire two accurate shots as quickly as you can maintain control.",
         goal:
@@ -5142,9 +4862,9 @@ const drills = [
     {
         name: "Failure Drill",
         setup:
-            "Draw one rectangle target (body) and one small circle target above it (head).",
+            "Imagine upper chest and head zones on one target.",
         execution:
-            "Fire three shots <br>&bull; Two shots to center mass of body <br>&bull; One shot to the head.",
+            "Fire two shots to center mass followed by one shot to the head.",
         goal:
             "Develop rapid target transitions and shot placement."
     },
@@ -5152,7 +4872,7 @@ const drills = [
     {
         name: "Target Transition",
         setup:
-            "Draw three targets evenly spaced.",
+            "Place three targets evenly spaced.",
         execution:
             "Fire one shot on each target from left to right. Reverse direction on the next run.",
         goal:
@@ -5162,7 +4882,7 @@ const drills = [
     {
         name: "Near to Far",
         setup:
-            "Draw one large target (near) and one small target (far) on screen.",
+            "Place one close target and one farther target.",
         execution:
             "Alternate shots between the near and far target.",
         goal:
@@ -5172,7 +4892,7 @@ const drills = [
     {
         name: "Box Drill",
         setup:
-            "Draw four targets so they roughly resemble one large square.",
+            "Place four targets in a square.",
         execution:
             "Fire one shot on each target in clockwise order.",
         goal:
@@ -5192,7 +4912,7 @@ const drills = [
     {
         name: "Draw to First Shot",
         setup:
-            "Draw on target. Begin from your normal ready position.",
+            "Begin from your normal ready position.",
         execution:
             "Draw and fire one accurate shot as quickly as possible.",
         goal:
@@ -5202,9 +4922,9 @@ const drills = [
     {
         name: "Dot Torture",
         setup:
-            "Draw nine (9) round targets (dots) about the size of the laser on screen.",
+            "Use a target with multiple small aiming points.",
         execution:
-            "Fire three (3) shots at each target (dot) without rushing.",
+            "Fire the prescribed number of shots at each dot without rushing.",
         goal:
             "Develop extreme precision and trigger control."
     }
@@ -5305,7 +5025,7 @@ drills.forEach((drill, index) => {
             </div>
 
             <div style="margin-top:15px;">
-                <strong>EXERCISE</strong>
+                <strong>EXECUTION</strong>
             </div>
 
             <div>
@@ -5447,6 +5167,7 @@ playLastBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
 
 
