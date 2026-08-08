@@ -5017,13 +5017,24 @@ if (
     
 drillsBtn.onclick = () => {
 
-    // Close Settings
-    closeSettingsPanel();
-
-    // Open Drills
     const drillsPanel =
         document.getElementById("drillsPanel");
 
+    // If Drills is currently open, close it
+    if (
+        drillsPanel &&
+        drillsPanel.style.display === "block"
+    ) {
+
+        drillsPanel.style.display = "none";
+
+        return;
+    }
+
+    // If Drills is closed, close Settings
+    closeSettingsPanel();
+
+    // Then open Drills
     if (drillsPanel) {
         drillsPanel.style.display = "block";
     }
