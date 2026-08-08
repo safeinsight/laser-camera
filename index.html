@@ -1581,13 +1581,11 @@ overlay.addEventListener(
 
 
 //------------------------------------------------
-// RESIZE EVERYTHING -->
+// RESIZE EVERYTHING
 //------------------------------------------------
 
 function resizeEverything(){
 
-
-    
     const video =
         preview.style.display != "none"
             ? preview
@@ -1602,6 +1600,10 @@ function resizeEverything(){
     }
 
 
+    //----------------------------------------
+    // Actual camera dimensions
+    //----------------------------------------
+
     cameraWidth =
         video.videoWidth;
 
@@ -1609,151 +1611,197 @@ function resizeEverything(){
         video.videoHeight;
 
 
+    //----------------------------------------
+    // Video element rectangle
+    //----------------------------------------
+
     const rect =
         video.getBoundingClientRect();
 
     const containerRect =
-    video.parentElement.getBoundingClientRect();
-
-
-overlay.style.left =
-    (rect.left - containerRect.left) + "px";
-
-overlay.style.top =
-    (rect.top - containerRect.top) + "px";
-
-overlay.style.width =
-    rect.width + "px";
-
-overlay.style.height =
-    rect.height + "px";
-
-const overlayRect =
-    overlay.getBoundingClientRect();
-
-
-console.log(
-    "VIDEO RECT:",
-    rect.left,
-    rect.top,
-    rect.width,
-    rect.height
-);
-
-
-console.log(
-    "OVERLAY RECT:",
-    overlayRect.left,
-    overlayRect.top,
-    overlayRect.width,
-    overlayRect.height
-);
-
-    displayWidth =
-        rect.width;
-
-    displayHeight =
-        rect.height;
-
-    //----------------------------------------
-    // Calculate actual displayed camera image
-    // inside object-fit:contain video
-    //----------------------------------------
-
-const videoRatio =
-    cameraWidth / cameraHeight;
-
-const elementRatio =
-    rect.width / rect.height;
-
-let displayedWidth;
-let displayedHeight;
-
-if(elementRatio > videoRatio){
-
-    // cover crops top/bottom
-
-    displayedWidth = rect.width;
-    displayedHeight = displayedWidth / videoRatio;
-
-}else{
-
-    // cover crops left/right
-
-    displayedHeight = rect.height;
-    displayedWidth = displayedHeight * videoRatio;
-
-}
-
-videoOffsetX =
-    (rect.width - displayedWidth) / 2;
-
-videoOffsetY =
-    (rect.height - displayedHeight) / 2;
-
-videoScaleX =
-    cameraWidth / displayedWidth;
-
-videoScaleY =
-    cameraHeight / displayedHeight;
+        video.parentElement.getBoundingClientRect();
 
 
     //----------------------------------------
-    // Match canvas to video display ratio
+    // Because video uses object-fit: cover,
+    // calculate the ACTUAL visible camera
+    // image inside the video element.
     //----------------------------------------
 
-//----------------------------------------
-// Overlay matches camera pixels
-//----------------------------------------
+    const videoRatio =
+        cameraWidth / cameraHeight;
 
-overlay.width =
-    cameraWidth;
-
-overlay.height =
-    cameraHeight;
+    const elementRatio =
+        rect.width / rect.height;
 
 
-//----------------------------------------
-// Detection canvas matches camera pixels
-//----------------------------------------
+    let displayedWidth;
+    let displayedHeight;
 
-//----------------------------------------
-// Adaptive detection resolution
-//----------------------------------------
 
-const shortSide =
-    Math.min(
-        window.innerWidth,
-        window.innerHeight
-    );
+    if(elementRatio > videoRatio){
 
-if(shortSide < 700){
+        //------------------------------------
+        // Element is wider than camera.
+        // Cover crops top/bottom.
+        //------------------------------------
 
-    // Phone
-    detectCanvas.width = 480;
-    detectCanvas.height = 270;
+        displayedWidth =
+            rect.width;
 
-}else{
+        displayedHeight =
+            rect.width / videoRatio;
 
-    // Tablet/Desktop
-    detectCanvas.width = 640;
-    detectCanvas.height = 360;
+    }else{
 
-}
+        //------------------------------------
+        // Element is taller than camera.
+        // Cover crops left/right.
+        //------------------------------------
 
+        displayedHeight =
+            rect.height;
+
+        displayedWidth =
+            rect.height * videoRatio;
+
+    }
 
 
     //----------------------------------------
-    // Resize CSS canvas exactly to video
+    // Position of actual camera image
+    // relative to the video element
     //----------------------------------------
 
+    videoOffsetX =
+        (rect.width - displayedWidth) / 2;
+
+    videoOffsetY =
+        (rect.height - displayedHeight) / 2;
+
+
+    //----------------------------------------
+    // Scale from camera pixels to displayed
+    // camera image
+    //----------------------------------------
+
+    videoScaleX =
+        displayedWidth / cameraWidth;
+
+    videoScaleY =
+        displayedHeight / cameraHeight;
+
+
+    //----------------------------------------
+    // Overlay represents CAMERA coordinates
+    //----------------------------------------
+
+    overlay.width =
+        cameraWidth;
+
+    overlay.height =
+        cameraHeight;
+
+
+    //----------------------------------------
+    // Position overlay over the actual
+    // visible camera image, NOT the entire
+    // video element.
+    //----------------------------------------
+
+    overlay.style.left =
+        (
+            rect.left -
+            containerRect.left +
+            videoOffsetX
+        ) + "px";
+
+
+    overlay.style.top =
+        (
+            rect.top -
+            containerRect.top +
+            videoOffsetY
+        ) + "px";
+
+
+    overlay.style.width =
+        displayedWidth + "px";
+
+
+    overlay.style.height =
+        displayedHeight + "px";
+
+
+    //----------------------------------------
+    // Detection canvas
+    //----------------------------------------
+
+    const shortSide =
+        Math.min(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+
+    if(shortSide < 700){
+
+        detectCanvas.width =
+            480;
+
+        detectCanvas.height =
+            270;
+
+    }else{
+
+        detectCanvas.width =
+            640;
+
+        detectCanvas.height =
+            360;
+
+    }
+
+
+    //----------------------------------------
+    // Debug information
+    //----------------------------------------
 
     console.log(
-        "Video Display:",
-        displayWidth,
-        displayHeight
+        "CAMERA:",
+        cameraWidth,
+        cameraHeight
     );
 
+    console.log(
+        "VIDEO RECT:",
+        rect.left,
+        rect.top,
+        rect.width,
+        rect.height
+    );
+
+    console.log(
+        "DISPLAYED IMAGE:",
+        displayedWidth,
+        displayedHeight
+    );
+
+    console.log(
+        "VIDEO OFFSET:",
+        videoOffsetX,
+        videoOffsetY
+    );
+
+    console.log(
+        "OVERLAY RECT:",
+        overlay.getBoundingClientRect()
+    );
+
+
+    //----------------------------------------
+    // Redraw everything
+    //----------------------------------------
 
     redrawOverlay();
 
