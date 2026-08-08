@@ -1393,6 +1393,20 @@ if(targetShapeSelect){
         targetShape;
 
 }
+
+//------------------------------------------------
+// TARGET SELECTION SETTINGS
+//------------------------------------------------
+
+let targetSelectionMode = "RANDOM";
+
+// Number of shots required on each target
+// when using CONSECUTIVE mode.
+let consecutiveShotsPerTarget = 1;
+
+// Number of shots already made on the
+// current target.
+let consecutiveShotCount = 0;
     
 
 //-------------------------------------
@@ -2571,15 +2585,12 @@ overlay.width * 0.003
 function nextTarget(){
 
     //----------------------------------------
-    // Build a list of usable targets
+    // Build list of usable targets
     //----------------------------------------
 
     const availableTargets =
-
         targets.filter(
-
             target => target.calibrated
-
         );
 
     if(availableTargets.length === 0){
@@ -2588,13 +2599,17 @@ function nextTarget(){
 
     }
 
+
     //----------------------------------------
     // Only one target
     //----------------------------------------
 
     if(availableTargets.length === 1){
 
-        activeTarget = availableTargets[0];
+        activeTarget =
+            availableTargets[0];
+
+        consecutiveShotCount = 0;
 
         redrawOverlay();
 
@@ -2602,50 +2617,133 @@ function nextTarget(){
 
     }
 
+
     //----------------------------------------
-    // Pick a different target
+    // RANDOM
     //----------------------------------------
 
-    let newTarget;
+    if(targetSelectionMode === "RANDOM"){
 
-    do{
+        let newTarget;
 
-        const randomIndex = Math.floor(
+        do{
 
-            Math.random() *
+            const randomIndex =
+                Math.floor(
+                    Math.random() *
+                    availableTargets.length
+                );
 
-            availableTargets.length
+            newTarget =
+                availableTargets[randomIndex];
 
+        }
+
+        while(
+            newTarget === activeTarget
         );
 
-        newTarget =
-
-            availableTargets[randomIndex];
+        activeTarget = newTarget;
 
     }
 
-    while(newTarget === activeTarget);
 
     //----------------------------------------
-    // Activate it
+    // CONSECUTIVE
+    //
+    // Find the current target's position
+    // and move to the next target.
     //----------------------------------------
 
-    activeTarget = newTarget;
+    else if(
+        targetSelectionMode === "CONSECUTIVE"
+    ){
 
-//----------------------------------------
-// Save target change for playback
-//----------------------------------------
+        const currentIndex =
+            availableTargets.indexOf(
+                activeTarget
+            );
 
-targetHistory.push({
+        let nextIndex;
 
-    id: activeTarget.id,
+        if(currentIndex === -1){
 
-    time:
-        (performance.now() - recordingStartTime) / 1000
+            nextIndex = 0;
 
-});
+        }else{
 
-redrawOverlay();
+            nextIndex =
+                currentIndex + 1;
+
+            //--------------------------------
+            // Wrap back to first target
+            //--------------------------------
+
+            if(
+                nextIndex >=
+                availableTargets.length
+            ){
+
+                nextIndex = 0;
+
+            }
+
+        }
+
+        activeTarget =
+            availableTargets[nextIndex];
+
+        consecutiveShotCount = 0;
+
+    }
+
+
+    //----------------------------------------
+    // ALL
+    //
+    // ALL does not normally call nextTarget,
+    // but if it does, simply keep the current
+    // target.
+    //----------------------------------------
+
+    else if(
+        targetSelectionMode === "ALL"
+    ){
+
+        if(!activeTarget){
+
+            activeTarget =
+                availableTargets[0];
+
+        }
+
+    }
+
+
+    //----------------------------------------
+    // Save target change for playback
+    //----------------------------------------
+
+    if(
+        activeTarget
+    ){
+
+        targetHistory.push({
+
+            id: activeTarget.id,
+
+            time:
+                (
+                    performance.now() -
+                    recordingStartTime
+                ) / 1000
+
+        });
+
+    }
+
+
+    redrawOverlay();
 
 }
 
@@ -3353,43 +3451,24 @@ if(!backgroundFrame){
 }
 
 //------------------------------------------------
-// Scan entire frame if no targets exist.
-// Otherwise scan only the active target.
+// TARGET SELECTION
 //------------------------------------------------
 
 let result = null;
 let hitTarget = null;
 
-const hasTarget = targets.some(
+const availableTargets = targets.filter(
     target => target.calibrated
 );
 
-if(hasTarget){
+const hasTarget = availableTargets.length > 0;
 
-    //----------------------------------------
-    // Existing behavior
-    //----------------------------------------
 
-    if(
-        activeTarget &&
-        activeTarget.calibrated
-    ){
+//------------------------------------------------
+// NO TARGETS
+//------------------------------------------------
 
-        result = scanTarget(
-            activeTarget,
-            pixels
-        );
-
-        if(
-            result.brightPixels >= DETECTOR.minBlobPixels &&
-            result.brightPixels <= DETECTOR.maxBlobPixels
-        ){
-            hitTarget = activeTarget;
-        }
-
-    }
-
-}else{
+if(!hasTarget){
 
     //----------------------------------------
     // Treat the whole camera image as one target
@@ -3403,10 +3482,85 @@ if(hasTarget){
     ){
 
         hitTarget = {
-
             id: "FULL_FRAME"
-
         };
+
+    }
+
+}
+
+
+//------------------------------------------------
+// TARGETS EXIST
+//------------------------------------------------
+
+else{
+
+
+    //----------------------------------------
+    // ALL MODE
+    //
+    // Every calibrated target is active.
+    //----------------------------------------
+
+    if(targetSelectionMode === "ALL"){
+
+        for(const target of availableTargets){
+
+            const scanResult = scanTarget(
+                target,
+                pixels
+            );
+
+            if(
+                scanResult.brightPixels >=
+                    DETECTOR.minBlobPixels &&
+                scanResult.brightPixels <=
+                    DETECTOR.maxBlobPixels
+            ){
+
+                hitTarget = target;
+                result = scanResult;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    //----------------------------------------
+    // CONSECUTIVE or RANDOM
+    //
+    // Only the current active target is scanned.
+    //----------------------------------------
+
+    else{
+
+        if(
+            activeTarget &&
+            activeTarget.calibrated
+        ){
+
+            result = scanTarget(
+                activeTarget,
+                pixels
+            );
+
+            if(
+                result.brightPixels >=
+                    DETECTOR.minBlobPixels &&
+                result.brightPixels <=
+                    DETECTOR.maxBlobPixels
+            ){
+
+                hitTarget = activeTarget;
+
+            }
+
+        }
 
     }
 
@@ -3421,40 +3575,6 @@ if(hitTarget){
         hitTarget.id
 
     );
-
-    //----------------------------------------
-    // Advance to the next target
-    //----------------------------------------
-
-    //----------------------------------------
-    // Wait before calling next target
-    //----------------------------------------
-
-//----------------------------------------
-// Schedule next target only once
-//----------------------------------------
-
-if(!waitingForNextTarget){
-
-    waitingForNextTarget = true;
-
-    setTimeout(
-
-        ()=>{
-
-            nextTarget();
-
-            waitingForNextTarget = false;
-
-        },
-
-        250
-
-    );
-
-}
-
-}
 
 //------------------------------------------------
 // Copy scan results
@@ -3667,22 +3787,133 @@ console.log(
 
 
 hits.push({
+
     x: savedX,
+
     y: savedY,
+
     time:
         (performance.now() - recordingStartTime) / 1000
+
 });
 
-        updateDisplays();
-        playHitSound();
 
-        console.log(
-            "SHOT",
-            shots,
-            Math.round(hitX),
-            Math.round(hitY)
+updateDisplays();
+
+playHitSound();
+
+
+console.log(
+    "SHOT",
+    shots,
+    Math.round(hitX),
+    Math.round(hitY)
+);
+
+
+//------------------------------------------------
+// TARGET SELECTION ADVANCEMENT
+//------------------------------------------------
+
+// ALL
+//
+// Every target remains active.
+// Do not change activeTarget.
+//
+if(targetSelectionMode === "ALL"){
+
+    console.log(
+        "TARGET MODE: ALL"
+    );
+
+}
+
+
+//------------------------------------------------
+// RANDOM
+//
+// Pick another target after every shot.
+//
+else if(targetSelectionMode === "RANDOM"){
+
+    console.log(
+        "TARGET MODE: RANDOM"
+    );
+
+    if(!waitingForNextTarget){
+
+        waitingForNextTarget = true;
+
+        setTimeout(
+
+            ()=>{
+
+                nextTarget();
+
+                waitingForNextTarget = false;
+
+            },
+
+            250
+
         );
+
     }
+
+}
+
+
+//------------------------------------------------
+// CONSECUTIVE
+//
+// Stay on the current target until the
+// required number of shots has been made.
+//
+else if(targetSelectionMode === "CONSECUTIVE"){
+
+    consecutiveShotCount++;
+
+    console.log(
+        "CONSECUTIVE:",
+        consecutiveShotCount,
+        "/",
+        consecutiveShotsPerTarget
+    );
+
+
+    if(
+        consecutiveShotCount >=
+        consecutiveShotsPerTarget
+    ){
+
+        consecutiveShotCount = 0;
+
+
+        if(!waitingForNextTarget){
+
+            waitingForNextTarget = true;
+
+            setTimeout(
+
+                ()=>{
+
+                    nextTarget();
+
+                    waitingForNextTarget = false;
+
+                },
+
+                250
+
+            );
+
+        }
+
+    }
+
+}
+        
+}
 
 }else{
 
