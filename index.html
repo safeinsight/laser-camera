@@ -4204,6 +4204,24 @@ else if(targetSelectionMode === "CONSECUTIVE"){
     );
 }
 
+//------------------------------------------------
+// DRAW HITS -->
+//------------------------------------------------
+
+function drawHits(maxTime = Infinity){
+
+    if(hits.length > 0){
+
+console.log(
+    "DRAW HITS:",
+    "overlay:",
+    overlay.width,
+    overlay.height,
+    "hits:",
+    hits.length
+);
+
+}
 
 
     //----------------------------------------
@@ -4259,7 +4277,7 @@ console.log(
         ctx.strokeStyle = "black";
         ctx.stroke();
     }
-
+}
     
 //------------------------------------------------
 // CALCULATE GROUP CENTER -->
