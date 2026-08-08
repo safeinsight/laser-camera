@@ -863,8 +863,127 @@ Drills Panel
     </div>
   </div>
 
-</div>
+
+  <!-- ROW 3, COL 1: TARGET SELECTION -->
+  <div class="settings-card">
+    <h4>Target Selection</h4>
+
+    <div class="custom-select-wrapper">
+
+      <select id="targetSelectionSelect" style="display:none;">
+        <option value="ALL">All</option>
+        <option value="CONSECUTIVE">Consecutive</option>
+        <option value="RANDOM" selected>Random</option>
+      </select>
+
+      <div class="select-trigger">Random</div>
+
+      <div class="custom-options-panel">
+
+        <div
+          class="custom-option-item"
+          data-value="ALL"
+        >
+          All
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="CONSECUTIVE"
+        >
+          Consecutive
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="RANDOM"
+        >
+          Random
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ROW 3, COL 2: SHOTS PER TARGET -->
+  <div
+    class="settings-card"
+    id="consecutiveShotsCard"
+    style="display:none;"
+  >
+
+    <h4>Shots Per Target</h4>
+
+    <div class="custom-select-wrapper">
+
+      <select
+        id="consecutiveShotsSelect"
+        style="display:none;"
+      >
+        <option value="1" selected>1 Shot</option>
+        <option value="2">2 Shots</option>
+        <option value="3">3 Shots</option>
+        <option value="4">4 Shots</option>
+        <option value="5">5 Shots</option>
+        <option value="10">10 Shots</option>
+      </select>
+
+      <div class="select-trigger">1 Shot</div>
+
+      <div class="custom-options-panel">
+
+        <div
+          class="custom-option-item"
+          data-value="1"
+        >
+          1 Shot
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="2"
+        >
+          2 Shots
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="3"
+        >
+          3 Shots
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="4"
+        >
+          4 Shots
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="5"
+        >
+          5 Shots
+        </div>
+
+        <div
+          class="custom-option-item"
+          data-value="10"
+        >
+          10 Shots
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
     
+    
+</div>  
 <hr>
 
 
@@ -1214,6 +1333,128 @@ document.getElementById(
 const settingsPanel =
 document.getElementById(
 "settingsPanel"
+);
+
+//------------------------------------------------
+// TARGET SELECTION SETTINGS
+//------------------------------------------------
+
+const targetSelectionSelect =
+    document.getElementById(
+        "targetSelectionSelect"
+    );
+
+const consecutiveShotsSelect =
+    document.getElementById(
+        "consecutiveShotsSelect"
+    );
+
+const consecutiveShotsCard =
+    document.getElementById(
+        "consecutiveShotsCard"
+    );
+
+
+//------------------------------------------------
+// TARGET SELECTION CHANGE
+//------------------------------------------------
+
+targetSelectionSelect.addEventListener(
+    "change",
+    function(){
+
+        //----------------------------------------
+        // Save selected mode
+        //----------------------------------------
+
+        targetSelectionMode =
+            this.value;
+
+
+        //----------------------------------------
+        // Show/hide shots-per-target
+        //----------------------------------------
+
+        if(
+            this.value === "CONSECUTIVE"
+        ){
+
+            consecutiveShotsCard.style.display =
+                "block";
+
+            consecutiveShotCount = 0;
+
+        }else{
+
+            consecutiveShotsCard.style.display =
+                "none";
+
+        }
+
+
+        //----------------------------------------
+        // If ALL is selected, there is no
+        // single active target.
+        //----------------------------------------
+
+        if(
+            this.value === "ALL"
+        ){
+
+            activeTarget = null;
+
+        }
+
+
+        //----------------------------------------
+        // RANDOM / CONSECUTIVE need an
+        // active target.
+        //----------------------------------------
+
+        else if(
+            (
+                this.value === "RANDOM" ||
+                this.value === "CONSECUTIVE"
+            ) &&
+            !activeTarget
+        ){
+
+            nextTarget();
+
+        }
+
+
+        console.log(
+            "Target Selection:",
+            targetSelectionMode
+        );
+
+        redrawOverlay();
+
+    }
+);
+
+
+//------------------------------------------------
+// CONSECUTIVE SHOTS CHANGE
+//------------------------------------------------
+
+consecutiveShotsSelect.addEventListener(
+    "change",
+    function(){
+
+        consecutiveShotsPerTarget =
+            Number(this.value);
+
+        consecutiveShotCount = 0;
+
+
+        console.log(
+            "Shots Per Target:",
+            consecutiveShotsPerTarget
+        );
+
+    }
 );
 
 const distanceSelect =
