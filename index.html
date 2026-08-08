@@ -215,6 +215,11 @@ background:#000000;
 color:white;
 }
 
+#drillDrawTargetBtn{
+    background:#000000;
+    color:white;
+}
+
 #deleteTargetsBtn{
 background:#000000;
 color:white;
@@ -3903,6 +3908,19 @@ function drawCurrentLaser(hitX, hitY){
 drawTargetBtn.onclick=()=>{
 
     settingsPanel.style.display = "none";
+
+    //------------------------------------
+    // Start drawing another target
+    //------------------------------------
+
+    calibrateTarget();
+
+};
+
+drillDrawTargetBtn.onclick = () => {
+
+    // Close the Drills panel
+    drillsPanel.style.display = "none";
 
     //------------------------------------
     // Start drawing another target
