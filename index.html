@@ -4682,6 +4682,12 @@ settingsBtn.onclick=()=>{
     else{
         settingsPanel.style.display="block";
     }
+    const drillsPanel =
+    document.getElementById("drillsPanel");
+
+if (drillsPanel) {
+    drillsPanel.style.display = "none";
+}
 };
 
 //------------------------------------------------
@@ -4909,20 +4915,39 @@ drills.forEach((drill, index) => {
     });
 
 });
+
+//------------------------------------------------
+// MOVE DRILLS PANEL OUTSIDE SETTINGS PANEL
+//------------------------------------------------
+
+const drillsPanel =
+    document.getElementById("drillsPanel");
+
+if (
+    drillsPanel &&
+    drillsPanel.parentElement &&
+    drillsPanel.parentElement.id === "settingsPanel"
+) {
+
+    document.body.appendChild(drillsPanel);
+
+}
     
 drillsBtn.onclick = () => {
 
-    // CLOSE SETTINGS PANEL
+    // Close Settings
     closeSettingsPanel();
 
-    // OPEN DRILLS PANEL
+    // Open Drills
     const drillsPanel =
         document.getElementById("drillsPanel");
 
-    drillsPanel.style.display = "block";
+    if (drillsPanel) {
+        drillsPanel.style.display = "block";
+    }
 
 };
-
+    
 summaryBtn.onclick = () => {
 
     const logo = new Image();
