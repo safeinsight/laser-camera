@@ -1416,7 +1416,7 @@ let currentTarget = null;
     
 // Used only during calibration
 let calibrationStep = 0;
-
+let continuousTargetDrawing = false;
 // Drag calibration
 let calibrationDragging = false;
 let calibrationStartX = 0;
@@ -2206,26 +2206,31 @@ const rect = overlay.getBoundingClientRect();
 }
 
 //------------------------------------------------
-// START DRAG CALIBRATION -->
+// START DRAG CALIBRATION
 //------------------------------------------------
 
 function calibrateTarget(){
 
-    alert("DRAW TARGET\n\nTouch and drag to draw a box around your target.");
-currentTarget = {
-    left:0,
-    right:0,
-    top:0,
-    bottom:0,
-    calibrated:false,
-    shape:targetShape,
-    id: targets.length + 1
-};
+    alert(
+        "DRAW TARGET\n\n" +
+        "Touch and drag to draw a box around your target."
+    );
+
+    currentTarget = {
+        left:0,
+        right:0,
+        top:0,
+        bottom:0,
+        calibrated:false,
+        shape:targetShape,
+        id:targets.length + 1
+    };
+
     calibrationStep = 1;
 }
 
 //------------------------------------------------
-// COMPLETE DRAG CALIBRATION -->
+// COMPLETE DRAG CALIBRATION
 //------------------------------------------------
 
 function finishCalibrationDrag(e){
@@ -2233,50 +2238,100 @@ function finishCalibrationDrag(e){
     if(!calibrationDragging){
         return;
     }
+
     calibrationDragging = false;
-    if(calibrationStep===0){
+
+    if(calibrationStep === 0){
         return;
     }
-const rect = overlay.getBoundingClientRect();
+
+    const rect =
+        overlay.getBoundingClientRect();
+
     calibrationCurrentX =
         (e.clientX - rect.left) / rect.width;
+
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
+
     currentTarget.left =
-        Math.min(calibrationStartX, calibrationCurrentX);
+        Math.min(
+            calibrationStartX,
+            calibrationCurrentX
+        );
+
     currentTarget.right =
-        Math.max(calibrationStartX, calibrationCurrentX);
+        Math.max(
+            calibrationStartX,
+            calibrationCurrentX
+        );
+
     currentTarget.top =
-        Math.min(calibrationStartY, calibrationCurrentY);
+        Math.min(
+            calibrationStartY,
+            calibrationCurrentY
+        );
+
     currentTarget.bottom =
-        Math.max(calibrationStartY, calibrationCurrentY);
-currentTarget.calibrated = true;
-currentTarget.shape = targetShape;
+        Math.max(
+            calibrationStartY,
+            calibrationCurrentY
+        );
 
-//----------------------------------------
-// Every new target starts active
-//----------------------------------------
+    currentTarget.calibrated = true;
 
-currentTarget.active = true;
+    currentTarget.shape =
+        targetShape;
 
-targets.push(currentTarget);
+    //----------------------------------------
+    // Every new target starts active
+    //----------------------------------------
 
-//----------------------------------------
-// First target becomes active
-//----------------------------------------
+    currentTarget.active = true;
 
-if(activeTarget === null){
+    targets.push(currentTarget);
 
-    activeTarget = currentTarget;
+    //----------------------------------------
+    // First target becomes active
+    //----------------------------------------
 
-}
-calibrationStep = 0;
-resizeEverything();
-redrawOverlay();
+    if(activeTarget === null){
 
+        activeTarget =
+            currentTarget;
 
-console.log("Normalized Target:", currentTarget);
-    alert("Calibration Complete");
+    }
+
+    calibrationStep = 0;
+
+    resizeEverything();
+
+    redrawOverlay();
+
+    console.log(
+        "Normalized Target:",
+        currentTarget
+    );
+
+    //----------------------------------------
+    // Calibration confirmation
+    //----------------------------------------
+
+    alert(
+        "CALIBRATION COMPLETE\n\n" +
+        "Your target has been added."
+    );
+
+    //----------------------------------------
+    // CONTINUOUS DRAWING
+    //----------------------------------------
+
+    if(continuousTargetDrawing){
+
+        calibrateTarget();
+
+    }
+
 }
 
 //------------------------------------------------
@@ -3905,13 +3960,11 @@ function drawCurrentLaser(hitX, hitY){
     currentLaserVisible = true;
 }
 
-drawTargetBtn.onclick=()=>{
+drawTargetBtn.onclick = () => {
+
+    continuousTargetDrawing = true;
 
     settingsPanel.style.display = "none";
-
-    //------------------------------------
-    // Start drawing another target
-    //------------------------------------
 
     calibrateTarget();
 
@@ -3919,12 +3972,9 @@ drawTargetBtn.onclick=()=>{
 
 drillDrawTargetBtn.onclick = () => {
 
-    // Close the Drills panel
-    drillsPanel.style.display = "none";
+    continuousTargetDrawing = true;
 
-    //------------------------------------
-    // Start drawing another target
-    //------------------------------------
+    drillsPanel.style.display = "none";
 
     calibrateTarget();
 
@@ -4757,6 +4807,7 @@ distanceSelect.onchange = ()=>{
 };
 
 settingsBtn.onclick=()=>{
+    continuousTargetDrawing = false;
        if(settingsPanel.style.display=="block"){
         settingsPanel.style.display="none";
     }
@@ -5017,6 +5068,7 @@ if (
     
 drillsBtn.onclick = () => {
 
+    continuousTargetDrawing = false;
     const drillsPanel =
         document.getElementById("drillsPanel");
 
