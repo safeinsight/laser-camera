@@ -1392,36 +1392,55 @@ targetSelectionSelect.addEventListener(
         }
 
 
-        //----------------------------------------
-        // If ALL is selected, there is no
-        // single active target.
-        //----------------------------------------
+//----------------------------------------
+// ALL
+//
+// Keep the current target so the existing
+// highlighting system continues to work.
+// The actual hit detection will allow
+// every calibrated target.
+//----------------------------------------
 
-        if(
-            this.value === "ALL"
-        ){
+if(
+    this.value === "ALL"
+){
 
-            activeTarget = null;
+    if(!activeTarget){
 
-        }
+        const availableTargets =
+            targets.filter(
+                target => target.calibrated
+            );
 
+        if(availableTargets.length > 0){
 
-        //----------------------------------------
-        // RANDOM / CONSECUTIVE need an
-        // active target.
-        //----------------------------------------
-
-        else if(
-            (
-                this.value === "RANDOM" ||
-                this.value === "CONSECUTIVE"
-            ) &&
-            !activeTarget
-        ){
-
-            nextTarget();
+            activeTarget =
+                availableTargets[0];
 
         }
+
+    }
+
+}
+
+
+//----------------------------------------
+// RANDOM / CONSECUTIVE
+//
+// Make sure a target is selected.
+//----------------------------------------
+
+else if(
+    (
+        this.value === "RANDOM" ||
+        this.value === "CONSECUTIVE"
+    ) &&
+    !activeTarget
+){
+
+    nextTarget();
+
+}
 
 
         console.log(
@@ -1641,7 +1660,7 @@ let targets = [];
 // TARGET SELECTION SETTINGS
 //------------------------------------------------
 
-let targetSelectionMode = "RANDOM";
+let targetSelectionMode = "ALL";
 
 // Number of shots required on each target
 // when using CONSECUTIVE mode.
@@ -2642,38 +2661,67 @@ function drawGreenBoxes(){
     //----------------------------------------
 
     for(const target of targets){
+
         if(!target.calibrated){
             continue;
         }
-        
-    const left =
-    normToOverlayX(target.left);
 
-    const top =
-    normToOverlayY(target.top);
 
-    const width =
-    normToOverlayX(target.right)
-    - left;
+        //----------------------------------------
+        // Determine whether this target is active
+        //----------------------------------------
 
-    const height =
-    normToOverlayY(target.bottom)
-    - top;
-        
+        const targetIsActive =
+            targetSelectionMode === "ALL"
+                ? true
+                : target === activeTarget;
+
+
+        //----------------------------------------
+        // Target position
+        //----------------------------------------
+
+        const left =
+            normToOverlayX(target.left);
+
+        const top =
+            normToOverlayY(target.top);
+
+        const width =
+            normToOverlayX(target.right)
+            - left;
+
+        const height =
+            normToOverlayY(target.bottom)
+            - top;
+
+
         ctx.save();
-     
 
-ctx.strokeStyle =
-    target === activeTarget
-        ? "#00FF00"
-        : "#808080";
-        
-       ctx.lineWidth =
-Math.max(
-2,
-overlay.width * 0.003
-);
+
+        //----------------------------------------
+        // Target outline
+        //----------------------------------------
+
+        ctx.strokeStyle =
+            targetIsActive
+                ? "#00FF00"
+                : "#808080";
+
+
+        ctx.lineWidth =
+            Math.max(
+                2,
+                overlay.width * 0.003
+            );
+
+
+        //----------------------------------------
+        // Draw target shape
+        //----------------------------------------
+
         if(target.shape === "rectangle"){
+
             ctx.strokeRect(
                 left,
                 top,
@@ -2682,70 +2730,99 @@ overlay.width * 0.003
             );
 
         }else{
+
             ctx.beginPath();
+
             ctx.ellipse(
-                left + width/2,
-                top + height/2,
-                width/2,
-                height/2,
+                left + width / 2,
+                top + height / 2,
+                width / 2,
+                height / 2,
                 0,
                 0,
                 Math.PI * 2
             );
+
             ctx.stroke();
+
         }
 
-    //----------------------------------------
-    // Draw target number
-    //----------------------------------------
 
-ctx.fillStyle =
-    target === activeTarget
-        ? "#00FF00"
-        : "#666666";
+        //----------------------------------------
+        // Draw target number
+        //----------------------------------------
 
-ctx.font =
-`bold ${overlay.width * .025}px Arial`;
-let label = target.id;
+        ctx.fillStyle =
+            targetIsActive
+                ? "#00FF00"
+                : "#666666";
 
-ctx.fillText(
-    label,
-    left + 8,
-    top + 28
-);
+
+        ctx.font =
+            `bold ${overlay.width * .025}px Arial`;
+
+
+        let label = target.id;
+
+
+        ctx.fillText(
+            label,
+            left + 8,
+            top + 28
+        );
+
+
         ctx.restore();
+
     }
+
 
     //----------------------------------------
     // Draw target currently being dragged
     //----------------------------------------
 
     if(calibrationDragging){
-        
-    const left =
-    normToOverlayX(currentTarget.left);
 
-    const top =
-    normToOverlayY(currentTarget.top);
+        const left =
+            normToOverlayX(
+                currentTarget.left
+            );
 
-    const width =
-    normToOverlayX(currentTarget.right)
-    - left;
+        const top =
+            normToOverlayY(
+                currentTarget.top
+            );
 
-    const height =
-    normToOverlayY(currentTarget.bottom)
-    - top;
-        
+        const width =
+            normToOverlayX(
+                currentTarget.right
+            ) - left;
+
+        const height =
+            normToOverlayY(
+                currentTarget.bottom
+            ) - top;
+
+
         ctx.save();
-       
-    ctx.strokeStyle = "#00FF00";
-        
+
+
+        ctx.strokeStyle =
+            "#00FF00";
+
+
         ctx.lineWidth =
-Math.max(
-2,
-overlay.width * 0.003
-);
-        if(currentTarget.shape === "rectangle"){
+            Math.max(
+                2,
+                overlay.width * 0.003
+            );
+
+
+        if(
+            currentTarget.shape ===
+            "rectangle"
+        ){
+
             ctx.strokeRect(
                 left,
                 top,
@@ -2754,20 +2831,27 @@ overlay.width * 0.003
             );
 
         }else{
+
             ctx.beginPath();
+
             ctx.ellipse(
-                left + width/2,
-                top + height/2,
-                width/2,
-                height/2,
+                left + width / 2,
+                top + height / 2,
+                width / 2,
+                height / 2,
                 0,
                 0,
                 Math.PI * 2
             );
+
             ctx.stroke();
+
         }
+
         ctx.restore();
+
     }
+
 }
 
 //------------------------------------------------
