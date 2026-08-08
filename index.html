@@ -2536,15 +2536,12 @@ overlay.width * 0.003
 function nextTarget(){
 
     //----------------------------------------
-    // Build a list of usable targets
+    // Build list of usable targets
     //----------------------------------------
 
     const availableTargets =
-
         targets.filter(
-
             target => target.calibrated
-
         );
 
     if(availableTargets.length === 0){
@@ -2553,13 +2550,17 @@ function nextTarget(){
 
     }
 
+
     //----------------------------------------
     // Only one target
     //----------------------------------------
 
     if(availableTargets.length === 1){
 
-        activeTarget = availableTargets[0];
+        activeTarget =
+            availableTargets[0];
+
+        consecutiveShotCount = 0;
 
         redrawOverlay();
 
@@ -2567,50 +2568,133 @@ function nextTarget(){
 
     }
 
+
     //----------------------------------------
-    // Pick a different target
+    // RANDOM
     //----------------------------------------
 
-    let newTarget;
+    if(targetSelectionMode === "RANDOM"){
 
-    do{
+        let newTarget;
 
-        const randomIndex = Math.floor(
+        do{
 
-            Math.random() *
+            const randomIndex =
+                Math.floor(
+                    Math.random() *
+                    availableTargets.length
+                );
 
-            availableTargets.length
+            newTarget =
+                availableTargets[randomIndex];
 
+        }
+
+        while(
+            newTarget === activeTarget
         );
 
-        newTarget =
-
-            availableTargets[randomIndex];
+        activeTarget = newTarget;
 
     }
 
-    while(newTarget === activeTarget);
 
     //----------------------------------------
-    // Activate it
+    // CONSECUTIVE
+    //
+    // Find the current target's position
+    // and move to the next target.
     //----------------------------------------
 
-    activeTarget = newTarget;
+    else if(
+        targetSelectionMode === "CONSECUTIVE"
+    ){
 
-//----------------------------------------
-// Save target change for playback
-//----------------------------------------
+        const currentIndex =
+            availableTargets.indexOf(
+                activeTarget
+            );
 
-targetHistory.push({
+        let nextIndex;
 
-    id: activeTarget.id,
+        if(currentIndex === -1){
 
-    time:
-        (performance.now() - recordingStartTime) / 1000
+            nextIndex = 0;
 
-});
+        }else{
 
-redrawOverlay();
+            nextIndex =
+                currentIndex + 1;
+
+            //--------------------------------
+            // Wrap back to first target
+            //--------------------------------
+
+            if(
+                nextIndex >=
+                availableTargets.length
+            ){
+
+                nextIndex = 0;
+
+            }
+
+        }
+
+        activeTarget =
+            availableTargets[nextIndex];
+
+        consecutiveShotCount = 0;
+
+    }
+
+
+    //----------------------------------------
+    // ALL
+    //
+    // ALL does not normally call nextTarget,
+    // but if it does, simply keep the current
+    // target.
+    //----------------------------------------
+
+    else if(
+        targetSelectionMode === "ALL"
+    ){
+
+        if(!activeTarget){
+
+            activeTarget =
+                availableTargets[0];
+
+        }
+
+    }
+
+
+    //----------------------------------------
+    // Save target change for playback
+    //----------------------------------------
+
+    if(
+        activeTarget
+    ){
+
+        targetHistory.push({
+
+            id: activeTarget.id,
+
+            time:
+                (
+                    performance.now() -
+                    recordingStartTime
+                ) / 1000
+
+        });
+
+    }
+
+
+    redrawOverlay();
 
 }
 
@@ -3655,22 +3739,132 @@ console.log(
 
 
 hits.push({
+
     x: savedX,
+
     y: savedY,
+
     time:
         (performance.now() - recordingStartTime) / 1000
+
 });
 
-        updateDisplays();
-        playHitSound();
 
-        console.log(
-            "SHOT",
-            shots,
-            Math.round(hitX),
-            Math.round(hitY)
+updateDisplays();
+
+playHitSound();
+
+
+console.log(
+    "SHOT",
+    shots,
+    Math.round(hitX),
+    Math.round(hitY)
+);
+
+
+//------------------------------------------------
+// TARGET SELECTION ADVANCEMENT
+//------------------------------------------------
+
+// ALL
+//
+// Every target remains active.
+// Do not change activeTarget.
+//
+if(targetSelectionMode === "ALL"){
+
+    console.log(
+        "TARGET MODE: ALL"
+    );
+
+}
+
+
+//------------------------------------------------
+// RANDOM
+//
+// Pick another target after every shot.
+//
+else if(targetSelectionMode === "RANDOM"){
+
+    console.log(
+        "TARGET MODE: RANDOM"
+    );
+
+    if(!waitingForNextTarget){
+
+        waitingForNextTarget = true;
+
+        setTimeout(
+
+            ()=>{
+
+                nextTarget();
+
+                waitingForNextTarget = false;
+
+            },
+
+            250
+
         );
+
     }
+
+}
+
+
+//------------------------------------------------
+// CONSECUTIVE
+//
+// Stay on the current target until the
+// required number of shots has been made.
+//
+else if(targetSelectionMode === "CONSECUTIVE"){
+
+    consecutiveShotCount++;
+
+    console.log(
+        "CONSECUTIVE:",
+        consecutiveShotCount,
+        "/",
+        consecutiveShotsPerTarget
+    );
+
+
+    if(
+        consecutiveShotCount >=
+        consecutiveShotsPerTarget
+    ){
+
+        consecutiveShotCount = 0;
+
+
+        if(!waitingForNextTarget){
+
+            waitingForNextTarget = true;
+
+            setTimeout(
+
+                ()=>{
+
+                    nextTarget();
+
+                    waitingForNextTarget = false;
+
+                },
+
+                250
+
+            );
+
+        }
+
+    }
+
+}
+   
 
 }else{
 
