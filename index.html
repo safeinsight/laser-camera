@@ -2916,23 +2916,24 @@ function nextTarget(){
     // Save target change for playback
     //----------------------------------------
 
-    if(
-        activeTarget
-    ){
+if(
+    activeTarget &&
+    targetSelectionMode !== "ALL"
+){
 
-        targetHistory.push({
+    targetHistory.push({
 
-            id: activeTarget.id,
+        id: activeTarget.id,
 
-            time:
-                (
-                    performance.now() -
-                    recordingStartTime
-                ) / 1000
+        time:
+            (
+                performance.now() -
+                recordingStartTime
+            ) / 1000
 
-        });
+    });
 
-    }
+}
 
 
     redrawOverlay();
