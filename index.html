@@ -834,94 +834,136 @@ Drills Panel
     </div>
   </div>
 
-  <!-- ROW 2, COL 2: TARGET DISTANCE -->
-  <div class="settings-card">
- <h4>Distance</h4>
-    <div class="custom-select-wrapper">
-      <select id="distanceSelect" style="display:none;">
-        <option value="3">3 yards</option>
-        <option value="5">5 yards</option>
-        <option value="7" selected>7 yards</option>
-        <option value="10">10 yards</option>
-        <option value="15">15 yards</option>
-        <option value="25">25 yards</option>
-      </select>
-      <div class="select-trigger">7 yards</div>
-      <div class="custom-options-panel">
-        <div class="custom-option-item" data-value="3">3 yards</div>
-        <div class="custom-option-item" data-value="5">5 yards</div>
-        <div class="custom-option-item" data-value="7">7 yards</div>
-        <div class="custom-option-item" data-value="10">10 yards</div>
-        <div class="custom-option-item" data-value="15">15 yards</div>
-        <div class="custom-option-item" data-value="25">25 yards</div>
-      </div>
+<!-- ROW 2, COL 2: TARGET DISTANCE -->
+
+<div class="settings-card">
+
+  <h4>Distance</h4>
+
+  <div class="custom-select-wrapper">
+
+    <select id="distanceSelect" style="display:none;">
+
+      <option value="3">3 yards</option>
+      <option value="5">5 yards</option>
+      <option value="7" selected>7 yards</option>
+      <option value="10">10 yards</option>
+      <option value="15">15 yards</option>
+      <option value="25">25 yards</option>
+
+    </select>
+
+    <div class="select-trigger">
+      7 yards
     </div>
+
+    <div class="custom-options-panel">
+
+      <div class="custom-option-item" data-value="3">
+        3 yards
+      </div>
+
+      <div class="custom-option-item" data-value="5">
+        5 yards
+      </div>
+
+      <div class="custom-option-item" data-value="7">
+        7 yards
+      </div>
+
+      <div class="custom-option-item" data-value="10">
+        10 yards
+      </div>
+
+      <div class="custom-option-item" data-value="15">
+        15 yards
+      </div>
+
+      <div class="custom-option-item" data-value="25">
+        25 yards
+      </div>
+
+    </div>
+
   </div>
 
 </div>
+
+
+<!-- CLOSE SETTINGS GRID -->
+</div>
+
+
+<!-- CLOSE SETTINGS PANEL -->
+</div>
+
+
 <hr>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+
 <!-- ==================================================== -->
 <!-- DRILLS PANEL                                         -->
 <!-- ==================================================== -->
 
 <div id="drillsPanel">
 
-    <h4 style="
-        color:#000000;
-        text-align:center;
-        font-size:24px;
-    ">
-        DRILLS
-    </h4>
+  <h4 style="
+      color:#000000;
+      text-align:center;
+      font-size:24px;
+  ">
+    DRILLS
+  </h4>
 
-    <div class="settings-grid">
+  <div class="settings-grid">
 
-        <div class="settings-card">
+    <div class="settings-card">
 
-            <h4>Choose Drill</h4>
+      <h4>Choose Drill</h4>
 
-            <div class="custom-select-wrapper">
+      <div class="custom-select-wrapper">
 
-                <select id="drillSelect" style="display:none;">
-                    <option value="" selected>
-                        CHOOSE DRILL
-                    </option>
-                </select>
+        <select id="drillSelect" style="display:none;">
 
-                <div class="select-trigger">
-                    CHOOSE DRILL
-                </div>
+          <option value="" selected>
+            CHOOSE DRILL
+          </option>
 
-                <div class="custom-options-panel">
-                </div>
+        </select>
 
-            </div>
-
+        <div class="select-trigger">
+          CHOOSE DRILL
         </div>
 
+        <div class="custom-options-panel">
+        </div>
+
+      </div>
+
     </div>
 
-    <div id="drillInfo"
-         style="
-             display:none;
-             color:#000000;
-             font-family:system-ui,-apple-system,sans-serif;
-             font-size:16px;
-             line-height:1.6;
-             margin-top:25px;
-             padding:15px;
-             background:#ffffff;
-             border:1px solid #555;
-             border-radius:6px;
-         ">
-    </div>
-    </div>
+  </div>
+
+
+  <div id="drillInfo"
+       style="
+           display:none;
+           color:#000000;
+           font-family:system-ui,-apple-system,sans-serif;
+           font-size:16px;
+           line-height:1.6;
+           margin-top:25px;
+           padding:15px;
+           background:#ffffff;
+           border:1px solid #555;
+           border-radius:6px;
+       ">
+  </div>
+
 </div>
-    
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- ==================================================== -->
 <!-- INTERACTION LAYER INTERACTION UTILITY               -->
