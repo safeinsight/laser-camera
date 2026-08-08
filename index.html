@@ -871,9 +871,9 @@ Drills Panel
     <div class="custom-select-wrapper">
 
       <select id="targetSelectionSelect" style="display:none;">
-        <option value="ALL">All</option>
+        <option value="ALL" selected>All</option>
         <option value="CONSECUTIVE">Consecutive</option>
-        <option value="RANDOM" selected>Random</option>
+        <option value="RANDOM">Random</option>
       </select>
 
       <div class="select-trigger">Random</div>
@@ -1375,21 +1375,22 @@ targetSelectionSelect.addEventListener(
         // Show/hide shots-per-target
         //----------------------------------------
 
-        if(
-            this.value === "CONSECUTIVE"
-        ){
+if(
+    this.value === "CONSECUTIVE" ||
+    this.value === "RANDOM"
+){
 
-            consecutiveShotsCard.style.display =
-                "block";
+    consecutiveShotsCard.style.display =
+        "block";
 
-            consecutiveShotCount = 0;
+    consecutiveShotCount = 0;
 
-        }else{
+}else{
 
-            consecutiveShotsCard.style.display =
-                "none";
+    consecutiveShotsCard.style.display =
+        "none";
 
-        }
+}
 
 
 //----------------------------------------
