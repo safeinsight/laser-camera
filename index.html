@@ -63,37 +63,6 @@ video{
     background:black;
 }
 
-.downloadButtons{
-    display:flex;
-    flex-direction:row;
-    gap:10px;
-    width:100%;
-    align-items:stretch;
-}
-
-.downloadButtons button{
-    flex:1 1 0;
-    width:0;
-    min-width:0;
-    height:56px;
-    margin:10px 0;
-    padding:0 10px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-
-    box-sizing:border-box;
-}
-
-.downloadButtons button svg{
-    width:22px;
-    height:22px;
-    flex-shrink:0;
-}
-
-    
 #overlay{
 position:absolute;
 pointer-events:auto;
@@ -1216,9 +1185,7 @@ Drills Panel
 
     <hr>
 
-<div class="downloadButtons">
-    
-    <div id="summaryControl">
+<div id="summaryControl">
 
     <button id="summaryBtn">
 
@@ -1260,23 +1227,9 @@ Drills Panel
 
     </button>
 
-
-
-<button id="downloadVideoBtn"
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 21h14"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-    </svg>
-    Download Video
-</button>
-
 </div>
-    
-<hr>
+
+    <hr>
 
 
 
@@ -2518,51 +2471,6 @@ playback.onloadedmetadata=()=>{
     );
 };
 }
-
-//----------------------------------------
-// DOWNLOAD LAST PLAYED VIDEO
-//----------------------------------------
-
-downloadVideoBtn.onclick = function(){
-
-    if(
-        !recordedChunks ||
-        recordedChunks.length === 0
-    ){
-        alert("No recorded video is available.");
-        return;
-    }
-
-    const blob =
-        new Blob(
-            recordedChunks,
-            {
-                type:"video/webm"
-            }
-        );
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-        "Laser-Training-Session.webm";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    setTimeout(()=>{
-        URL.revokeObjectURL(url);
-    },1000);
-
-};
 
 //--------------------------
 // UPDATE DISPLAYS -->
@@ -5935,4 +5843,5 @@ playLastBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
