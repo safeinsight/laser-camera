@@ -1811,6 +1811,62 @@ function detectorToNormY(py){
 
 }
 
+
+//------------------------------------------------
+// CALL OUT ACTIVE TARGET
+//------------------------------------------------
+
+function callOutTargetNumber(target){
+
+    console.log(
+        "CALLING TARGET ID:",
+        target.id
+    );
+
+    const words = [
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten"
+    ];
+
+    const targetNumber =
+        Number(target.id);
+
+    if(
+        !Number.isInteger(targetNumber) ||
+        targetNumber < 1 ||
+        targetNumber >= words.length
+    ){
+        console.log(
+            "INVALID TARGET ID:",
+            target.id
+        );
+        return;
+    }
+
+    speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(
+            words[targetNumber]
+        );
+
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    speechSynthesis.speak(utterance);
+
+}
+    
 //--------------------------
 // CAMERA -->
 //--------------------------
@@ -2566,17 +2622,18 @@ function finishCalibrationDrag(e){
 
     targets.push(currentTarget);
 
-    //----------------------------------------
-    // First target becomes active
-    //----------------------------------------
+//----------------------------------------
+// First target becomes active
+//----------------------------------------
 
-    if(activeTarget === null){
+if(activeTarget === null){
 
-        activeTarget =
-            currentTarget;
+    activeTarget =
+        currentTarget;
 
-    }
+    callOutTargetNumber(activeTarget);
 
+}
     calibrationStep = 0;
 
     resizeEverything();
@@ -2877,22 +2934,28 @@ function nextTarget(){
     }
 
 
-    //----------------------------------------
-    // Only one target
-    //----------------------------------------
+//----------------------------------------
+// Only one target
+//----------------------------------------
 
-    if(availableTargets.length === 1){
+if(availableTargets.length === 1){
+
+    if(activeTarget !== availableTargets[0]){
 
         activeTarget =
             availableTargets[0];
 
-        consecutiveShotCount = 0;
-
-        redrawOverlay();
-
-        return;
+        callOutTargetNumber(activeTarget);
 
     }
+
+    consecutiveShotCount = 0;
+
+    redrawOverlay();
+
+    return;
+
+}
 
 
     //----------------------------------------
@@ -2920,7 +2983,13 @@ function nextTarget(){
             newTarget === activeTarget
         );
 
-        activeTarget = newTarget;
+        if(activeTarget !== newTarget){
+
+    activeTarget = newTarget;
+
+    callOutTargetNumber(activeTarget);
+
+}
 
     }
 
@@ -2967,10 +3036,19 @@ function nextTarget(){
 
         }
 
-        activeTarget =
-            availableTargets[nextIndex];
+        const newTarget =
+    availableTargets[nextIndex];
 
-        consecutiveShotCount = 0;
+if(activeTarget !== newTarget){
+
+    activeTarget =
+        newTarget;
+
+    callOutTargetNumber(activeTarget);
+
+}
+
+consecutiveShotCount = 0;
 
     }
 
@@ -2989,10 +3067,12 @@ function nextTarget(){
 
         if(!activeTarget){
 
-            activeTarget =
-                availableTargets[0];
+    activeTarget =
+        availableTargets[0];
 
-        }
+    callOutTargetNumber(activeTarget);
+
+}
 
     }
 
