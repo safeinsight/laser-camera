@@ -1812,14 +1812,14 @@ function detectorToNormY(py){
 }
 
 //------------------------------------------------
-// CALL OUT ACTIVE TARGET -->
+// CALL OUT ACTIVE TARGET
 //------------------------------------------------
 
-function callOutTargetNumber(targetNumber){
+function callOutTargetNumber(target){
 
     console.log(
-        "CALLING TARGET:",
-        targetNumber
+        "CALLING TARGET ID:",
+        target.id
     );
 
     const words = [
@@ -1836,17 +1836,22 @@ function callOutTargetNumber(targetNumber){
         "ten"
     ];
 
+    const targetNumber =
+        Number(target.id);
+
     if(
-        targetNumber == null ||
-        targetNumber < 0 ||
+        !Number.isInteger(targetNumber) ||
+        targetNumber < 1 ||
         targetNumber >= words.length
     ){
         console.log(
-            "INVALID TARGET NUMBER:",
-            targetNumber
+            "INVALID TARGET ID:",
+            target.id
         );
         return;
     }
+
+    speechSynthesis.cancel();
 
     const utterance =
         new SpeechSynthesisUtterance(
@@ -1857,7 +1862,6 @@ function callOutTargetNumber(targetNumber){
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    speechSynthesis.cancel();
     speechSynthesis.speak(utterance);
 
 }
@@ -2356,19 +2360,7 @@ recordingStartTime = performance.now();
 
 targetHistory = [];
 
-//-------------------------------------
-// Record first active target
-//-------------------------------------
-
-if(activeTarget){
-
-    targetHistory.push({
-
-        id: activeTarget.id,
-
-        time: 0
-
-    });
+id:
 
 }
     
