@@ -5261,9 +5261,39 @@ function setAppMode(mode){
 //--------------------------
 
 startBtn.onclick = ()=>{
-console.log("START BUTTON CLICKED");
-setAppMode(APP_RECORDING);
-clearSessionData();
+
+    console.log("START BUTTON CLICKED");
+
+    //--------------------------------
+    // Stop continuous target drawing
+    //--------------------------------
+
+    continuousTargetDrawing = false;
+
+    //--------------------------------
+    // Close Drills Panel
+    //--------------------------------
+
+    const drillsPanel =
+        document.getElementById("drillsPanel");
+
+    if(drillsPanel){
+        drillsPanel.style.display = "none";
+    }
+
+    //--------------------------------
+    // Close Settings Panel
+    //--------------------------------
+
+    settingsPanel.style.display = "none";
+
+    //--------------------------------
+    // Start recording mode
+    //--------------------------------
+
+    setAppMode(APP_RECORDING);
+
+    clearSessionData();
 
 //--------------------------
 // STOP BUTTON CLICK
