@@ -68,47 +68,45 @@ video{
     flex-direction:row;
     gap:10px;
     width:100%;
-    align-items:stretch;
+    align-items:center;
 }
 
 .downloadButtons button{
     flex:1 1 0;
     width:0;
-    min-width:0;
-    height:56px;
-    margin:10px 0;
-    padding:0 10px;
+    min-width:0 !important;
+    height:56px !important;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
+    margin:10px 0 !important;
+    padding:0 10px !important;
 
     box-sizing:border-box;
+
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    font-size:16px !important;
+    line-height:1;
 }
 
 .downloadButtons button svg{
-    width:22px;
-    height:22px;
+    width:22px !important;
+    height:22px !important;
     flex-shrink:0;
 }
 
-.downloadVideoBtn{
+.downloadButtons #summaryBtn{
+    background:initial;
+}
+
+.downloadButtons #downloadVideoBtn{
     background:#00a651;
     color:white;
     border:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
 }
-
-.downloadVideoBtn svg{
-    width:20px;
-    height:20px;
-    flex-shrink:0;
-}
-
 #overlay{
 position:absolute;
 pointer-events:auto;
