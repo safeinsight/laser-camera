@@ -63,6 +63,22 @@ video{
     background:black;
 }
 
+.downloadVideoBtn{
+    background:#198754;
+    color:white;
+    border:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.downloadVideoBtn svg{
+    width:20px;
+    height:20px;
+    flex-shrink:0;
+}
+
 #overlay{
 position:absolute;
 pointer-events:auto;
@@ -2482,6 +2498,51 @@ playback.onloadedmetadata=()=>{
     );
 };
 }
+
+//----------------------------------------
+// DOWNLOAD LAST PLAYED VIDEO
+//----------------------------------------
+
+downloadVideoBtn.onclick = function(){
+
+    if(
+        !recordedChunks ||
+        recordedChunks.length === 0
+    ){
+        alert("No recorded video is available.");
+        return;
+    }
+
+    const blob =
+        new Blob(
+            recordedChunks,
+            {
+                type:"video/webm"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "Laser-Training-Session.webm";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    setTimeout(()=>{
+        URL.revokeObjectURL(url);
+    },1000);
+
+};
 
 //--------------------------
 // UPDATE DISPLAYS -->
