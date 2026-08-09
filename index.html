@@ -3174,9 +3174,7 @@ let brightestY = 0;
 
             gridTotal[gy][gx] = 0;
             gridCount[gy][gx] = 0;
-
         }
-
     }
 
     //------------------------------------------------
@@ -3370,25 +3368,15 @@ totalY += y * weight;
 return{
 
     brightPixels,
-
     totalWeight,
-
     totalX,
-
     totalY,
-
     laserMask,
-
     brightestX,
-
     brightestY,
-
     brightestValue,
-
     gridTotal,
-
     gridCount
-
 };
 }
 
@@ -3880,8 +3868,18 @@ let brightestValue =
     
 let gridTotal =
     result?.gridTotal ?? [];
+
 let gridCount =
     result?.gridCount ?? [];
+
+console.log(
+    "GRID CHECK:",
+    "result exists:", !!result,
+    "gridTotal rows:", gridTotal.length,
+    "gridCount rows:", gridCount.length,
+    "expected rows:", GRID_ROWS,
+    "first row:", gridCount[0]
+);
 
     //------------------------------------------------
     // Update grid brightness map
