@@ -68,12 +68,29 @@ video{
     flex-direction:row;
     gap:10px;
     width:100%;
+    align-items:stretch;
 }
 
 .downloadButtons button{
-    flex:1;
+    flex:1 1 0;
+    width:0;
     min-width:0;
+    height:56px;
     margin:10px 0;
+    padding:0 10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    box-sizing:border-box;
+}
+
+.downloadButtons button svg{
+    width:22px;
+    height:22px;
+    flex-shrink:0;
 }
 
 .downloadVideoBtn{
