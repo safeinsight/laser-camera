@@ -61,23 +61,7 @@ video{
     height:100%;
     object-fit:cover;
     background:black;
-}.downloadVideoBtn{
-    background:#198754;
-    color:white;
-    border:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
 }
-
-.downloadVideoBtn svg{
-    width:20px;
-    height:20px;
-    flex-shrink:0;
-}
-
-
 
 #overlay{
 position:absolute;
@@ -1243,18 +1227,6 @@ Drills Panel
 
     </button>
 
-    <button id="downloadVideoBtn" class="downloadVideoBtn">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 21h14"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-    </svg>
-    Download Video
-</button>
-    
 </div>
 
     <hr>
@@ -1897,7 +1869,7 @@ function callOutTargetNumber(target){
 
         speechSynthesis.speak(utterance);
 
-    }, 250);
+    }, 350);
 
 }
     
@@ -2499,51 +2471,6 @@ playback.onloadedmetadata=()=>{
     );
 };
 }
-
-//----------------------------------------
-// DOWNLOAD LAST PLAYED VIDEO
-//----------------------------------------
-
-downloadVideoBtn.onclick = function(){
-
-    if(
-        !recordedChunks ||
-        recordedChunks.length === 0
-    ){
-        alert("No recorded video is available.");
-        return;
-    }
-
-    const blob =
-        new Blob(
-            recordedChunks,
-            {
-                type:"video/webm"
-            }
-        );
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-        "Laser-Training-Session.webm";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    setTimeout(()=>{
-        URL.revokeObjectURL(url);
-    },1000);
-
-};
 
 //--------------------------
 // UPDATE DISPLAYS -->
@@ -5913,17 +5840,4 @@ playLastBtn.onclick = ()=>{
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
