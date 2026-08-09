@@ -1817,6 +1817,11 @@ function detectorToNormY(py){
 
 function callOutTargetNumber(targetNumber){
 
+    console.log(
+        "CALLING TARGET:",
+        targetNumber
+    );
+
     const words = [
         "zero",
         "one",
@@ -1836,10 +1841,12 @@ function callOutTargetNumber(targetNumber){
         targetNumber < 0 ||
         targetNumber >= words.length
     ){
+        console.log(
+            "INVALID TARGET NUMBER:",
+            targetNumber
+        );
         return;
     }
-
-    speechSynthesis.cancel();
 
     const utterance =
         new SpeechSynthesisUtterance(
@@ -1850,7 +1857,9 @@ function callOutTargetNumber(targetNumber){
     utterance.pitch = 1;
     utterance.volume = 1;
 
+    speechSynthesis.cancel();
     speechSynthesis.speak(utterance);
+
 }
     
 //--------------------------
