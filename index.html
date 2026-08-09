@@ -1818,52 +1818,58 @@ function detectorToNormY(py){
 
 function callOutTargetNumber(target){
 
+    const targetToCall = target;
+
     console.log(
-        "CALLING TARGET ID:",
-        target.id
+        "TARGET WILL BE CALLED:",
+        targetToCall.id
     );
 
-    const words = [
-        "zero",
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-        "ten"
-    ];
+    setTimeout(() => {
 
-    const targetNumber =
-        Number(target.id);
+        const words = [
+            "zero",
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten"
+        ];
 
-    if(
-        !Number.isInteger(targetNumber) ||
-        targetNumber < 1 ||
-        targetNumber >= words.length
-    ){
-        console.log(
-            "INVALID TARGET ID:",
-            target.id
-        );
-        return;
-    }
+        const targetNumber =
+            Number(targetToCall.id);
 
-    speechSynthesis.cancel();
+        if(
+            !Number.isInteger(targetNumber) ||
+            targetNumber < 1 ||
+            targetNumber >= words.length
+        ){
+            console.log(
+                "INVALID TARGET ID:",
+                targetToCall.id
+            );
+            return;
+        }
 
-    const utterance =
-        new SpeechSynthesisUtterance(
-            words[targetNumber]
-        );
+        speechSynthesis.cancel();
 
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+        const utterance =
+            new SpeechSynthesisUtterance(
+                words[targetNumber]
+            );
 
-    speechSynthesis.speak(utterance);
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        speechSynthesis.speak(utterance);
+
+    }, 500);
 
 }
     
