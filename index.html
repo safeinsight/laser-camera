@@ -1811,6 +1811,68 @@ function detectorToNormY(py){
 
 }
 
+
+//------------------------------------------------
+// CALL OUT ACTIVE TARGET
+//------------------------------------------------
+
+function callOutTargetNumber(target){
+
+    const targetToCall = target;
+
+    console.log(
+        "TARGET WILL BE CALLED:",
+        targetToCall.id
+    );
+
+    setTimeout(() => {
+
+        const words = [
+            "zero",
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten"
+        ];
+
+        const targetNumber =
+            Number(targetToCall.id);
+
+        if(
+            !Number.isInteger(targetNumber) ||
+            targetNumber < 1 ||
+            targetNumber >= words.length
+        ){
+            console.log(
+                "INVALID TARGET ID:",
+                targetToCall.id
+            );
+            return;
+        }
+
+        speechSynthesis.cancel();
+
+        const utterance =
+            new SpeechSynthesisUtterance(
+                words[targetNumber]
+            );
+
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        speechSynthesis.speak(utterance);
+
+    }, 350);
+
+}
+    
 //--------------------------
 // CAMERA -->
 //--------------------------
@@ -2566,17 +2628,16 @@ function finishCalibrationDrag(e){
 
     targets.push(currentTarget);
 
-    //----------------------------------------
-    // First target becomes active
-    //----------------------------------------
+//----------------------------------------
+// First target becomes active
+//----------------------------------------
 
-    if(activeTarget === null){
+if(activeTarget === null){
 
-        activeTarget =
-            currentTarget;
+    activeTarget =
+        currentTarget;
 
-    }
-
+}
     calibrationStep = 0;
 
     resizeEverything();
@@ -2877,22 +2938,28 @@ function nextTarget(){
     }
 
 
-    //----------------------------------------
-    // Only one target
-    //----------------------------------------
+//----------------------------------------
+// Only one target
+//----------------------------------------
 
-    if(availableTargets.length === 1){
+if(availableTargets.length === 1){
+
+    if(activeTarget !== availableTargets[0]){
 
         activeTarget =
             availableTargets[0];
 
-        consecutiveShotCount = 0;
-
-        redrawOverlay();
-
-        return;
+        callOutTargetNumber(activeTarget);
 
     }
+
+    consecutiveShotCount = 0;
+
+    redrawOverlay();
+
+    return;
+
+}
 
 
     //----------------------------------------
@@ -2920,7 +2987,13 @@ function nextTarget(){
             newTarget === activeTarget
         );
 
-        activeTarget = newTarget;
+        if(activeTarget !== newTarget){
+
+    activeTarget = newTarget;
+
+    callOutTargetNumber(activeTarget);
+
+}
 
     }
 
@@ -2967,10 +3040,19 @@ function nextTarget(){
 
         }
 
-        activeTarget =
-            availableTargets[nextIndex];
+        const newTarget =
+    availableTargets[nextIndex];
 
-        consecutiveShotCount = 0;
+if(activeTarget !== newTarget){
+
+    activeTarget =
+        newTarget;
+
+    callOutTargetNumber(activeTarget);
+
+}
+
+consecutiveShotCount = 0;
 
     }
 
@@ -2989,10 +3071,12 @@ function nextTarget(){
 
         if(!activeTarget){
 
-            activeTarget =
-                availableTargets[0];
+    activeTarget =
+        availableTargets[0];
 
-        }
+    callOutTargetNumber(activeTarget);
+
+}
 
     }
 
@@ -3174,7 +3258,9 @@ let brightestY = 0;
 
             gridTotal[gy][gx] = 0;
             gridCount[gy][gx] = 0;
+
         }
+
     }
 
     //------------------------------------------------
@@ -3368,15 +3454,25 @@ totalY += y * weight;
 return{
 
     brightPixels,
+
     totalWeight,
+
     totalX,
+
     totalY,
+
     laserMask,
+
     brightestX,
+
     brightestY,
+
     brightestValue,
+
     gridTotal,
+
     gridCount
+
 };
 }
 
@@ -3868,32 +3964,25 @@ let brightestValue =
     
 let gridTotal =
     result?.gridTotal ?? [];
-
 let gridCount =
     result?.gridCount ?? [];
 
-console.log(
-    "GRID CHECK:",
-    "result exists:", !!result,
-    "gridTotal rows:", gridTotal.length,
-    "gridCount rows:", gridCount.length,
-    "expected rows:", GRID_ROWS,
-    "first row:", gridCount[0]
-);
+//------------------------------------------------
+// Update grid brightness map
+//------------------------------------------------
 
-    //------------------------------------------------
-    // Update grid brightness map
-    //------------------------------------------------
+if(result){
 
-for(let gy=0; gy<GRID_ROWS; gy++){
-
+    for(let gy=0; gy<GRID_ROWS; gy++){
     for(let gx=0; gx<GRID_COLS; gx++){
-        if(gridCount[gy][gx] > 0){
-            const average =
-                gridTotal[gy][gx] /
-                gridCount[gy][gx];
-            gridBrightness[gy][gx] =
-                average;
+
+if(gridCount[gy][gx] > 0){
+    const average =
+            gridTotal[gy][gx] /
+            gridCount[gy][gx];
+            gridBrightness[gy][gx] = average;
+
+            }
         }
     }
 }
@@ -5612,7 +5701,7 @@ drills.forEach((drill, index) => {
             </div>
 
             <div style="margin-top:15px;">
-                <strong>EXECUTION</strong>
+                <strong>PERFORM</strong>
             </div>
 
             <div>
@@ -5754,17 +5843,4 @@ playLastBtn.onclick = ()=>{
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
