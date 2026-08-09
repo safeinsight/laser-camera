@@ -2626,9 +2626,7 @@ if(activeTarget === null){
     activeTarget =
         currentTarget;
 
-    callOutTargetNumber(
-    availableTargets.indexOf(activeTarget) + 1
-);
+    callOutTargetNumber(activeTarget);
 
 }
 
@@ -2943,9 +2941,7 @@ if(availableTargets.length === 1){
         activeTarget =
             availableTargets[0];
 
-        callOutTargetNumber(
-    availableTargets.indexOf(activeTarget) + 1
-);
+        callOutTargetNumber(activeTarget);
 
     }
 
@@ -2987,9 +2983,7 @@ if(targetSelectionMode === "RANDOM"){
 
         activeTarget = newTarget;
 
-        callOutTargetNumber(
-    availableTargets.indexOf(activeTarget) + 1
-);
+        callOutTargetNumber(activeTarget);
 
     }
 
@@ -3046,9 +3040,7 @@ if(activeTarget !== newTarget){
     activeTarget =
         newTarget;
 
-    callOutTargetNumber(
-    availableTargets.indexOf(activeTarget) + 1
-);
+    callOutTargetNumber(activeTarget);
 
 }
 
@@ -3074,9 +3066,7 @@ if(!activeTarget){
     activeTarget =
         availableTargets[0];
 
-    callOutTargetNumber(
-    availableTargets.indexOf(activeTarget) + 1
-);
+    callOutTargetNumber(activeTarget);
 
 }
 
