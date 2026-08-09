@@ -63,6 +63,19 @@ video{
     background:black;
 }
 
+.downloadButtons{
+    display:flex;
+    flex-direction:row;
+    gap:10px;
+    width:100%;
+}
+
+.downloadButtons button{
+    flex:1;
+    min-width:0;
+    margin:10px 0;
+}
+
 .downloadVideoBtn{
     background:#00a651;
     color:white;
@@ -1201,7 +1214,9 @@ Drills Panel
 
     <hr>
 
-<div id="summaryControl">
+<div class="downloadButtons">
+    
+    <div id="summaryControl">
 
     <button id="summaryBtn">
 
@@ -1256,6 +1271,8 @@ Drills Panel
     </svg>
     Download Video
 </button>
+
+</div>
     
 <hr>
 
