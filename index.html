@@ -1811,6 +1811,48 @@ function detectorToNormY(py){
 
 }
 
+//------------------------------------------------
+// CALL OUT ACTIVE TARGET -->
+//------------------------------------------------
+
+function callOutTargetNumber(targetNumber){
+
+    const words = [
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten"
+    ];
+
+    if(
+        targetNumber == null ||
+        targetNumber < 0 ||
+        targetNumber >= words.length
+    ){
+        return;
+    }
+
+    speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(
+            words[targetNumber]
+        );
+
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    speechSynthesis.speak(utterance);
+}
+    
 //--------------------------
 // CAMERA -->
 //--------------------------
@@ -2566,16 +2608,18 @@ function finishCalibrationDrag(e){
 
     targets.push(currentTarget);
 
-    //----------------------------------------
-    // First target becomes active
-    //----------------------------------------
+//----------------------------------------
+// First target becomes active
+//----------------------------------------
 
-    if(activeTarget === null){
+if(activeTarget === null){
 
-        activeTarget =
-            currentTarget;
+    activeTarget =
+        currentTarget;
 
-    }
+    callOutTargetNumber(activeTarget);
+
+}
 
     calibrationStep = 0;
 
@@ -2877,52 +2921,64 @@ function nextTarget(){
     }
 
 
-    //----------------------------------------
-    // Only one target
-    //----------------------------------------
+//----------------------------------------
+// Only one target
+//----------------------------------------
 
-    if(availableTargets.length === 1){
+if(availableTargets.length === 1){
+
+    if(activeTarget !== availableTargets[0]){
 
         activeTarget =
             availableTargets[0];
 
-        consecutiveShotCount = 0;
-
-        redrawOverlay();
-
-        return;
+        callOutTargetNumber(activeTarget);
 
     }
 
+    consecutiveShotCount = 0;
 
-    //----------------------------------------
-    // RANDOM
-    //----------------------------------------
+    redrawOverlay();
 
-    if(targetSelectionMode === "RANDOM"){
+    return;
 
-        let newTarget;
+}
 
-        do{
 
-            const randomIndex =
-                Math.floor(
-                    Math.random() *
-                    availableTargets.length
-                );
+//----------------------------------------
+// RANDOM
+//----------------------------------------
 
-            newTarget =
-                availableTargets[randomIndex];
+if(targetSelectionMode === "RANDOM"){
 
-        }
+    let newTarget;
 
-        while(
-            newTarget === activeTarget
-        );
+    do{
+
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                availableTargets.length
+            );
+
+        newTarget =
+            availableTargets[randomIndex];
+
+    }
+
+    while(
+        newTarget === activeTarget
+    );
+
+    if(activeTarget !== newTarget){
 
         activeTarget = newTarget;
 
+        callOutTargetNumber(activeTarget);
+
     }
+
+}
 
 
     //----------------------------------------
@@ -2967,10 +3023,19 @@ function nextTarget(){
 
         }
 
-        activeTarget =
-            availableTargets[nextIndex];
+const newTarget =
+    availableTargets[nextIndex];
 
-        consecutiveShotCount = 0;
+if(activeTarget !== newTarget){
+
+    activeTarget =
+        newTarget;
+
+    callOutTargetNumber(activeTarget);
+
+}
+
+consecutiveShotCount = 0;
 
     }
 
@@ -2987,12 +3052,14 @@ function nextTarget(){
         targetSelectionMode === "ALL"
     ){
 
-        if(!activeTarget){
+if(!activeTarget){
 
-            activeTarget =
-                availableTargets[0];
+    activeTarget =
+        availableTargets[0];
 
-        }
+    callOutTargetNumber(activeTarget);
+
+}
 
     }
 
