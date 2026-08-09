@@ -2548,10 +2548,10 @@ playback.onloadedmetadata=()=>{
 }
 
 //----------------------------------------
-// DOWNLOAD LAST PLAYED VIDEO
+// DOWNLOAD VIDEO WITH SHOT MARKERS
 //----------------------------------------
 
-downloadVideoBtn.onclick = function(){
+downloadVideoBtn.onclick = async function(){
 
     if(
         !recordedChunks ||
@@ -2561,6 +2561,10 @@ downloadVideoBtn.onclick = function(){
         return;
     }
 
+    //----------------------------------------
+    // Create video from recorded chunks
+    //----------------------------------------
+
     const blob =
         new Blob(
             recordedChunks,
@@ -2569,16 +2573,197 @@ downloadVideoBtn.onclick = function(){
             }
         );
 
-    const url =
+    const videoURL =
         URL.createObjectURL(blob);
+
+    //----------------------------------------
+    // Create export video element
+    //----------------------------------------
+
+    const exportVideo =
+        document.createElement("video");
+
+    exportVideo.src = videoURL;
+    exportVideo.muted = true;
+    exportVideo.playsInline = true;
+
+    //----------------------------------------
+    // Wait for video metadata
+    //----------------------------------------
+
+    await new Promise((resolve, reject)=>{
+
+        exportVideo.onloadedmetadata =
+            resolve;
+
+        exportVideo.onerror =
+            reject;
+
+    });
+
+    //----------------------------------------
+    // Create export canvas
+    //----------------------------------------
+
+    const exportCanvas =
+        document.createElement("canvas");
+
+    exportCanvas.width =
+        exportVideo.videoWidth;
+
+    exportCanvas.height =
+        exportVideo.videoHeight;
+
+    const exportCtx =
+        exportCanvas.getContext("2d");
+
+    //----------------------------------------
+    // Create recording stream
+    //----------------------------------------
+
+    const exportStream =
+        exportCanvas.captureStream(30);
+
+    //----------------------------------------
+    // Create MediaRecorder
+    //----------------------------------------
+
+    const exportRecorder =
+        new MediaRecorder(
+            exportStream,
+            {
+                mimeType:"video/webm"
+            }
+        );
+
+    const exportChunks = [];
+
+    exportRecorder.ondataavailable =
+        event => {
+
+            if(event.data.size > 0){
+
+                exportChunks.push(
+                    event.data
+                );
+
+            }
+
+        };
+
+    //----------------------------------------
+    // Wait for export to finish
+    //----------------------------------------
+
+    const recordingFinished =
+        new Promise(resolve => {
+
+            exportRecorder.onstop =
+                resolve;
+
+        });
+
+    //----------------------------------------
+    // Start export
+    //----------------------------------------
+
+    exportRecorder.start();
+
+    exportVideo.currentTime = 0;
+
+    await exportVideo.play();
+
+    //----------------------------------------
+    // Draw each frame
+    //----------------------------------------
+
+    function renderExportFrame(){
+
+        if(
+            exportVideo.paused ||
+            exportVideo.ended
+        ){
+
+            exportRecorder.stop();
+
+            return;
+        }
+
+        //------------------------------------
+        // Draw video frame
+        //------------------------------------
+
+        exportCtx.drawImage(
+            exportVideo,
+            0,
+            0,
+            exportCanvas.width,
+            exportCanvas.height
+        );
+
+        //------------------------------------
+        // Update existing overlay
+        //------------------------------------
+
+        redrawOverlay({
+            maxTime:
+                exportVideo.currentTime
+        });
+
+        //------------------------------------
+        // Draw existing overlay onto export
+        //------------------------------------
+
+        exportCtx.drawImage(
+            overlay,
+            0,
+            0,
+            exportCanvas.width,
+            exportCanvas.height
+        );
+
+        requestAnimationFrame(
+            renderExportFrame
+        );
+    }
+
+    renderExportFrame();
+
+    //----------------------------------------
+    // Wait until recording finishes
+    //----------------------------------------
+
+    await recordingFinished;
+
+    //----------------------------------------
+    // Create final video
+    //----------------------------------------
+
+    const finalBlob =
+        new Blob(
+            exportChunks,
+            {
+                type:"video/webm"
+            }
+        );
+
+    //----------------------------------------
+    // Download
+    //----------------------------------------
+
+    const downloadURL =
+        URL.createObjectURL(
+            finalBlob
+        );
 
     const link =
         document.createElement("a");
 
-    link.href = url;
+    link.href =
+        downloadURL;
 
     link.download =
-        "Laser-Training-Session.webm";
+        "Laser-Training-Session-With-Shots.webm";
 
     document.body.appendChild(link);
 
@@ -2586,8 +2771,20 @@ downloadVideoBtn.onclick = function(){
 
     document.body.removeChild(link);
 
+    //----------------------------------------
+    // Cleanup
+    //----------------------------------------
+
     setTimeout(()=>{
-        URL.revokeObjectURL(url);
+
+        URL.revokeObjectURL(
+            videoURL
+        );
+
+        URL.revokeObjectURL(
+            downloadURL
+        );
+
     },1000);
 
 };
