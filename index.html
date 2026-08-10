@@ -5292,7 +5292,15 @@ pdf.text(
 // REBUILD OVERLAY FOR PDF EXPORT
 //----------------------------------------
 
+const savedShowRecordedHits =
+    showRecordedHits;
+
+showRecordedHits = true;
+
 redrawOverlay();
+
+showRecordedHits =
+    savedShowRecordedHits;
     
 //-----------------------------
 // ADD COMBINED TARGET IMAGE
