@@ -1615,6 +1615,9 @@ let countdownInterval = null;
 let laserSensitivity = "normal";
 let recordingStartTime = 0;
 
+let playbackSyncActive = false;
+let showRecordedHits = true;
+
 let videoOffsetX = 0;
 let videoOffsetY = 0;
 
@@ -2011,46 +2014,67 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
-//------------------------------------------------
-// RETURN TO LIVE VIDEO
-//------------------------------------------------
-
 function returnToLive(){
 
+    //----------------------------------------
+    // Stop playback synchronization
+    //----------------------------------------
+
+    playbackSyncActive = false;
+
+
+    //----------------------------------------
+    // Stop displaying recorded hit markers
+    // WITHOUT deleting the saved hit data
+    //----------------------------------------
+
+    showRecordedHits = false;
+
+
+    //----------------------------------------
     // Stop playback
-    if(!playback.paused){
+    //----------------------------------------
 
-        playback.pause();
+    playback.pause();
 
-    }
-
-    // Reset playback position
     playback.currentTime = 0;
 
-    // Show live camera
-    preview.style.display = "block";
 
-    // Hide playback video
+    //----------------------------------------
+    // Return to live camera
+    //----------------------------------------
+
+    preview.style.display = "block";
     playback.style.display = "none";
 
-    // Make sure live camera stream is attached
+
+    //----------------------------------------
+    // Restore camera stream
+    //----------------------------------------
+
     if(stream){
 
         preview.srcObject = stream;
 
     }
 
+
+    //----------------------------------------
+    // Clear the overlay immediately
+    //----------------------------------------
+
+    clearOverlay();
+
+
+    //----------------------------------------
     // Make sure live video is playing
+    //----------------------------------------
+
     preview.play().catch(()=>{});
 
-    // Resize overlay to live video
-    requestAnimationFrame(()=>{
-
-        resizeEverything();
-
-    });
 
     console.log("Returned to live video.");
+
 }
 
 //------------------------------------------------
@@ -2426,6 +2450,8 @@ setTimeout(()=>{
 
 function startRecording(){
 
+showRecordedHits = true;
+    
 countdownRunning = false;
 recordedChunks=[];
 hits=[];
@@ -4804,11 +4830,15 @@ if(maxTime !== Infinity){
 
 drawGreenBoxes();
 
-    //----------------------------------------
-    // Draw recorded hits
-    //----------------------------------------
+//----------------------------------------
+// Draw recorded hits
+//----------------------------------------
 
-drawHits(maxTime);
+if(showRecordedHits){
+
+    drawHits(maxTime);
+
+}
 
 //----------------------------------------
 // Restore live active target
@@ -6203,18 +6233,40 @@ deleteTargetsBtn.onclick = ()=>{
 };
 
 playLastBtn.onclick = ()=>{
+
     closeSettingsPanel();
+
     // Nothing to play yet
     if(!playback.src){
 
         console.log("No recording available.");
+
         return;
+
     }
 
+    //----------------------------------------
+    // Switch to playback video
+    //----------------------------------------
 
-    
-    // Start from the beginning
+    preview.style.display = "none";
+    playback.style.display = "block";
+
+
+    //----------------------------------------
+    // Show saved shot markers
+    //----------------------------------------
+
+    showRecordedHits = true;
+
+
+    //----------------------------------------
+    // Start from beginning
+    //----------------------------------------
+
     playback.currentTime = 0;
+
+    playbackSyncActive = true;
 
     playback.play();
 
