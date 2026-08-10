@@ -5200,6 +5200,29 @@ pdf.text(
     18
 );
 
+//--------------------------------
+// DRILL TITLE
+//--------------------------------
+
+if(drillSelect){
+
+    const drillIndex =
+        Number(drillSelect.value);
+
+    if(drills[drillIndex]){
+
+        pdf.setFontSize(12);
+
+        pdf.text(
+            "Drill: " + drills[drillIndex].name,
+            75,
+            29
+        );
+
+    }
+
+}
+
 // Divider line
 pdf.setLineWidth(0.5);
 pdf.line(
