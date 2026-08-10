@@ -1615,6 +1615,8 @@ let countdownInterval = null;
 let laserSensitivity = "normal";
 let recordingStartTime = 0;
 
+let playbackSyncActive = false;
+
 let videoOffsetX = 0;
 let videoOffsetY = 0;
 
@@ -2017,11 +2019,12 @@ overlay.addEventListener(
 
 function returnToLive(){
 
+    // Stop playback synchronization FIRST
+    playbackSyncActive = false;
+    
     // Stop playback
     if(!playback.paused){
-
         playback.pause();
-
     }
 
     // Reset playback position
@@ -4996,48 +4999,57 @@ function liveOverlayLoop(){
     requestAnimationFrame(liveOverlayLoop);
 }
 
+//------------------------------------------------
+// SYNC PLAYBACK -->
+//------------------------------------------------
+    
 function syncPlayback(){
 
-if(
-playback.paused ||
-playback.ended
-){
-return;
-}
-redrawOverlay({
-    maxTime: playback.currentTime
-});
+    if(
+        !playbackSyncActive ||
+        playback.paused ||
+        playback.ended
+    ){
 
-let t=
-Math.floor(
-playback.currentTime
-);
+        playbackSyncActive = false;
 
-let mins=
-Math.floor(
-t/60
-)
+        return;
 
-.toString()
-.padStart(
-2,
-"0"
-);
+    }
 
-let secs=
-(t%60)
-.toString()
-.padStart(
-2,
-"0"
-);
+    redrawOverlay({
+        maxTime: playback.currentTime
+    });
 
-timerOverlay.innerHTML=
-`${mins}:${secs}`;
+    let t =
+        Math.floor(
+            playback.currentTime
+        );
 
-requestAnimationFrame(
-syncPlayback
-);
+    let mins =
+        Math.floor(
+            t / 60
+        )
+        .toString()
+        .padStart(
+            2,
+            "0"
+        );
+
+    let secs =
+        (t % 60)
+        .toString()
+        .padStart(
+            2,
+            "0"
+        );
+
+    timerOverlay.innerHTML =
+        `${mins}:${secs}`;
+
+    requestAnimationFrame(
+        syncPlayback
+    );
 }
 
 
@@ -6215,6 +6227,8 @@ playLastBtn.onclick = ()=>{
     
     // Start from the beginning
     playback.currentTime = 0;
+
+    playbackSyncActive = true;
 
     playback.play();
 
