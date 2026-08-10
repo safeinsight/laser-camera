@@ -6215,27 +6215,35 @@ deleteTargetsBtn.onclick = ()=>{
 };
 
 playLastBtn.onclick = ()=>{
+
     closeSettingsPanel();
+
     // Nothing to play yet
     if(!playback.src){
 
         console.log("No recording available.");
+
         return;
+
     }
 
+    // Switch from live video to playback video
+    preview.style.display = "none";
+    playback.style.display = "block";
 
-    
     // Start from the beginning
     playback.currentTime = 0;
 
+    // Activate playback synchronization
     playbackSyncActive = true;
 
     playback.play();
 
-    requestAnimationFrame(syncPlayback);
+    requestAnimationFrame(
+        syncPlayback
+    );
 
 };
-
     
     
 
