@@ -5178,6 +5178,7 @@ function createPDFSummary(logo){
 //--------------------------------
 
 // Draw logo
+
 pdf.addImage(
     logo,
     "PNG",
@@ -5187,21 +5188,48 @@ pdf.addImage(
     12
 );
 
+
+//--------------------------------
 // Report title
+//--------------------------------
+
 pdf.setFont(
     "helvetica",
     "bold"
 );
 
 pdf.setFontSize(20);
+
 pdf.text(
     "Laser Training Session Report",
     75,
     18
 );
 
+
+//--------------------------------
+// Drill title
+//--------------------------------
+
+if(drillselect){
+
+    pdf.setFontSize(12);
+
+    pdf.text(
+        "Drill: " + drillSelect.value,
+        75,
+        29
+    );
+
+}
+
+
+//--------------------------------
 // Divider line
+//--------------------------------
+
 pdf.setLineWidth(0.5);
+
 pdf.line(
     15,
     42,
