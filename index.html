@@ -2011,7 +2011,47 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
+//------------------------------------------------
+// RETURN TO LIVE VIDEO
+//------------------------------------------------
 
+function returnToLive(){
+
+    // Stop playback
+    if(!playback.paused){
+
+        playback.pause();
+
+    }
+
+    // Reset playback position
+    playback.currentTime = 0;
+
+    // Show live camera
+    preview.style.display = "block";
+
+    // Hide playback video
+    playback.style.display = "none";
+
+    // Make sure live camera stream is attached
+    if(stream){
+
+        preview.srcObject = stream;
+
+    }
+
+    // Make sure live video is playing
+    preview.play().catch(()=>{});
+
+    // Resize overlay to live video
+    requestAnimationFrame(()=>{
+
+        resizeEverything();
+
+    });
+
+    console.log("Returned to live video.");
+}
 
 //------------------------------------------------
 // RESIZE EVERYTHING
@@ -5800,20 +5840,33 @@ distanceSelect.onchange = ()=>{
 };
 
 settingsBtn.onclick=()=>{
+
+    // Always return from playback to live video
+    returnToLive();
+
     continuousTargetDrawing = false;
-       if(settingsPanel.style.display=="block"){
+
+    if(settingsPanel.style.display=="block"){
+
         settingsPanel.style.display="none";
+
     }
 
     else{
-        settingsPanel.style.display="block";
-    }
-    const drillsPanel =
-    document.getElementById("drillsPanel");
 
-if (drillsPanel) {
-    drillsPanel.style.display = "none";
-}
+        settingsPanel.style.display="block";
+
+    }
+
+    const drillsPanel =
+        document.getElementById("drillsPanel");
+
+    if(drillsPanel){
+
+        drillsPanel.style.display="none";
+
+    }
+
 };
 
 //------------------------------------------------
@@ -6071,27 +6124,34 @@ if (
     
 drillsBtn.onclick = () => {
 
+    // Always return from playback to live video
+    returnToLive();
+
     continuousTargetDrawing = false;
+
     const drillsPanel =
         document.getElementById("drillsPanel");
 
     // If Drills is currently open, close it
-    if (
+    if(
         drillsPanel &&
         drillsPanel.style.display === "block"
-    ) {
+    ){
 
         drillsPanel.style.display = "none";
 
         return;
+
     }
 
     // If Drills is closed, close Settings
     closeSettingsPanel();
 
     // Then open Drills
-    if (drillsPanel) {
+    if(drillsPanel){
+
         drillsPanel.style.display = "block";
+
     }
 
 };
