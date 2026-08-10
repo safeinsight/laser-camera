@@ -1615,9 +1615,9 @@ let countdownInterval = null;
 let laserSensitivity = "normal";
 let recordingStartTime = 0;
 
-let playbackMode = false;
 let playbackSyncActive = false;
-
+let suppressPlaybackHits = false;
+    
 let videoOffsetX = 0;
 let videoOffsetY = 0;
 
@@ -2020,11 +2020,11 @@ overlay.addEventListener(
 
 function returnToLive(){
 
-    // Leave playback mode
-    playbackMode = false;
-
     // Stop playback synchronization
     playbackSyncActive = false;
+
+    // Suppress the previous recording's markers
+    suppressPlaybackHits = true;
 
     // Stop playback
     playback.pause();
@@ -2043,7 +2043,7 @@ function returnToLive(){
         preview.srcObject = stream;
     }
 
-    // Clear current visual overlay
+    // Clear what's currently visible
     clearOverlay();
 
     // Resume live video
@@ -2057,7 +2057,7 @@ function returnToLive(){
 
     console.log("Returned to live video.");
 }
-
+    
 //------------------------------------------------
 // RESIZE EVERYTHING
 //------------------------------------------------
@@ -4809,11 +4809,11 @@ if(maxTime !== Infinity){
 
 drawGreenBoxes();
 
-    //----------------------------------------
-    // Draw recorded hits
-    //----------------------------------------
+//----------------------------------------
+// Draw recorded hits
+//----------------------------------------
 
-if(playbackMode){
+if(!suppressPlaybackHits){
 
     drawHits(maxTime);
 
@@ -6233,24 +6233,21 @@ playLastBtn.onclick = ()=>{
 
     }
 
-    // Switch from live video to playback video
+    // Switch to playback video
     preview.style.display = "none";
     playback.style.display = "block";
 
-    // Start playback mode
-    playbackMode = true;
-    
+    // Allow recorded hits to be drawn
+    suppressPlaybackHits = false;
+
     // Start from the beginning
     playback.currentTime = 0;
 
-    // Activate playback synchronization
     playbackSyncActive = true;
 
     playback.play();
 
-    requestAnimationFrame(
-        syncPlayback
-    );
+    requestAnimationFrame(syncPlayback);
 
 };
     
