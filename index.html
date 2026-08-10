@@ -2788,9 +2788,9 @@ downloadVideoBtn.onclick = async function(){
             exportCanvas.height
         );
 
-//------------------------------------
+//----------------------------------------
 // Draw shot markers onto export
-//------------------------------------
+//----------------------------------------
 
 for(const hit of hits){
 
@@ -2814,9 +2814,21 @@ for(const hit of hits){
         Math.PI * 2
     );
 
+    //------------------------------------
+    // Yellow center
+    //------------------------------------
+
     exportCtx.fillStyle = "yellow";
     exportCtx.fill();
-} 
+
+    //------------------------------------
+    // Black outline
+    //------------------------------------
+
+    exportCtx.strokeStyle = "black";
+    exportCtx.lineWidth = 2;
+    exportCtx.stroke();
+}
 
         requestAnimationFrame(
             renderExportFrame
