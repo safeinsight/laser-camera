@@ -1615,9 +1615,6 @@ let countdownInterval = null;
 let laserSensitivity = "normal";
 let recordingStartTime = 0;
 
-let playbackSyncActive = false;
-let returningToLive = false;
-    
 let videoOffsetX = 0;
 let videoOffsetY = 0;
 
@@ -2014,92 +2011,8 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
-//------------------------------------------------
-// RETURN TO LIVE VIDEO
-//------------------------------------------------
-
-function returnToLive(){
-
-    //------------------------------------
-    // Stop playback synchronization
-    //------------------------------------
-
-    playbackSyncActive = false;
 
 
-    //------------------------------------
-    // Stop playback
-    //------------------------------------
-
-    playback.pause();
-
-    playback.currentTime = 0;
-
-
-    //------------------------------------
-    // Switch to live video
-    //------------------------------------
-
-    preview.style.display = "block";
-    playback.style.display = "none";
-
-
-    //------------------------------------
-    // Restore live camera stream
-    //------------------------------------
-
-    if(stream){
-
-        preview.srcObject = stream;
-
-    }
-
-
-    //------------------------------------
-    // Tell resizeEverything NOT to redraw
-    // the old playback hits
-    //------------------------------------
-
-    returningToLive = true;
-
-
-    //------------------------------------
-    // Clear the visible overlay
-    //------------------------------------
-
-    clearOverlay();
-
-
-    //------------------------------------
-    // Resize overlay for live video
-    //------------------------------------
-
-    requestAnimationFrame(()=>{
-
-        resizeEverything();
-
-        //--------------------------------
-        // Allow normal redraws again
-        //--------------------------------
-
-        returningToLive = false;
-
-    });
-
-
-    //------------------------------------
-    // Resume live camera
-    //------------------------------------
-
-    preview.play().catch(()=>{});
-
-
-    console.log(
-        "Returned to live video."
-    );
-
-}
-    
 //------------------------------------------------
 // RESIZE EVERYTHING
 //------------------------------------------------
@@ -2319,11 +2232,9 @@ function resizeEverything(){
     );
 
 
-//----------------------------------------
-// Redraw everything
-//----------------------------------------
-
-if(!returningToLive){
+    //----------------------------------------
+    // Redraw everything
+    //----------------------------------------
 
     redrawOverlay();
 
@@ -4853,9 +4764,9 @@ if(maxTime !== Infinity){
 
 drawGreenBoxes();
 
-//----------------------------------------
-// Draw recorded hits
-//----------------------------------------
+    //----------------------------------------
+    // Draw recorded hits
+    //----------------------------------------
 
 drawHits(maxTime);
 
@@ -5045,57 +4956,48 @@ function liveOverlayLoop(){
     requestAnimationFrame(liveOverlayLoop);
 }
 
-//------------------------------------------------
-// SYNC PLAYBACK -->
-//------------------------------------------------
-    
 function syncPlayback(){
 
-    if(
-        !playbackSyncActive ||
-        playback.paused ||
-        playback.ended
-    ){
+if(
+playback.paused ||
+playback.ended
+){
+return;
+}
+redrawOverlay({
+    maxTime: playback.currentTime
+});
 
-        playbackSyncActive = false;
+let t=
+Math.floor(
+playback.currentTime
+);
 
-        return;
+let mins=
+Math.floor(
+t/60
+)
 
-    }
+.toString()
+.padStart(
+2,
+"0"
+);
 
-    redrawOverlay({
-        maxTime: playback.currentTime
-    });
+let secs=
+(t%60)
+.toString()
+.padStart(
+2,
+"0"
+);
 
-    let t =
-        Math.floor(
-            playback.currentTime
-        );
+timerOverlay.innerHTML=
+`${mins}:${secs}`;
 
-    let mins =
-        Math.floor(
-            t / 60
-        )
-        .toString()
-        .padStart(
-            2,
-            "0"
-        );
-
-    let secs =
-        (t % 60)
-        .toString()
-        .padStart(
-            2,
-            "0"
-        );
-
-    timerOverlay.innerHTML =
-        `${mins}:${secs}`;
-
-    requestAnimationFrame(
-        syncPlayback
-    );
+requestAnimationFrame(
+syncPlayback
+);
 }
 
 
@@ -5898,33 +5800,20 @@ distanceSelect.onchange = ()=>{
 };
 
 settingsBtn.onclick=()=>{
-
-    // Always return from playback to live video
-    returnToLive();
-
     continuousTargetDrawing = false;
-
-    if(settingsPanel.style.display=="block"){
-
+       if(settingsPanel.style.display=="block"){
         settingsPanel.style.display="none";
-
     }
 
     else{
-
         settingsPanel.style.display="block";
-
     }
-
     const drillsPanel =
-        document.getElementById("drillsPanel");
+    document.getElementById("drillsPanel");
 
-    if(drillsPanel){
-
-        drillsPanel.style.display="none";
-
-    }
-
+if (drillsPanel) {
+    drillsPanel.style.display = "none";
+}
 };
 
 //------------------------------------------------
@@ -6182,34 +6071,27 @@ if (
     
 drillsBtn.onclick = () => {
 
-    // Always return from playback to live video
-    returnToLive();
-
     continuousTargetDrawing = false;
-
     const drillsPanel =
         document.getElementById("drillsPanel");
 
     // If Drills is currently open, close it
-    if(
+    if (
         drillsPanel &&
         drillsPanel.style.display === "block"
-    ){
+    ) {
 
         drillsPanel.style.display = "none";
 
         return;
-
     }
 
     // If Drills is closed, close Settings
     closeSettingsPanel();
 
     // Then open Drills
-    if(drillsPanel){
-
+    if (drillsPanel) {
         drillsPanel.style.display = "block";
-
     }
 
 };
@@ -6261,35 +6143,25 @@ deleteTargetsBtn.onclick = ()=>{
 };
 
 playLastBtn.onclick = ()=>{
-
     closeSettingsPanel();
-
     // Nothing to play yet
     if(!playback.src){
 
         console.log("No recording available.");
-
         return;
-
     }
 
-    // Switch to playback video
-    preview.style.display = "none";
-    playback.style.display = "block";
 
-    // Allow recorded hits to be drawn
-    suppressPlaybackHits = false;
-
+    
     // Start from the beginning
     playback.currentTime = 0;
-
-    playbackSyncActive = true;
 
     playback.play();
 
     requestAnimationFrame(syncPlayback);
 
 };
+
     
     
 
@@ -6298,5 +6170,6 @@ playLastBtn.onclick = ()=>{
 </body>
 
 </html>
+
 
 
