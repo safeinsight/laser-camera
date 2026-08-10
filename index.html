@@ -1615,6 +1615,7 @@ let countdownInterval = null;
 let laserSensitivity = "normal";
 let recordingStartTime = 0;
 
+let playbackMode = false;
 let playbackSyncActive = false;
 
 let videoOffsetX = 0;
@@ -2019,13 +2020,14 @@ overlay.addEventListener(
 
 function returnToLive(){
 
+    // Leave playback mode
+    playbackMode = false;
+
     // Stop playback synchronization
     playbackSyncActive = false;
 
     // Stop playback
-    if(!playback.paused){
-        playback.pause();
-    }
+    playback.pause();
 
     // Reset playback position
     playback.currentTime = 0;
@@ -2041,13 +2043,12 @@ function returnToLive(){
         preview.srcObject = stream;
     }
 
-    // Clear ONLY the visual overlay
+    // Clear current visual overlay
     clearOverlay();
 
-    // Make sure live video is playing
+    // Resume live video
     preview.play().catch(()=>{});
 
-    // Resize overlay for live video
     requestAnimationFrame(()=>{
 
         resizeEverything();
@@ -4812,7 +4813,11 @@ drawGreenBoxes();
     // Draw recorded hits
     //----------------------------------------
 
-drawHits(maxTime);
+if(playbackMode){
+
+    drawHits(maxTime);
+
+}
 
 //----------------------------------------
 // Restore live active target
@@ -6232,6 +6237,9 @@ playLastBtn.onclick = ()=>{
     preview.style.display = "none";
     playback.style.display = "block";
 
+    // Start playback mode
+    playbackMode = true;
+    
     // Start from the beginning
     playback.currentTime = 0;
 
