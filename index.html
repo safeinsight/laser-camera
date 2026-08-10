@@ -2019,9 +2019,9 @@ overlay.addEventListener(
 
 function returnToLive(){
 
-    // Stop playback synchronization FIRST
+    // Stop playback synchronization
     playbackSyncActive = false;
-    
+
     // Stop playback
     if(!playback.paused){
         playback.pause();
@@ -2033,20 +2033,21 @@ function returnToLive(){
     // Show live camera
     preview.style.display = "block";
 
-    // Hide playback video
+    // Hide playback
     playback.style.display = "none";
 
-    // Make sure live camera stream is attached
+    // Restore live camera stream
     if(stream){
-
         preview.srcObject = stream;
-
     }
+
+    // Clear ONLY the visual overlay
+    clearOverlay();
 
     // Make sure live video is playing
     preview.play().catch(()=>{});
 
-    // Resize overlay to live video
+    // Resize overlay for live video
     requestAnimationFrame(()=>{
 
         resizeEverything();
