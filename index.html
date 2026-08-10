@@ -5334,13 +5334,80 @@ pdf.roundedRect(
 );
 
 
+//--------------------------------
+// FIT TARGET IMAGE WITHOUT STRETCHING
+//--------------------------------
+
+const boxX = 20;
+const boxY = 115;
+const boxW = 170;
+const boxH = 95;
+
+// Original image dimensions
+const imageW =
+    exportCanvas.width;
+
+const imageH =
+    exportCanvas.height;
+
+const imageAspect =
+    imageW / imageH;
+
+const boxAspect =
+    boxW / boxH;
+
+let drawW;
+let drawH;
+
+//--------------------------------
+// LANDSCAPE / WIDE IMAGE
+//--------------------------------
+
+if(imageAspect >= boxAspect){
+
+    drawW = boxW;
+
+    drawH =
+        boxW / imageAspect;
+
+}
+
+//--------------------------------
+// PORTRAIT / TALL IMAGE
+//--------------------------------
+
+else{
+
+    drawH = boxH;
+
+    drawW =
+        boxH * imageAspect;
+
+}
+
+//--------------------------------
+// CENTER IMAGE IN BOX
+//--------------------------------
+
+const drawX =
+    boxX +
+    (boxW - drawW) / 2;
+
+const drawY =
+    boxY +
+    (boxH - drawH) / 2;
+
+//--------------------------------
+// DRAW IMAGE
+//--------------------------------
+
 pdf.addImage(
     targetImage,
     "PNG",
-    20,
-    115,
-    170,
-    95
+    drawX,
+    drawY,
+    drawW,
+    drawH
 );
 
 //----------------------------------------
@@ -5376,13 +5443,13 @@ if(
     // to PDF target coordinates
     //------------------------------------
 
-    const poiX =
-        20 +
-        (averageX * 170);
+const poiX =
+    drawX +
+    (averageX * drawW);
 
-    const poiY =
-        115 +
-        (averageY * 95);
+const poiY =
+    drawY +
+    (averageY * drawH);
 
     //------------------------------------
     // Draw Average Point of Impact marker
