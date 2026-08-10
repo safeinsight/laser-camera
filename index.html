@@ -2788,6 +2788,38 @@ downloadVideoBtn.onclick = async function(){
             exportCanvas.height
         );
 
+//------------------------------------
+// Draw shot markers onto export
+//------------------------------------
+
+for(const hit of hits){
+
+    if(hit.time > exportVideo.currentTime){
+        continue;
+    }
+
+    const drawX =
+        hit.x * exportCanvas.width;
+
+    const drawY =
+        hit.y * exportCanvas.height;
+
+    exportCtx.beginPath();
+
+    exportCtx.arc(
+        drawX,
+        drawY,
+        5,
+        0,
+        Math.PI * 2
+    );
+
+    exportCtx.strokeStyle = "red";
+    exportCtx.lineWidth = 2;
+
+    exportCtx.stroke();
+} 
+
         requestAnimationFrame(
             renderExportFrame
         );
