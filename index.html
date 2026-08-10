@@ -1616,7 +1616,7 @@ let laserSensitivity = "normal";
 let recordingStartTime = 0;
 
 let playbackSyncActive = false;
-let suppressPlaybackHits = false;
+let returningToLive = false;
     
 let videoOffsetX = 0;
 let videoOffsetY = 0;
@@ -2020,42 +2020,84 @@ overlay.addEventListener(
 
 function returnToLive(){
 
+    //------------------------------------
     // Stop playback synchronization
+    //------------------------------------
+
     playbackSyncActive = false;
 
-    // Suppress the previous recording's markers
-    suppressPlaybackHits = true;
 
+    //------------------------------------
     // Stop playback
+    //------------------------------------
+
     playback.pause();
 
-    // Reset playback position
     playback.currentTime = 0;
 
-    // Show live camera
-    preview.style.display = "block";
 
-    // Hide playback
+    //------------------------------------
+    // Switch to live video
+    //------------------------------------
+
+    preview.style.display = "block";
     playback.style.display = "none";
 
+
+    //------------------------------------
     // Restore live camera stream
+    //------------------------------------
+
     if(stream){
+
         preview.srcObject = stream;
+
     }
 
-    // Clear what's currently visible
+
+    //------------------------------------
+    // Tell resizeEverything NOT to redraw
+    // the old playback hits
+    //------------------------------------
+
+    returningToLive = true;
+
+
+    //------------------------------------
+    // Clear the visible overlay
+    //------------------------------------
+
     clearOverlay();
 
-    // Resume live video
-    preview.play().catch(()=>{});
+
+    //------------------------------------
+    // Resize overlay for live video
+    //------------------------------------
 
     requestAnimationFrame(()=>{
 
         resizeEverything();
 
+        //--------------------------------
+        // Allow normal redraws again
+        //--------------------------------
+
+        returningToLive = false;
+
     });
 
-    console.log("Returned to live video.");
+
+    //------------------------------------
+    // Resume live camera
+    //------------------------------------
+
+    preview.play().catch(()=>{});
+
+
+    console.log(
+        "Returned to live video."
+    );
+
 }
     
 //------------------------------------------------
@@ -2277,9 +2319,11 @@ function resizeEverything(){
     );
 
 
-    //----------------------------------------
-    // Redraw everything
-    //----------------------------------------
+//----------------------------------------
+// Redraw everything
+//----------------------------------------
+
+if(!returningToLive){
 
     redrawOverlay();
 
@@ -4813,11 +4857,7 @@ drawGreenBoxes();
 // Draw recorded hits
 //----------------------------------------
 
-if(!suppressPlaybackHits){
-
-    drawHits(maxTime);
-
-}
+drawHits(maxTime);
 
 //----------------------------------------
 // Restore live active target
