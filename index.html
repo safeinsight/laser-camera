@@ -1469,10 +1469,8 @@ else if(
         );
 
         redrawOverlay();
-
     }
 );
-
 
 //------------------------------------------------
 // CONSECUTIVE SHOTS CHANGE
@@ -1484,15 +1482,12 @@ consecutiveShotsSelect.addEventListener(
 
         consecutiveShotsPerTarget =
             Number(this.value);
-
         consecutiveShotCount = 0;
-
 
         console.log(
             "Shots Per Target:",
             consecutiveShotsPerTarget
         );
-
     }
 );
 
@@ -1514,9 +1509,7 @@ hitSoundTemplate.preload = "auto";
 
 function playHitSound() {
     const sound = hitSoundTemplate.cloneNode();
-
     sound.volume = 1.0;
-
     sound.play().catch(err => {
         console.log("Hit sound failed:", err);
     });
@@ -1531,7 +1524,6 @@ const targetShapeSelect =
 document.getElementById(
 "targetShapeSelect"
 );
-        
 
 //--------------------------
 // APP MODES
@@ -1541,7 +1533,6 @@ const APP_SETUP = "setup";
 const APP_COUNTDOWN = "countdown";
 const APP_RECORDING = "recording";
 const APP_PLAYBACK = "playback";
-
 
 let appMode = APP_SETUP;
 
@@ -1566,10 +1557,8 @@ let selectedDrill = null;
 
 let videoOffsetX = 0;
 let videoOffsetY = 0;
-
 let videoScaleX = 1;
 let videoScaleY = 1;
-
     
 let targetDistance = 7;
 
@@ -1581,12 +1570,11 @@ if(distanceSelect){
 let shots = 0;
 let hits = [];
 
-//------------------------------------------------
-// TARGET HISTORY
-//------------------------------------------------
+    //------------------------------------------------
+    // Target History
+    //------------------------------------------------
 
 let targetHistory = [];
-    
 let countdownValue = null;
 
     //------------------------------------------------
@@ -1612,7 +1600,6 @@ analysisBtn.checked = analysisEnabled;
 
 let countdownSeconds = 3;
 if(countdownSelect){
-
     countdownSelect.value =
         countdownSeconds;
 }
@@ -1624,15 +1611,12 @@ if(countdownSelect){
 let targetShape = "rectangle";
 
 if(targetShapeSelect){
-
     targetShapeSelect.value =
         targetShape;
-
 }
-    
 
 //-------------------------------------
-// LASER STATE MACHINE (VERSION 7)
+// LASER STATE MACHINE 
 //-------------------------------------
 
 const LASER_WAITING = 0;
@@ -1695,21 +1679,19 @@ let consecutiveShotsPerTarget = 1;
 // current target.
 let consecutiveShotCount = 0;
 
-//------------------------------------------------
-// ACTIVE TARGET
-//------------------------------------------------
-
+    //------------------------------------------------
+    // Active Target
+    //------------------------------------------------
 let activeTarget = null;
 
-//------------------------------------------------
-// TARGET CHANGE LOCK
-//------------------------------------------------
-
+    //------------------------------------------------
+    // Target Change Locked
+    //------------------------------------------------
 let waitingForNextTarget = false;
 
-//------------------------------------------------
-// Current Target
-//------------------------------------------------
+    //------------------------------------------------
+    // Current Target
+    //------------------------------------------------
 let target = targets[0];
 let currentTarget = null;
     
@@ -1728,7 +1710,6 @@ let calibrationCurrentY = 0;
     //-------------------------------------
 
 // Updated every resize()
-
 let cameraWidth = 0;
 let cameraHeight = 0;
 
@@ -1740,14 +1721,11 @@ let cameraHeight = 0;
 let displayWidth = 0;
 let displayHeight = 0;
 
-
-
     //-------------------------------------
     // Overlay Scale
     //-------------------------------------
 
-// Converts camera coordinates
-// to overlay coordinates.
+// Converts camera coordinates to overlay coordinates
 let scaleX = 1;
 let scaleY = 1;
 
@@ -1775,11 +1753,9 @@ const LOCAL_RADIUS = 1;
     // Adaptive Target Grid
     //------------------------------------------------
 
-// Divide the calibrated target into
-// smaller regions.
+// Divide the calibrated target into smaller regions
 
-// Each region will maintain its own
-// average background brightness.
+// Each region will maintain its own average background brightness
 const GRID_COLS = 4;
 const GRID_ROWS = 4;
 
@@ -1808,49 +1784,37 @@ let backgroundFrame = null;
 let learnBackground = true;
 
 //------------------------------------------------
-// RENDERING HELPERS
+// RENDERING HELPER FUNCTIONS
 //------------------------------------------------
 
 function normToOverlayX(nx){
-
     return nx * overlay.width;
-
 }
 
 function normToOverlayY(ny){
-
     return ny * overlay.height;
-
 }
 
 function detectorToNormX(px){
-
     return px / detectCanvas.width;
-
 }
 
 function detectorToNormY(py){
-
     return py / detectCanvas.height;
-
 }
 
-
 //------------------------------------------------
-// CALL OUT ACTIVE TARGET
+// CALL OUT ACTIVE TARGET FUNCTION
 //------------------------------------------------
 
 function callOutTargetNumber(target){
-
     const targetToCall = target;
-
     console.log(
         "TARGET WILL BE CALLED:",
         targetToCall.id
     );
 
     setTimeout(() => {
-
         const words = [
             "zero",
             "one",
@@ -1881,7 +1845,6 @@ function callOutTargetNumber(target){
         }
 
         speechSynthesis.cancel();
-
         const utterance =
             new SpeechSynthesisUtterance(
                 words[targetNumber]
@@ -1890,17 +1853,13 @@ function callOutTargetNumber(target){
         utterance.rate = 1;
         utterance.pitch = 1;
         utterance.volume = 1;
-
         speechSynthesis.speak(utterance);
-
     }, 350);
-
 }
     
 //--------------------------
-// CAMERA -->
+// START CAMERA FUNCTION
 //--------------------------
-
 async function startCamera(){
 try{
 stream=
@@ -1943,8 +1902,6 @@ console.log(err);
 startCamera();
 liveOverlayLoop();
 
-
-
 overlay.addEventListener(
     "pointerdown",
     beginCalibrationDrag
@@ -1960,80 +1917,39 @@ overlay.addEventListener(
     finishCalibrationDrag
 );
 
+//--------------------------
+// RETURN TO LIVE FUNCTION
+//--------------------------
 function returnToLive(){
-
-    //----------------------------------------
-    // Stop playback synchronization
-    //----------------------------------------
-
-    playbackSyncActive = false;
-
-
-    //----------------------------------------
-    // Stop displaying recorded hit markers
-    // WITHOUT deleting the saved hit data
-    //----------------------------------------
-
-    showRecordedHits = false;
-
-
-    //----------------------------------------
-    // Stop playback
-    //----------------------------------------
-
-    playback.pause();
-
-    playback.currentTime = 0;
-
+playbackSyncActive = false;
+showRecordedHits = false;
+playback.pause();
+playback.currentTime = 0;
 
     //----------------------------------------
     // Return to live camera
     //----------------------------------------
-
-    preview.style.display = "block";
-    playback.style.display = "none";
-
-
-    //----------------------------------------
-    // Restore camera stream
-    //----------------------------------------
+preview.style.display = "block";
+playback.style.display = "none";
 
     if(stream){
-
         preview.srcObject = stream;
-
     }
 
-
-    //----------------------------------------
-    // Clear the overlay immediately
-    //----------------------------------------
-
     clearOverlay();
-
-
-    //----------------------------------------
-    // Make sure live video is playing
-    //----------------------------------------
-
     preview.play().catch(()=>{});
 
-
     console.log("Returned to live video.");
-
 }
 
 //------------------------------------------------
-// RESIZE EVERYTHING
+// RESIZE EVERYTHING FUNCTION
 //------------------------------------------------
-
 function resizeEverything(){
-
     const video =
         preview.style.display != "none"
             ? preview
             : playback;
-
 
     if(
         !video.videoWidth ||
@@ -2042,123 +1958,80 @@ function resizeEverything(){
         return;
     }
 
-
     //----------------------------------------
     // Actual camera dimensions
     //----------------------------------------
-
     cameraWidth =
         video.videoWidth;
-
     cameraHeight =
         video.videoHeight;
-
 
     //----------------------------------------
     // Video element rectangle
     //----------------------------------------
-
     const rect =
         video.getBoundingClientRect();
-
     const containerRect =
         video.parentElement.getBoundingClientRect();
 
-
     //----------------------------------------
-    // Because video uses object-fit: cover,
     // calculate the ACTUAL visible camera
     // image inside the video element.
     //----------------------------------------
-
     const videoRatio =
         cameraWidth / cameraHeight;
-
     const elementRatio =
         rect.width / rect.height;
-
 
     let displayedWidth;
     let displayedHeight;
 
-
     if(elementRatio > videoRatio){
-
-        //------------------------------------
-        // Element is wider than camera.
-        // Cover crops top/bottom.
-        //------------------------------------
-
         displayedWidth =
             rect.width;
-
         displayedHeight =
             rect.width / videoRatio;
 
     }else{
-
-        //------------------------------------
-        // Element is taller than camera.
-        // Cover crops left/right.
-        //------------------------------------
-
         displayedHeight =
             rect.height;
-
         displayedWidth =
             rect.height * videoRatio;
-
     }
 
-
     //----------------------------------------
-    // Position of actual camera image
-    // relative to the video element
+    // Position of actual camera image relative video element
     //----------------------------------------
-
     videoOffsetX =
         (rect.width - displayedWidth) / 2;
-
     videoOffsetY =
         (rect.height - displayedHeight) / 2;
 
-
     //----------------------------------------
-    // Scale from camera pixels to displayed
-    // camera image
+    // Scale from camera pixels to displayed camera image
     //----------------------------------------
-
     videoScaleX =
         displayedWidth / cameraWidth;
-
     videoScaleY =
         displayedHeight / cameraHeight;
-
 
     //----------------------------------------
     // Overlay represents CAMERA coordinates
     //----------------------------------------
-
     overlay.width =
         cameraWidth;
-
     overlay.height =
         cameraHeight;
 
-
     //----------------------------------------
-    // Position overlay over the actual
-    // visible camera image, NOT the entire
-    // video element.
+    // Position overlay over the actual visible camera image, NOT video element
     //----------------------------------------
-
     overlay.style.left =
         (
             rect.left -
             containerRect.left +
             videoOffsetX
         ) + "px";
-
 
     overlay.style.top =
         (
@@ -2167,44 +2040,32 @@ function resizeEverything(){
             videoOffsetY
         ) + "px";
 
-
     overlay.style.width =
         displayedWidth + "px";
-
-
     overlay.style.height =
         displayedHeight + "px";
-
 
     //----------------------------------------
     // Detection canvas
     //----------------------------------------
-
     const shortSide =
         Math.min(
             window.innerWidth,
             window.innerHeight
         );
 
-
     if(shortSide < 700){
-
         detectCanvas.width =
             480;
-
         detectCanvas.height =
             270;
 
     }else{
-
         detectCanvas.width =
             640;
-
         detectCanvas.height =
             360;
-
     }
-
 
     //----------------------------------------
     // Debug information
