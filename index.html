@@ -4569,18 +4569,19 @@ pdf.line(
 //--------------------------------
 
 if(selectedDrill){
-    pdf.setFontSize(20);
+    pdf.setFontSize(16);
+    
     pdf.text(
         "Drill: " + selectedDrill.name,
         20,
-        50
+        40
     );
 }
     pdf.text(
         "Shots Fired: " +
        hits.length,
         20,
-        60
+        55
     );
 
 //--------------------------------
@@ -4626,7 +4627,7 @@ pdf.text(
     totalTime.toFixed(2) +
     " sec",
     20,
-    70
+    65
 );
 
 pdf.text(
@@ -4634,7 +4635,7 @@ pdf.text(
     averageSplit.toFixed(2) +
     " sec",
     20,
-    80
+    75
 );
 
 pdf.text(
@@ -4642,7 +4643,7 @@ pdf.text(
     fastestSplit.toFixed(2) +
     " sec",
     20,
-    90
+    85
 );
 
 pdf.text(
@@ -4650,7 +4651,7 @@ pdf.text(
     slowestSplit.toFixed(2) +
     " sec",
     20,
-    100
+    95
 );
 
 //----------------------------------------
