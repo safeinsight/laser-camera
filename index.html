@@ -4625,9 +4625,7 @@ if(hits.length > 1){
     }
 }
 
-
 // Add statistics to PDF
-
 pdf.text(
     "Total Time: " +
     totalTime.toFixed(2) +
@@ -4663,35 +4661,26 @@ pdf.text(
 //----------------------------------------
 // REBUILD OVERLAY FOR PDF EXPORT
 //----------------------------------------
-
 const savedShowRecordedHits =
     showRecordedHits;
-
 showRecordedHits = true;
-
 redrawOverlay();
-
 showRecordedHits =
     savedShowRecordedHits;
     
 //-----------------------------
-// ADD COMBINED TARGET IMAGE
+// ADD COMBINED TARGET PDF IMAGE
 //-----------------------------
-
 const exportCanvas =
     document.createElement("canvas");
-
 exportCanvas.width =
     overlay.width;
-
 exportCanvas.height =
     overlay.height;
-
 const exportCtx =
     exportCanvas.getContext("2d");
 
 // Draw the video image first
-
 exportCtx.drawImage(
     playback,
     0,
@@ -4700,26 +4689,21 @@ exportCtx.drawImage(
     exportCanvas.height
 );
 
-
 // Draw the shot overlay on top
-
 exportCtx.drawImage(
     overlay,
     0,
     0
 );
 
-
 const targetImage =
     exportCanvas.toDataURL(
         "image/png"
     );
 
-
 //--------------------------------
-// TARGET IMAGE
+// PDF TARGET IMAGE
 //--------------------------------
-
 pdf.setDrawColor(0);
 pdf.setLineWidth(0.4);
 pdf.roundedRect(
@@ -4731,62 +4715,46 @@ pdf.roundedRect(
     2
 );
 
-
 //--------------------------------
-// FIT TARGET IMAGE WITHOUT STRETCHING
+// FIT TARGET PDF IMAGE WITHOUT STRETCHING
 //--------------------------------
-
 const boxX = 20;
 const boxY = 115;
 const boxW = 170;
 const boxH = 95;
-
 // Original image dimensions
 const imageW =
     exportCanvas.width;
-
 const imageH =
     exportCanvas.height;
-
 const imageAspect =
     imageW / imageH;
-
 const boxAspect =
     boxW / boxH;
-
 let drawW;
 let drawH;
 
 //--------------------------------
-// LANDSCAPE / WIDE IMAGE
+// PDF LANDSCAPE / WIDE IMAGE
 //--------------------------------
-
 if(imageAspect >= boxAspect){
-
     drawW = boxW;
-
     drawH =
         boxW / imageAspect;
-
 }
 
 //--------------------------------
-// PORTRAIT / TALL IMAGE
+// PDF PORTRAIT / TALL IMAGE
 //--------------------------------
-
 else{
-
     drawH = boxH;
-
     drawW =
         boxH * imageAspect;
-
 }
 
 //--------------------------------
-// CENTER IMAGE IN BOX
+// PDF CENTER IMAGE IN BOX
 //--------------------------------
-
 const drawX =
     boxX +
     (boxW - drawW) / 2;
@@ -4796,9 +4764,8 @@ const drawY =
     (boxH - drawH) / 2;
 
 //--------------------------------
-// DRAW IMAGE
+// PDF DRAW IMAGE
 //--------------------------------
-
 pdf.addImage(
     targetImage,
     "PNG",
@@ -4809,9 +4776,8 @@ pdf.addImage(
 );
 
 //----------------------------------------
-// AVERAGE POINT OF IMPACT
+// Average Point of Impact Analysis
 //----------------------------------------
-
 if(
     analysisBtn &&
     analysisBtn.checked &&
@@ -4821,36 +4787,29 @@ if(
     //------------------------------------
     // Calculate average normalized X/Y
     //------------------------------------
-
     let averageX = 0;
     let averageY = 0;
-
     for(const hit of hits){
         averageX += hit.x;
         averageY += hit.y;
     }
-
     averageX =
         averageX / hits.length;
-
     averageY =
         averageY / hits.length;
 
     //------------------------------------
-    // Convert normalized coordinates
-    // to PDF target coordinates
+    // Convert normalized coordinates 
     //------------------------------------
-
 const poiX =
     drawX +
     (averageX * drawW);
-
 const poiY =
     drawY +
     (averageY * drawH);
 
     //------------------------------------
-    // Draw Average Point of Impact marker
+    // Draw PDF Average Point of Impact marker
     //------------------------------------
 
     pdf.setDrawColor(
@@ -4886,7 +4845,7 @@ const poiY =
     );
 
     //------------------------------------
-    // Label
+    // PDF Label
     //------------------------------------
 
     pdf.setFont(
@@ -4902,8 +4861,8 @@ const poiY =
     );
 }
 
-
 pdf.setFontSize(11);
+    
 pdf.setFont(
     "helvetica",
     "bold"
@@ -4916,12 +4875,10 @@ pdf.text(
 );
 
 //--------------------------------
-// TEST VECTOR DRAWING
+// Test Vector Drawing
 //--------------------------------
-
 pdf.setDrawColor(255,0,0);
 pdf.setLineWidth(0.75);
-
 pdf.rect(
     20,
     115,
@@ -4930,16 +4887,13 @@ pdf.rect(
 );
 
 //--------------------------------
-// SHOT DETAILS TABLE
+// Shot Details Table
 //--------------------------------
-
 let tableY = 220;
 
-
 //--------------------------------
-// FUNCTION TO DRAW TABLE HEADER
+// DRAW PDF TABLE HEADER FUNCTION
 //--------------------------------
-
 function drawShotTableHeader(){
 
     pdf.setFont(
@@ -4986,47 +4940,37 @@ function drawShotTableHeader(){
 }
 
 //--------------------------------
-// DRAW FIRST TABLE HEADER
+// Draw First Table Header
 //--------------------------------
-
 drawShotTableHeader();
 
-
 //--------------------------------
-// DRAW SHOT ROWS
+// Draw Shot Rows
 //--------------------------------
-
 pdf.setFontSize(10);
 hits.forEach((hit,index)=>{
 
-
     //--------------------------------
-    // CHECK FOR PAGE BOTTOM
+    // Check for Page Bottom
     //--------------------------------
-
     if(
         tableY >=
         pdf.internal.pageSize.getHeight() - 25
     ){
 
         //--------------------------------
-        // CREATE NEW PAGE
+        // Create New Page
         //--------------------------------
-
         pdf.addPage();
 
-
         //--------------------------------
-        // RESET TABLE POSITION
+        // Reset Table Position
         //--------------------------------
-
         tableY = 25;
 
-
         //--------------------------------
-        // PAGE 2+ TITLE
+        // Page 2+ Title
         //--------------------------------
-
         pdf.setFont(
             "helvetica",
             "bold"
@@ -5038,86 +4982,70 @@ hits.forEach((hit,index)=>{
             20,
             tableY
         );
-
+        
         tableY += 12;
 
-
-        //--------------------------------
-        // DRAW COLUMN HEADERS AGAIN
-        //--------------------------------
-
-        drawShotTableHeader();
+    //--------------------------------
+    // Draw Column Headers Again
+    //--------------------------------
+    drawShotTableHeader();
     }
 
 
     //--------------------------------
-    // MOVE TO NEXT ROW
+    // Move To Next Row
     //--------------------------------
-
     tableY += 8;
 
-
     //--------------------------------
-    // CALCULATE SPLIT
+    // Calculate Split
     //--------------------------------
-
     let split = 0;
-
     if(index > 0){
         split =
             hit.time -
             hits[index-1].time;
     }
 
-
     //--------------------------------
-    // DRAW SHOT NUMBER
+    // Draw Shot Number
     //--------------------------------
-
     pdf.text(
         String(index + 1),
         20,
         tableY
     );
 
-
     //--------------------------------
-    // DRAW TIME
+    // Draw Time
     //--------------------------------
-
     pdf.text(
         hit.time.toFixed(2),
         45,
         tableY
     );
 
-
     //--------------------------------
-    // DRAW SPLIT
+    // Draw Split
     //--------------------------------
-
     pdf.text(
         split.toFixed(2),
         75,
         tableY
     );
 
-
     //--------------------------------
-    // DRAW X
+    // Draw X
     //--------------------------------
-
     pdf.text(
         hit.x.toFixed(3),
         110,
         tableY
     );
 
-
     //--------------------------------
-    // DRAW Y
+    // Draw Y
     //--------------------------------
-
     pdf.text(
         hit.y.toFixed(3),
         140,
@@ -5126,23 +5054,18 @@ hits.forEach((hit,index)=>{
 });
 
 //--------------------------------
-// FOOTER
+// PDF FOOTER
 //--------------------------------
-
 const totalPages =
     pdf.internal.getNumberOfPages();
-
 const pageWidth =
     pdf.internal.pageSize.getWidth();
-
 const pageHeight =
     pdf.internal.pageSize.getHeight();
-
 const generatedDate =
     new Date().toLocaleString();
 
 // Add footer to EVERY page
-
 for(
     let page = 1;
     page <= totalPages;
@@ -5161,7 +5084,6 @@ for(
     );
 
     // Footer text
-
     pdf.setFont(
         "helvetica",
         "normal"
@@ -5176,7 +5098,6 @@ for(
         15,
         pageHeight - 6
     );
-
 
     // Page number - right
     pdf.text(
@@ -5195,18 +5116,14 @@ for(
 //--------------------------
 // SAVE PDF
 //--------------------------    
-
     pdf.save(
         "Safe_Insight_Training_Summary.pdf"
     );
 }
 
-
-
 //--------------------------
-// SET APP MODE
+// SET APP MODE FUNCTION
 //--------------------------
-
 function setAppMode(mode){
     appMode = mode;
     switch(mode){
@@ -5226,54 +5143,29 @@ function setAppMode(mode){
 }
 
 //--------------------------
-// START BUTTON CLICK
+// Start Button OnClick
 //--------------------------
-
 startBtn.onclick = ()=>{
-
     console.log("START BUTTON CLICKED");
 
-    //--------------------------------
-    // Stop continuous target drawing
-    //--------------------------------
-
     continuousTargetDrawing = false;
-
-    //--------------------------------
-    // Close Drills Panel
-    //--------------------------------
-
     const drillsPanel =
         document.getElementById("drillsPanel");
-
     if(drillsPanel){
         drillsPanel.style.display = "none";
     }
 
-    //--------------------------------
-    // Close Settings Panel
-    //--------------------------------
-
     settingsPanel.style.display = "none";
-
-    //--------------------------------
-    // Start recording mode
-    //--------------------------------
-
     setAppMode(APP_RECORDING);
-
     clearSessionData();
 
 //--------------------------
-// STOP BUTTON CLICK
+// Stop Button OnClick
 //--------------------------
-
 stopBtn.onclick = ()=>{
     console.log("STOP BUTTON CLICKED");
 
-    // If countdown is running, cancel countdown only
     if(countdownRunning){
-
         clearInterval(countdownInterval);
         countdownInterval = null;
         countdownRunning = false;
@@ -5288,20 +5180,14 @@ stopBtn.onclick = ()=>{
     // Otherwise stop active recording
     stopRecording();
 };
-
     
 //------------------------------------------------
-// CLEAR ALL TARGETS
+// CLEAR ALL TARGETS FUNCTION
 //------------------------------------------------
-
 function clearTargets(){
-
     targets = [];
-
     currentTarget = null;
-
     redrawOverlay();
-
 }
     playback.pause();
     playback.src = "";
@@ -5364,40 +5250,30 @@ distanceSelect.onchange = ()=>{
         Number(distanceSelect.value);
 };
 
+//--------------------------------
+// Settings Button OnClick
+//--------------------------------
 settingsBtn.onclick=()=>{
-
-    // Always return from playback to live video
     returnToLive();
-
     continuousTargetDrawing = false;
-
     if(settingsPanel.style.display=="block"){
-
         settingsPanel.style.display="none";
-
     }
 
     else{
-
         settingsPanel.style.display="block";
-
     }
 
     const drillsPanel =
         document.getElementById("drillsPanel");
-
     if(drillsPanel){
-
         drillsPanel.style.display="none";
-
     }
-
 };
 
 //------------------------------------------------
-// DRILLS TO USE
+// DRILLS TO USE ARRAY
 //------------------------------------------------
-
 const drills = [
 
     {
@@ -5509,12 +5385,11 @@ const drills = [
         goal:
             "Develop extreme precision and trigger control."
     }
-
 ];
 
 
 //------------------------------------------------
-// BUILD DRILL DROPDOWN
+// Build Drills Dropdown
 //------------------------------------------------
 
 const drillSelect =
@@ -5538,62 +5413,40 @@ const drillOptionsPanel =
 const drillInfo =
     document.getElementById("drillInfo");
 
-
-// Create all 10 drill choices
-
 drills.forEach((drill, index) => {
 
     // Add to hidden native select
-
     const option =
         document.createElement("option");
-
     option.value = index;
     option.textContent = drill.name;
-
     drillSelect.appendChild(option);
 
-
     // Add to visible custom dropdown
-
     const item =
         document.createElement("div");
-
     item.className =
         "custom-option-item";
-
     item.dataset.value =
         index;
-
     item.textContent =
         drill.name;
-
     drillOptionsPanel.appendChild(item);
 
-
-    // When a drill is selected
-
+//--------------------------------
+// When Clicked Save Selected Drill
+//--------------------------------
 item.addEventListener("click", () => {
-
-    //--------------------------------
-    // SAVE SELECTED DRILL
-    //--------------------------------
-
     selectedDrill = drill;
-
     drillSelect.value =
         index;
-
     drillTrigger.textContent =
         drill.name;
-
         drillWrapper.classList.remove(
             "open"
         );
 
-
         drillInfo.innerHTML = `
-
             <div style="
                 font-size:20px;
                 font-weight:bold;
@@ -5602,43 +5455,30 @@ item.addEventListener("click", () => {
             ">
                 ${drill.name}
             </div>
-
             <div>
                 <strong>SETUP</strong>
             </div>
-
             <div>
                 ${drill.setup}
             </div>
-
             <div style="margin-top:15px;">
                 <strong>PERFORM</strong>
             </div>
-
             <div>
                 ${drill.execution}
             </div>
-
             <div style="margin-top:15px;">
                 <strong>GOAL</strong>
             </div>
-
             <div>
                 ${drill.goal}
             </div>
-
         `;
 
         drillInfo.style.display =
             "block";
-
     });
-
 });
-
-//------------------------------------------------
-// MOVE DRILLS PANEL OUTSIDE SETTINGS PANEL
-//------------------------------------------------
 
 const drillsPanel =
     document.getElementById("drillsPanel");
@@ -5650,16 +5490,14 @@ if (
 ) {
 
     document.body.appendChild(drillsPanel);
-
 }
-    
+
+//------------------------------------------------
+// Drills Button Click
+//------------------------------------------------
 drillsBtn.onclick = () => {
-
-    // Always return from playback to live video
     returnToLive();
-
     continuousTargetDrawing = false;
-
     const drillsPanel =
         document.getElementById("drillsPanel");
 
@@ -5670,21 +5508,13 @@ drillsBtn.onclick = () => {
     ){
 
         drillsPanel.style.display = "none";
-
         return;
-
     }
 
-    // If Drills is closed, close Settings
     closeSettingsPanel();
-
-    // Then open Drills
     if(drillsPanel){
-
         drillsPanel.style.display = "block";
-
     }
-
 };
     
 summaryBtn.onclick = () => {
@@ -5692,14 +5522,11 @@ summaryBtn.onclick = () => {
     const logo = new Image();
 
 logo.onload = () => {
-
     console.log("LOGO LOADED",
         logo.width,
         logo.height
     );
-
     createPDFSummary(logo);
-
 };
 
 logo.onerror = (e) => {
@@ -5710,73 +5537,55 @@ logo.onerror = (e) => {
     );
 
 };
-
 logo.src = "Logo High Res.png";
-
 };
 
-
+//------------------------------------------------
+// Clear Target Button Click
+//------------------------------------------------
 clearTargetBtn.onclick = () => {
-
     clearTargetData();
-
     settingsPanel.style.display = "none";
 };
 
-
+//------------------------------------------------
+// Delete Targets Button Click
+//------------------------------------------------
 deleteTargetsBtn.onclick = ()=>{
-
     if(confirm("Delete ALL targets?")){
         deleteAllTargets();
         settingsPanel.style.display = "none";
     }
-
 };
 
+//------------------------------------------------
+// Play Last Replay Button Click
+//------------------------------------------------
 playLastBtn.onclick = ()=>{
-
     closeSettingsPanel();
-
     // Nothing to play yet
     if(!playback.src){
 
         console.log("No recording available.");
 
         return;
-
     }
 
     //----------------------------------------
     // Switch to playback video
     //----------------------------------------
-
     preview.style.display = "none";
     playback.style.display = "block";
-
-
-    //----------------------------------------
-    // Show saved shot markers
-    //----------------------------------------
-
     showRecordedHits = true;
-
 
     //----------------------------------------
     // Start from beginning
     //----------------------------------------
-
     playback.currentTime = 0;
-
     playbackSyncActive = true;
-
     playback.play();
-
     requestAnimationFrame(syncPlayback);
-
 };
-
-    
-    
 
 </script>
 
