@@ -1618,6 +1618,8 @@ let recordingStartTime = 0;
 let playbackSyncActive = false;
 let showRecordedHits = true;
 
+let selectedDrill = null;
+
 let videoOffsetX = 0;
 let videoOffsetY = 0;
 
@@ -5204,22 +5206,15 @@ pdf.text(
 // DRILL TITLE
 //--------------------------------
 
-if(drillSelect){
+if(selectedDrill){
 
-    const drillIndex =
-        Number(drillSelect.value);
+    pdf.setFontSize(12);
 
-    if(drills[drillIndex]){
-
-        pdf.setFontSize(12);
-
-        pdf.text(
-            "Drill: " + drills[drillIndex].name,
-            75,
-            29
-        );
-
-    }
+    pdf.text(
+        "Drill: " + selectedDrill.name,
+        75,
+        29
+    );
 
 }
 
@@ -6225,13 +6220,19 @@ drills.forEach((drill, index) => {
 
     // When a drill is selected
 
-    item.addEventListener("click", () => {
+item.addEventListener("click", () => {
 
-        drillSelect.value =
-            index;
+    //--------------------------------
+    // SAVE SELECTED DRILL
+    //--------------------------------
 
-        drillTrigger.textContent =
-            drill.name;
+    selectedDrill = drill;
+
+    drillSelect.value =
+        index;
+
+    drillTrigger.textContent =
+        drill.name;
 
         drillWrapper.classList.remove(
             "open"
