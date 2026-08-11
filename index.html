@@ -4569,13 +4569,14 @@ pdf.line(
 //--------------------------------
 
 if(selectedDrill){
-    pdf.setFontSize(16);
+    pdf.setFontSize(20);
     
     pdf.text(
         "Drill: " + selectedDrill.name,
         20,
         40
     );
+    pdf.setFontSize(16);
 }
     pdf.text(
         "Shots Fired: " +
