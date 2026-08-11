@@ -4555,22 +4555,6 @@ pdf.text(
     18
 );
 
-//--------------------------------
-// DRILL TITLE
-//--------------------------------
-
-if(selectedDrill){
-
-    pdf.setFontSize(12);
-
-    pdf.text(
-        "Drill: " + selectedDrill.name,
-        75,
-        29
-    );
-
-}
-
 // Divider line
 pdf.setLineWidth(0.5);
 pdf.line(
@@ -4580,7 +4564,18 @@ pdf.line(
     42
 );
 
+//--------------------------------
+// DRILL TITLE
+//--------------------------------
 
+if(selectedDrill){
+    pdf.setFontSize(12);
+    pdf.text(
+        "Drill: " + selectedDrill.name,
+        75,
+        29
+    );
+}
     pdf.text(
         "Shots Fired: " +
        hits.length,
