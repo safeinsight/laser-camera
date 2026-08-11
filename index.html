@@ -1463,11 +1463,6 @@ else if(
     nextTarget();
 }
 
-        console.log(
-            "Target Selection:",
-            targetSelectionMode
-        );
-
         redrawOverlay();
     }
 );
@@ -1483,11 +1478,6 @@ consecutiveShotsSelect.addEventListener(
         consecutiveShotsPerTarget =
             Number(this.value);
         consecutiveShotCount = 0;
-
-        console.log(
-            "Shots Per Target:",
-            consecutiveShotsPerTarget
-        );
     }
 );
 
@@ -1637,32 +1627,6 @@ const LASER_RELEASE_FRAMES = 2;
 // Prevent double-shots from timer
 // glitches.
 let lastShotTime = 0;
-
-//-------------------------------------
-// NORMALIZED TARGET -->
-//-------------------------------------
-
-// IMPORTANT:
-//
-// These values are stored from
-// 0.0 to 1.0 instead of pixels.
-//
-// They never depend on camera
-// resolution or browser size.
-//
-// Example:
-//
-// left = 0.22
-//
-// means:
-//
-// 22% across the image.
-//
-
-    //------------------------------------------------
-    // Target Collection
-    //------------------------------------------------
-
 let targets = [];
 
 //------------------------------------------------
@@ -1938,8 +1902,6 @@ playback.style.display = "none";
 
     clearOverlay();
     preview.play().catch(()=>{});
-
-    console.log("Returned to live video.");
 }
 
 //------------------------------------------------
