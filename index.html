@@ -2029,36 +2029,23 @@ function resizeEverything(){
             360;
     }
 
-   
-
-    //----------------------------------------
-    // Redraw everything
-    //----------------------------------------
-
     redrawOverlay();
-
 }
 
 //------------------------------------
-// CLEAR OLD OVERLAY INFORMATION -->
+// CLEAR OLD OVERLAY INFORMATION FUNCTION
 //------------------------------------
-
 function clearSessionData(){
-
-
 
     //------------------------------------
     // Clear recorded shots
     //------------------------------------
-
     hits = [];
     shots = 0;
-
 
     //------------------------------------
     // Reset laser detector
     //------------------------------------
-
     laserState = LASER_WAITING;
     laserMissingFrames = 0;
     freezeBackground = false;
@@ -2066,7 +2053,6 @@ function clearSessionData(){
     //------------------------------------
     // Reset live laser
     //------------------------------------
-
     currentLaserVisible = false;
     laserX = 0;
     laserY = 0;
@@ -2074,7 +2060,6 @@ function clearSessionData(){
     //--------------------------------
     // Clear overlay
     //--------------------------------
-
     ctx.clearRect(
         0,
         0,
@@ -2083,63 +2068,43 @@ function clearSessionData(){
     );
 }
 
-    //--------------------------------
-    // Clear Target Information
-    //--------------------------------
-    
-    function clearTargetData(){
-
+//--------------------------------
+// CLEAR TARGET INFORMATION FUNCTION
+//--------------------------------
+   function clearTargetData(){
     hits = [];
     shots = 0;
-
     groupCenter = null;
-
     currentLaserVisible = false;
-
-
     updateDisplays();
-
     redrawOverlay();
 }
 
-    //--------------------------------
-    // Delete Targets
-    //--------------------------------
-    
-function deleteAllTargets(){
-
-    // Clear all shot data
+//--------------------------------
+// DELETE ALL TARGETS FUNCTION
+//--------------------------------
+    function deleteAllTargets(){
     hits = [];
     shots = 0;
     groupCenter = null;
-
-    // Remove every target
     targets = [];
-
     activeTarget = null;
     currentTarget = null;
-
     calibrationStep = 0;
     calibrationDragging = false;
-
-
     currentLaserVisible = false;
     resetGrid();
     updateDisplays();
     redrawOverlay();
 }
     
-    
 //--------------------------
-// COUNTDOWN -->
+// COUNTDOWN FUNCTION
 //--------------------------
-
 function beginCountdown(){
-
     console.log("COUNTDOWN STARTED");
     setupControls.hidden = true;
     countdownRunning = true;
-    
   let count;
 if(countdownSeconds === "random"){
    // Random whole number from 3 to 7 seconds
@@ -2180,13 +2145,10 @@ setTimeout(()=>{
 }
 
 //--------------------------
-// START RECORDING -->
+// START RECORDING FUNCTION
 //--------------------------
-
 function startRecording(){
-
 showRecordedHits = true;
-    
 countdownRunning = false;
 recordedChunks=[];
 hits=[];
@@ -2196,19 +2158,15 @@ recordingSeconds=0;
     //-------------------------------------
     // Reset Detector State
     //-------------------------------------
-
 laserState = LASER_WAITING;
 laserMissingFrames = 0;
 freezeBackground = false;
-
 backgroundFrame = null;
 learnBackground = true;
 lastShotTime = 0;
-
 updateDisplays();
 
 mediaRecorder=
-
 new MediaRecorder(
 stream
 );
@@ -2230,39 +2188,19 @@ mediaRecorder
 showPlayback;
 mediaRecorder.start();
 
-
-    //-------------------------------------
-    // Start high-precision recording timer
-    //-------------------------------------
-
 recordingStartTime = performance.now();
-
-//-------------------------------------
-// Reset target history
-//-------------------------------------
-
 targetHistory = [];
 
-//-------------------------------------
-// Record first active target
-//-------------------------------------
-
 if(activeTarget){
-
     targetHistory.push({
-
         id: activeTarget.id,
-
         time: 0
-
     });
-
 }
     
     //-------------------------------------
     // Give camera one frame to stabilize
     //-------------------------------------
-
 setTimeout(()=>{
     requestAnimationFrame(
         detectLaser
@@ -2276,45 +2214,34 @@ updateDisplays();
 }
 
 //--------------------------
-// STOP RECORDING -->
+// STOP RECORDING FUNCTION
 //--------------------------
-
 function stopRecording(){
-
     if(
         mediaRecorder &&
         mediaRecorder.state === "recording"
     ){
 
         mediaRecorder.stop();
-
     }
 
     clearInterval(timerInterval);
 
-
     // Return toolbar to Start state
     exitRecordingMode();
-
-
 }
 
 //--------------------------
-// Close Settings Panel -->
+// CLOSE SETTINGS FUNCTION
 //--------------------------
-    
 function closeSettingsPanel(){
-
     settingsPanel.style.display = "none";
-
 }
     
 //--------------------------
-// PLAYBACK -->
+// PLAYBACK FUNCTION
 //--------------------------
-
 function showPlayback(){
-
 const blob=
 new Blob(
 recordedChunks,
@@ -2334,10 +2261,6 @@ playback.style.display=
 "block";
 playback.src=url;
 
-    //----------------------------------------
-    // Calculate final group center
-    //----------------------------------------
-
 groupCenter = calculateGroupCenter();
 playback.onloadedmetadata=()=>{
     resizeEverything();
@@ -2349,11 +2272,9 @@ playback.onloadedmetadata=()=>{
 }
 
 //----------------------------------------
-// DOWNLOAD VIDEO WITH SHOT MARKERS
+// DOWNLOAD VIDEO ONCLICK FUNCTION 
 //----------------------------------------
-
 downloadVideoBtn.onclick = async function(){
-
     if(
         !recordedChunks ||
         recordedChunks.length === 0
@@ -2362,11 +2283,7 @@ downloadVideoBtn.onclick = async function(){
         return;
     }
 
-    //----------------------------------------
-    // Create video from recorded chunks
-    //----------------------------------------
-
-    const blob =
+        const blob =
         new Blob(
             recordedChunks,
             {
@@ -2376,59 +2293,30 @@ downloadVideoBtn.onclick = async function(){
 
     const videoURL =
         URL.createObjectURL(blob);
-
-    //----------------------------------------
-    // Create export video element
-    //----------------------------------------
-
     const exportVideo =
         document.createElement("video");
-
     exportVideo.src = videoURL;
     exportVideo.muted = true;
     exportVideo.playsInline = true;
 
-    //----------------------------------------
-    // Wait for video metadata
-    //----------------------------------------
-
     await new Promise((resolve, reject)=>{
-
         exportVideo.onloadedmetadata =
             resolve;
-
         exportVideo.onerror =
             reject;
-
     });
-
-    //----------------------------------------
-    // Create export canvas
-    //----------------------------------------
 
     const exportCanvas =
         document.createElement("canvas");
-
     exportCanvas.width =
         exportVideo.videoWidth;
-
     exportCanvas.height =
         exportVideo.videoHeight;
 
     const exportCtx =
         exportCanvas.getContext("2d");
-
-    //----------------------------------------
-    // Create recording stream
-    //----------------------------------------
-
     const exportStream =
         exportCanvas.captureStream(30);
-
-    //----------------------------------------
-    // Create MediaRecorder
-    //----------------------------------------
-
     const exportRecorder =
         new MediaRecorder(
             exportStream,
@@ -2436,64 +2324,42 @@ downloadVideoBtn.onclick = async function(){
                 mimeType:"video/webm"
             }
         );
-
     const exportChunks = [];
-
     exportRecorder.ondataavailable =
         event => {
-
             if(event.data.size > 0){
-
                 exportChunks.push(
                     event.data
                 );
-
             }
-
         };
-
-    //----------------------------------------
-    // Wait for export to finish
-    //----------------------------------------
 
     const recordingFinished =
         new Promise(resolve => {
-
             exportRecorder.onstop =
                 resolve;
-
         });
 
-    //----------------------------------------
-    // Start export
-    //----------------------------------------
-
     exportRecorder.start();
-
     exportVideo.currentTime = 0;
-
     await exportVideo.play();
 
-    //----------------------------------------
-    // Draw each frame
-    //----------------------------------------
-
+//----------------------------------------
+// RENDER EXPORT FRAME FUNCTION
+//----------------------------------------
     function renderExportFrame(){
-
         if(
             exportVideo.paused ||
             exportVideo.ended
         ){
 
             exportRecorder.stop();
-
             return;
         }
 
         //------------------------------------
         // Draw video frame
         //------------------------------------
-
         exportCtx.drawImage(
             exportVideo,
             0,
@@ -2505,7 +2371,6 @@ downloadVideoBtn.onclick = async function(){
         //------------------------------------
         // Update existing overlay
         //------------------------------------
-
         redrawOverlay({
             maxTime:
                 exportVideo.currentTime
@@ -2514,7 +2379,6 @@ downloadVideoBtn.onclick = async function(){
         //------------------------------------
         // Draw existing overlay onto export
         //------------------------------------
-
         exportCtx.drawImage(
             overlay,
             0,
@@ -2523,24 +2387,18 @@ downloadVideoBtn.onclick = async function(){
             exportCanvas.height
         );
 
-//----------------------------------------
-// Draw shot markers onto export
-//----------------------------------------
-
+    //----------------------------------------
+    // Draw shot markers onto export
+    //----------------------------------------
 for(const hit of hits){
-
     if(hit.time > exportVideo.currentTime){
         continue;
     }
-
     const drawX =
         hit.x * exportCanvas.width;
-
     const drawY =
         hit.y * exportCanvas.height;
-
     exportCtx.beginPath();
-
     exportCtx.arc(
         drawX,
         drawY,
@@ -2550,16 +2408,14 @@ for(const hit of hits){
     );
 
     //------------------------------------
-    // Yellow center
+    // Shot Marker Yellow center
     //------------------------------------
-
     exportCtx.fillStyle = "yellow";
     exportCtx.fill();
 
     //------------------------------------
-    // Black outline
+    // Shot Marker Black outline
     //------------------------------------
-
     exportCtx.strokeStyle = "black";
     exportCtx.lineWidth = 2;
     exportCtx.stroke();
@@ -2569,19 +2425,9 @@ for(const hit of hits){
             renderExportFrame
         );
     }
-
+    
     renderExportFrame();
-
-    //----------------------------------------
-    // Wait until recording finishes
-    //----------------------------------------
-
     await recordingFinished;
-
-    //----------------------------------------
-    // Create final video
-    //----------------------------------------
-
     const finalBlob =
         new Blob(
             exportChunks,
@@ -2590,10 +2436,6 @@ for(const hit of hits){
             }
         );
 
-    //----------------------------------------
-    // Download
-    //----------------------------------------
-
     const downloadURL =
         URL.createObjectURL(
             finalBlob
@@ -2601,43 +2443,31 @@ for(const hit of hits){
 
     const link =
         document.createElement("a");
-
     link.href =
         downloadURL;
-
     link.download =
         "Laser-Training-Session-With-Shots.webm";
-
     document.body.appendChild(link);
-
     link.click();
-
     document.body.removeChild(link);
 
     //----------------------------------------
     // Cleanup
     //----------------------------------------
-
     setTimeout(()=>{
-
         URL.revokeObjectURL(
             videoURL
         );
-
         URL.revokeObjectURL(
             downloadURL
         );
-
     },1000);
-
 };
 
 //--------------------------
-// UPDATE DISPLAYS -->
+// UPDATE DISPLAYS FUNCTION
 //--------------------------
-
 function updateDisplays(){
-
 let mins=
 Math.floor(
 recordingSeconds/60
@@ -2654,15 +2484,12 @@ let time=
 `${mins}:${secs}`;
 timerOverlay.innerHTML=
 time;
-
 }
 
 //------------------------------------------------
-// BEGIN CALIBRATION DRAG -->
+// BEGIN CALIBRATION DRAG FUNCTION
 //------------------------------------------------
-
 function beginCalibrationDrag(e){
-
     if(calibrationStep !== 1){
         return;
     }
@@ -2678,11 +2505,9 @@ const rect = overlay.getBoundingClientRect();
 }
 
 //------------------------------------------------
-// UPDATE CALIBRATION DRAG -->
+// UPDATE CALIBRATION DRAG FUNCTION
 //------------------------------------------------
-
 function updateCalibrationDrag(e){
-
     if(!calibrationDragging){
         return;
     }
@@ -2703,11 +2528,9 @@ const rect = overlay.getBoundingClientRect();
 }
 
 //------------------------------------------------
-// START DRAG CALIBRATION
+// START DRAG CALIBRATION FUNCTION
 //------------------------------------------------
-
 function calibrateTarget(){
-
     alert(
         "DRAW TARGET\n\n" +
         "Touch and drag to draw a box around your target."
@@ -2727,30 +2550,24 @@ function calibrateTarget(){
 }
 
 //------------------------------------------------
-// COMPLETE DRAG CALIBRATION
+// COMPLETE DRAG CALIBRATION FUNCTION
 //------------------------------------------------
-
 function finishCalibrationDrag(e){
-
     if(!calibrationDragging){
         return;
     }
 
     calibrationDragging = false;
-
     if(calibrationStep === 0){
         return;
     }
 
     const rect =
         overlay.getBoundingClientRect();
-
     calibrationCurrentX =
         (e.clientX - rect.left) / rect.width;
-
     calibrationCurrentY =
         (e.clientY - rect.top) / rect.height;
-
     currentTarget.left =
         Math.min(
             calibrationStartX,
@@ -2776,32 +2593,20 @@ function finishCalibrationDrag(e){
         );
 
     currentTarget.calibrated = true;
-
     currentTarget.shape =
         targetShape;
-
-    //----------------------------------------
-    // Every new target starts active
-    //----------------------------------------
-
     currentTarget.active = true;
-
     targets.push(currentTarget);
 
-//----------------------------------------
-// First target becomes active
-//----------------------------------------
-
+    //----------------------------------------
+    // First target becomes active
+    //----------------------------------------
 if(activeTarget === null){
-
     activeTarget =
         currentTarget;
-
 }
     calibrationStep = 0;
-
     resizeEverything();
-
     redrawOverlay();
 
     console.log(
@@ -2809,33 +2614,23 @@ if(activeTarget === null){
         currentTarget
     );
 
-    //----------------------------------------
-    // Calibration confirmation
-    //----------------------------------------
-
     alert(
         "CALIBRATION COMPLETE\n\n" +
         "Your target has been added."
     );
 
     //----------------------------------------
-    // CONTINUOUS DRAWING
+    // Continuous Drawing
     //----------------------------------------
-
     if(continuousTargetDrawing){
-
         calibrateTarget();
-
     }
-
 }
 
 //------------------------------------------------
-// TARGET PIXELS -->
+// TARGET PIXELS FUNCTION
 //------------------------------------------------
-
 function getTargetPixels(target){
-
     return{
         left:
             target.left *
@@ -2853,97 +2648,56 @@ function getTargetPixels(target){
 }
 
 //------------------------------------------------
-// SET ACTIVE TARGET
+// SET ACTIVE TARGET FUNCTION
 //------------------------------------------------
-
 function setActiveTarget(targetId){
-
     for(const target of targets){
-
         target.active =
-
             target.id === targetId;
-
     }
 
     redrawOverlay();
-
 }
-
-
     
 //------------------------------------------------
-// DRAW ALL TARGETS -->
+// DRAW GREEN BOXES FUNCTION
 //------------------------------------------------
-
 function drawGreenBoxes(){
-
-    //----------------------------------------
-    // Draw every completed target
-    //----------------------------------------
-
     for(const target of targets){
-
         if(!target.calibrated){
             continue;
         }
-
-
-        //----------------------------------------
-        // Determine whether this target is active
-        //----------------------------------------
 
         const targetIsActive =
             targetSelectionMode === "ALL"
                 ? true
                 : target === activeTarget;
-
-
-        //----------------------------------------
-        // Target position
-        //----------------------------------------
-
         const left =
             normToOverlayX(target.left);
-
         const top =
             normToOverlayY(target.top);
-
         const width =
             normToOverlayX(target.right)
             - left;
-
         const height =
             normToOverlayY(target.bottom)
             - top;
-
-
         ctx.save();
-
 
         //----------------------------------------
         // Target outline
         //----------------------------------------
-
         ctx.strokeStyle =
             targetIsActive
                 ? "#00FF00"
                 : "#808080";
-
-
         ctx.lineWidth =
             Math.max(
                 2,
                 overlay.width * 0.003
             );
 
-
-        //----------------------------------------
-        // Draw target shape
-        //----------------------------------------
-
         if(target.shape === "rectangle"){
-
             ctx.strokeRect(
                 left,
                 top,
@@ -2952,9 +2706,7 @@ function drawGreenBoxes(){
             );
 
         }else{
-
             ctx.beginPath();
-
             ctx.ellipse(
                 left + width / 2,
                 top + height / 2,
@@ -2966,26 +2718,19 @@ function drawGreenBoxes(){
             );
 
             ctx.stroke();
-
         }
-
 
         //----------------------------------------
         // Draw target number
         //----------------------------------------
-
         ctx.fillStyle =
             targetIsActive
                 ? "#00FF00"
                 : "#666666";
-
-
         ctx.font =
             `bold ${overlay.width * .025}px Arial`;
 
-
         let label = target.id;
-
 
         ctx.fillText(
             label,
@@ -2993,52 +2738,37 @@ function drawGreenBoxes(){
             top + 28
         );
 
-
         ctx.restore();
-
     }
-
 
     //----------------------------------------
     // Draw target currently being dragged
     //----------------------------------------
-
     if(calibrationDragging){
-
         const left =
             normToOverlayX(
                 currentTarget.left
             );
-
         const top =
             normToOverlayY(
                 currentTarget.top
             );
-
         const width =
             normToOverlayX(
                 currentTarget.right
             ) - left;
-
         const height =
             normToOverlayY(
                 currentTarget.bottom
             ) - top;
-
-
         ctx.save();
-
-
         ctx.strokeStyle =
             "#00FF00";
-
-
         ctx.lineWidth =
             Math.max(
                 2,
                 overlay.width * 0.003
             );
-
 
         if(
             currentTarget.shape ===
@@ -3053,9 +2783,7 @@ function drawGreenBoxes(){
             );
 
         }else{
-
             ctx.beginPath();
-
             ctx.ellipse(
                 left + width / 2,
                 top + height / 2,
@@ -3067,80 +2795,52 @@ function drawGreenBoxes(){
             );
 
             ctx.stroke();
-
         }
-
         ctx.restore();
-
     }
-
 }
 
 //------------------------------------------------
-// NEXT TARGET
+// NEXT TARGET FUNCTION
 //------------------------------------------------
-
 function nextTarget(){
-
-    //----------------------------------------
-    // Build list of usable targets
-    //----------------------------------------
-
     const availableTargets =
         targets.filter(
             target => target.calibrated
         );
 
     if(availableTargets.length === 0){
-
         return;
-
     }
 
-
-//----------------------------------------
-// Only one target
-//----------------------------------------
-
+    //----------------------------------------
+    // Only one target
+    //----------------------------------------
 if(availableTargets.length === 1){
-
     if(activeTarget !== availableTargets[0]){
-
         activeTarget =
             availableTargets[0];
-
         callOutTargetNumber(activeTarget);
-
     }
 
     consecutiveShotCount = 0;
-
     redrawOverlay();
-
     return;
-
 }
 
-
     //----------------------------------------
-    // RANDOM
+    // If Target RANDOM
     //----------------------------------------
-
     if(targetSelectionMode === "RANDOM"){
-
         let newTarget;
-
         do{
-
             const randomIndex =
                 Math.floor(
                     Math.random() *
                     availableTargets.length
                 );
-
             newTarget =
                 availableTargets[randomIndex];
-
         }
 
         while(
@@ -3148,179 +2848,122 @@ if(availableTargets.length === 1){
         );
 
         if(activeTarget !== newTarget){
-
     activeTarget = newTarget;
-
     callOutTargetNumber(activeTarget);
-
 }
-
     }
 
 
     //----------------------------------------
-    // CONSECUTIVE
-    //
-    // Find the current target's position
-    // and move to the next target.
+    // If Target CONSECUTIVE
     //----------------------------------------
-
     else if(
         targetSelectionMode === "CONSECUTIVE"
     ){
-
         const currentIndex =
             availableTargets.indexOf(
                 activeTarget
             );
-
         let nextIndex;
-
         if(currentIndex === -1){
-
             nextIndex = 0;
 
         }else{
-
             nextIndex =
                 currentIndex + 1;
 
             //--------------------------------
             // Wrap back to first target
             //--------------------------------
-
             if(
                 nextIndex >=
                 availableTargets.length
             ){
 
                 nextIndex = 0;
-
             }
-
         }
 
         const newTarget =
-    availableTargets[nextIndex];
+        availableTargets[nextIndex];
 
-if(activeTarget !== newTarget){
-
-    activeTarget =
+        if(activeTarget !== newTarget){
+        activeTarget =
         newTarget;
 
     callOutTargetNumber(activeTarget);
-
 }
 
 consecutiveShotCount = 0;
-
     }
 
 
     //----------------------------------------
-    // ALL
-    //
-    // ALL does not normally call nextTarget,
-    // but if it does, simply keep the current
-    // target.
+    // If Target ALL
     //----------------------------------------
-
     else if(
         targetSelectionMode === "ALL"
     ){
 
         if(!activeTarget){
-
     activeTarget =
         availableTargets[0];
 
     callOutTargetNumber(activeTarget);
-
 }
-
     }
-
 
     //----------------------------------------
     // Save target change for playback
     //----------------------------------------
-
-if(
+    if(
     activeTarget &&
     targetSelectionMode !== "ALL"
-){
+    ){
 
     targetHistory.push({
-
         id: activeTarget.id,
-
         time:
             (
                 performance.now() -
                 recordingStartTime
             ) / 1000
-
     });
-
 }
-
 
     redrawOverlay();
-
 }
 
 //------------------------------------------------
-// GET ACTIVE TARGET FOR PLAYBACK
+// GET ACTIVE TARGET FOR PLAYBACK FUNCTION
 //------------------------------------------------
-
 function getPlaybackActiveTarget(playbackTime){
-
-    //----------------------------------------
-    // Default to current active target
-    //----------------------------------------
-
     let targetId = null;
 
-    //----------------------------------------
-    // Find latest target change
-    //----------------------------------------
-
     for(const event of targetHistory){
-
         if(event.time <= playbackTime){
-
             targetId = event.id;
-
         }else{
-
             break;
-
         }
-
     }
 
     //----------------------------------------
     // Find matching target object
     //----------------------------------------
-
     if(targetId === null){
         return null;
     }
 
     return targets.find(
-
         target => target.id === targetId
-
     );
-
 }
     
 //------------------------------------------------
-// CLEAR OVERLAY -->
+// CLEAR OVERLAY FUNCTION
 //------------------------------------------------
-
 function clearOverlay(){
-
     ctx.clearRect(
         0,
         0,
@@ -3334,10 +2977,9 @@ function clearOverlay(){
 }
 
 //------------------------------------------------
-// DRAW COUNTDOWN FUNCTION -->
+// DRAW COUNTDOWN FUNCTION 
 //------------------------------------------------
 function drawCountdown(){
-
     clearOverlay();
     drawHits();
     if(countdownValue === null){
@@ -3367,60 +3009,38 @@ function drawCountdown(){
 }
 
 //------------------------------------------------
-// SCAN ONE TARGET -->
+// SCAN ONE TARGET FUNCTION
 //------------------------------------------------
-
 function scanTarget(target, pixels){
-
     const box = getTargetPixels(target);
-
     let totalWeight = 0;
     let totalX = 0;
     let totalY = 0;
-
     let brightPixels = 0;
-
-    //------------------------------------------------
-    // Binary laser mask
-    //------------------------------------------------
-
 const laserMask = new Uint8Array(
-
     detectCanvas.width *
-
     detectCanvas.height
-
 );
 
     //------------------------------------------------
     // Brightest laser pixel
     //------------------------------------------------
-
 let brightestValue = -1;
-
 let brightestX = 0;
-
 let brightestY = 0;
 
     //------------------------------------------------
     // Reset grid brightness sums
     //------------------------------------------------
-
-    let gridTotal = [];
-    let gridCount = [];
-
+let gridTotal = [];
+let gridCount = [];
     for(let gy=0; gy<GRID_ROWS; gy++){
-
         gridTotal[gy] = [];
         gridCount[gy] = [];
-
         for(let gx=0; gx<GRID_COLS; gx++){
-
             gridTotal[gy][gx] = 0;
             gridCount[gy][gx] = 0;
-
         }
-
     }
 
     //------------------------------------------------
