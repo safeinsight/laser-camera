@@ -42,7 +42,6 @@ flex-direction:column;
 min-height:0;
 }
 
-
 .videoContainer{
 position:relative;
 flex:1;
@@ -144,7 +143,6 @@ touch-action:none;
     color:#fff;
     text-shadow:0 0 6px #000;
 }
-
 
 #shotsOverlay{
 position:absolute;
@@ -461,7 +459,6 @@ z-index:50;
     align-items:center;
     gap:3px;
 }
-
 
 .toolbarIcon{
     width:22px;
@@ -841,7 +838,7 @@ Drills Panel
 </style>
 
 <!-- ==================================================== -->
-<!-- MAIN SETTINGS GRID                         -->
+<!-- MAIN TOOLS SETTINGS GRID                         -->
 <!-- ==================================================== -->
 <div class="settings-grid">
 
@@ -930,7 +927,6 @@ Drills Panel
     <h4>Target Selection</h4>
 
     <div class="custom-select-wrapper">
-
       <select id="targetSelectionSelect" style="display:none;">
         <option value="ALL" selected>All</option>
         <option value="CONSECUTIVE">Consecutive</option>
@@ -940,14 +936,13 @@ Drills Panel
       <div class="select-trigger">All</div>
 
       <div class="custom-options-panel">
-
         <div
           class="custom-option-item"
           data-value="ALL"
         >
           All
         </div>
-
+        
         <div
           class="custom-option-item"
           data-value="CONSECUTIVE"
@@ -955,7 +950,7 @@ Drills Panel
           Consecutive
         </div>
 
-        <div
+          <div
           class="custom-option-item"
           data-value="RANDOM"
         >
@@ -967,7 +962,6 @@ Drills Panel
     </div>
   </div>
 
-
   <!-- ROW 3, COL 2: SHOTS PER TARGET -->
   <div
     class="settings-card"
@@ -978,7 +972,6 @@ Drills Panel
     <h4>Shots Per Target</h4>
 
     <div class="custom-select-wrapper">
-
       <select
         id="consecutiveShotsSelect"
         style="display:none;"
@@ -1036,18 +1029,12 @@ Drills Panel
         >
           10 Shots
         </div>
-
       </div>
-
     </div>
-
   </div>
-    
     
 </div>  
 <hr>
-
-
     
 <!-- ==================================================== -->
 <!-- DRILLS PANEL                                         -->
@@ -1066,11 +1053,8 @@ Drills Panel
     <div class="settings-grid">
 
         <div class="settings-card">
-
             <h4>Choose Drill</h4>
-
             <div class="custom-select-wrapper">
-
                 <select id="drillSelect" style="display:none;">
                     <option value="" selected>
                         CHOOSE DRILL
@@ -1085,9 +1069,7 @@ Drills Panel
                 </div>
 
             </div>
-
         </div>
-
     </div>
 
     <div id="drillInfo"
@@ -1108,23 +1090,17 @@ Drills Panel
 <!-- DRAW TARGET BUTTON FOR DRILLS -->
 
 <button id="drillDrawTargetBtn">
-
     <svg class="toolbarIcon"
          viewBox="0 0 24 24"
          aria-hidden="true">
-
         <path d="M3 17.25V21h3.75L18.81 8.94l-3.75-3.75L3 17.25zm13.56-11.31 1.5 1.5-1.06 1.06-1.5-1.5 1.06-1.06z"/>
-
     </svg>
 
     <span>Draw Targets</span>
-
 </button>
-    
 </div>
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 
 <!-- ==================================================== -->
 <!-- INTERACTION LAYER INTERACTION UTILITY               -->
@@ -1170,8 +1146,6 @@ Drills Panel
   });
 </script>
 
-
-
 <!--=====================================-->
 <!-- TARGET SETTINGS -->
 <!--=====================================-->
@@ -1190,7 +1164,6 @@ Drills Panel
     <span>Draw Targets</span>
 </button>
 
-
 <button id="clearTargetBtn">
     <svg class="toolbarIcon"
          viewBox="0 0 24 24"
@@ -1207,7 +1180,6 @@ Drills Panel
     <span>Clear All Hits</span>
 </button>
 
-
 <button id="deleteTargetsBtn">
     <svg class="toolbarIcon"
          viewBox="0 0 24 24"
@@ -1217,13 +1189,11 @@ Drills Panel
     <span>Delete Targets</span>
 </button>
 
-
 <button id="playLastBtn">
     ▶ Replay Last
 </button>
 
 <br><br>
-
 
 <!--=====================================-->
 <!-- ANALYSIS SETTINGS -->
@@ -1247,13 +1217,10 @@ Drills Panel
     <hr>
 
 <div id="summaryControl">
-
     <button id="summaryBtn">
-
         <svg class="toolbarIcon"
              viewBox="0 0 24 24"
              aria-hidden="true">
-
             <path
                 d="M7 2h7l5 5v15H7z"
                 fill="none"
@@ -1285,9 +1252,7 @@ Drills Panel
         </svg>
 
         Download PDF Summary
-
     </button>
-
     </div>
     
 <button id="downloadVideoBtn" class="downloadVideoBtn">
@@ -1302,18 +1267,10 @@ Drills Panel
     Download Video
 </button>
     
-
-
     <hr>
 
-
-
-
-
-
 </div>
 </div>
-
 
 <script>
 
@@ -1411,7 +1368,7 @@ document.getElementById(
 );
 
 //------------------------------------------------
-// TARGET SELECTION SETTINGS
+// Target Selection Settings
 //------------------------------------------------
 
 const targetSelectionSelect =
@@ -1431,7 +1388,7 @@ const consecutiveShotsCard =
 
 
 //------------------------------------------------
-// TARGET SELECTION CHANGE
+// Target Selection Change
 //------------------------------------------------
 
 targetSelectionSelect.addEventListener(
@@ -1446,14 +1403,14 @@ targetSelectionSelect.addEventListener(
             this.value;
 
 
-        //----------------------------------------
-        // Show/hide shots-per-target
-        //----------------------------------------
+    //----------------------------------------
+    // Show/hide shots-per-target
+    //----------------------------------------
 
-if(
-    this.value === "CONSECUTIVE" ||
-    this.value === "RANDOM"
-){
+    if(
+        this.value === "CONSECUTIVE" ||
+        this.value === "RANDOM"
+    ){
 
     consecutiveShotsCard.style.display =
         "block";
@@ -1464,17 +1421,13 @@ if(
 
     consecutiveShotsCard.style.display =
         "none";
-
 }
-
 
 //----------------------------------------
 // ALL
 //
 // Keep the current target so the existing
 // highlighting system continues to work.
-// The actual hit detection will allow
-// every calibrated target.
 //----------------------------------------
 
 if(
@@ -1482,27 +1435,20 @@ if(
 ){
 
     if(!activeTarget){
-
         const availableTargets =
             targets.filter(
                 target => target.calibrated
             );
 
         if(availableTargets.length > 0){
-
             activeTarget =
                 availableTargets[0];
-
         }
-
     }
-
 }
-
 
 //----------------------------------------
 // RANDOM / CONSECUTIVE
-//
 // Make sure a target is selected.
 //----------------------------------------
 
@@ -1515,9 +1461,7 @@ else if(
 ){
 
     nextTarget();
-
 }
-
 
         console.log(
             "Target Selection:",
