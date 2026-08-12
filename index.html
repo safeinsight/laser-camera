@@ -1773,11 +1773,7 @@ function detectorToNormY(py){
 
 function callOutTargetNumber(target){
     const targetToCall = target;
-    console.log(
-        "TARGET WILL BE CALLED:",
-        targetToCall.id
-    );
-
+   
     setTimeout(() => {
         const words = [
             "zero",
@@ -1801,10 +1797,6 @@ function callOutTargetNumber(target){
             targetNumber < 1 ||
             targetNumber >= words.length
         ){
-            console.log(
-                "INVALID TARGET ID:",
-                targetToCall.id
-            );
             return;
         }
 
@@ -2105,44 +2097,45 @@ function beginCountdown(){
     console.log("COUNTDOWN STARTED");
     setupControls.hidden = true;
     countdownRunning = true;
-  let count;
-if(countdownSeconds === "random"){
-   // Random whole number from 3 to 7 seconds
-count = Math.floor(Math.random() * 5) + 3;
-    console.log("Random countdown:", count);
-}else{
-    count = countdownSeconds;
-}
-
-countdownValue = count;
-drawCountdown();
-countdownInterval = setInterval(()=>{
-        console.log("COUNT:", count);
+    let count;
+    
+    if(countdownSeconds === "random"){
+        // Random whole number from 3 to 7 seconds
+        count = Math.floor(Math.random() * 5) + 3;
+    }else{
+        count = countdownSeconds;
+    }
+    
+    countdownValue = count;
+    drawCountdown();
+    
+    countdownInterval = setInterval(()=>{
         count--;
         if(count > 0){
             countdownValue = count;
             drawCountdown();
         }else{
             clearInterval(countdownInterval);
-countdownInterval = null;
-countdownRunning = false;
+            countdownInterval = null;
+            countdownRunning = false;
             countdownValue = null;
             clearOverlay();
             drawHits();
-           countdownSound.currentTime = 0;
-countdownSound.play().then(()=>{
-    console.log("Countdown beep started.");
-}).catch(err=>{
-
-    console.log("Countdown sound failed:", err);
-});
-
-setTimeout(()=>{
-    startRecording();
-},100);
+            
+            countdownSound.currentTime = 0;
+            countdownSound.play().then(()=>{
+                // The audio plays here, completely unaffected
+            }).catch(err=>{
+                console.log("Countdown sound failed:", err);
+            });
+            
+            setTimeout(()=>{
+                startRecording();
+            },100);
         }
     },1000);
 }
+
 
 //--------------------------
 // START RECORDING FUNCTION
@@ -2608,12 +2601,6 @@ if(activeTarget === null){
     calibrationStep = 0;
     resizeEverything();
     redrawOverlay();
-
-    console.log(
-        "Normalized Target:",
-        currentTarget
-    );
-
     alert(
         "CALIBRATION COMPLETE\n\n" +
         "Your target has been added."
@@ -3708,14 +3695,6 @@ else{
 }
     
 if(hitTarget){
-
-    console.log(
-
-        "Hit Target:",
-
-        hitTarget.id
-
-    );
 }
 
 //------------------------------------------------
@@ -3811,73 +3790,35 @@ currentLaserVisible = false;
 //---------------------------------------
 // Build connected laser blob
 //---------------------------------------
-
 const blob = growLaserBlob(
-
     laserMask,
-
     brightestX,
-
     brightestY
-
 );
 
 const blobCenter =
-
     calculateBlobCenter(blob);
-
 const blobValid =
-
     validateBlob(
-
         blob,
-
         brightestValue
-
     );
-
-    console.log(
-    "Blob:",
-    blob.length,
-    "Brightest:",
-    brightestValue,
-    "Valid:",
-    blobValid
-);
 
 //---------------------------------------
 // Use blob center if valid
 //---------------------------------------
-
 const hitX =
-
     blobValid
-
         ? blobCenter.x
-
         : totalX / totalWeight;
-
 const hitY =
-
     blobValid
-
         ? blobCenter.y
-
         : totalY / totalWeight;
     
-
-    console.log(
-
-    "BLOB SIZE:",
-
-    blob.length
-
-);
-
     //---------------------------------------
     // Laser is currently being tracked
     //---------------------------------------
-
 laserMissingFrames = 0;
 
 // Draw the live laser every frame
@@ -3897,64 +3838,21 @@ if(laserState === LASER_WAITING){
     if(now - lastShotTime >= DETECTOR.shotDelay){
         lastShotTime = now;
         shots++;
-
-        console.log(
-    "DETECT:",
-    detectCanvas.width,
-    detectCanvas.height,
-    "OVERLAY:",
-    overlay.width,
-    overlay.height,
-    "HIT:",
-    hitX,
-    hitY
-);
         
     const savedX =
     detectorToNormX(hitX);
-
     const savedY =
     detectorToNormY(hitY);
 
-
-console.log(
-    "SAVE HIT:",
-    "RAW:",
-    hitX,
-    hitY,
-    "NORMALIZED:",
-    savedX,
-    savedY,
-    "LIVE PIXELS:",
-    currentLaserX,
-    currentLaserY
-);
-
-
 hits.push({
-
     x: savedX,
-
     y: savedY,
-
     time:
         (performance.now() - recordingStartTime) / 1000
-
 });
 
-
 updateDisplays();
-
 playHitSound();
-
-
-console.log(
-    "SHOT",
-    shots,
-    Math.round(hitX),
-    Math.round(hitY)
-);
-
 
 //------------------------------------------------
 // TARGET SELECTION ADVANCEMENT
@@ -3966,64 +3864,34 @@ console.log(
 // Do not change activeTarget.
 //
 if(targetSelectionMode === "ALL"){
-
-    console.log(
-        "TARGET MODE: ALL"
-    );
-
 }
 
 
 //------------------------------------------------
-// RANDOM
-//
-// Pick another target after every shot.
-//
+// RANDOM Pick another target after every shot
+//------------------------------------------------
 else if(targetSelectionMode === "RANDOM"){
 
-    console.log(
-        "TARGET MODE: RANDOM"
-    );
+
 
     if(!waitingForNextTarget){
-
         waitingForNextTarget = true;
-
         setTimeout(
-
             ()=>{
-
                 nextTarget();
-
                 waitingForNextTarget = false;
-
             },
-
             250
-
         );
-
     }
-
 }
 
-
 //------------------------------------------------
-// CONSECUTIVE
-//
-// Stay on the current target until the
-// required number of shots has been made.
-//
+// CONSECUTIVE current target until required number of shots
+//------------------------------------------------
 else if(targetSelectionMode === "CONSECUTIVE"){
 
     consecutiveShotCount++;
-
-    console.log(
-        "CONSECUTIVE:",
-        consecutiveShotCount,
-        "/",
-        consecutiveShotsPerTarget
-    );
 
 
     if(
@@ -4032,37 +3900,23 @@ else if(targetSelectionMode === "CONSECUTIVE"){
     ){
 
         consecutiveShotCount = 0;
-
-
         if(!waitingForNextTarget){
-
             waitingForNextTarget = true;
-
             setTimeout(
-
                 ()=>{
-
                     nextTarget();
-
                     waitingForNextTarget = false;
-
                 },
-
                 250
-
             );
-
         }
-
     }
-
 }
     }   
 
 }else{
 
-    // Laser is already being tracked.
-    // Do not record another shot.
+    // Laser is already being tracked - DO NOT record shot
     laserMissingFrames = 0;
 }
     requestAnimationFrame(
@@ -5137,14 +4991,7 @@ sensitivitySelect.onchange = ()=>{
             break;
     }
 
-    console.log(
-        "Laser Sensitivity:",
-        laserSensitivity,
-        "Base Threshold:",
-        DETECTOR.baseThreshold,
-        "Color Difference:",
-        DETECTOR.colorDifference
-    );
+
 };
     
 targetShapeSelect.onchange = ()=>{
