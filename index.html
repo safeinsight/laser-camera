@@ -4342,7 +4342,7 @@ pdf.line(
 //--------------------------------
 
 if(selectedDrill){
-    pdf.setFontSize(20);
+    pdf.setFontSize(24);
     
     pdf.text(
         "Drill: " + selectedDrill.name,
@@ -4352,6 +4352,8 @@ if(selectedDrill){
 }
 
 else{
+    pdf.setFontSize(24);
+    
     pdf.text(
         "Open Shoot - No Drill Selected",
         20,
