@@ -3582,7 +3582,6 @@ function detectLaser(){
 if(learnBackground){
     backgroundFrame = new Uint8ClampedArray(pixels);
     learnBackground = false;
-    console.log("Background learned");
     requestAnimationFrame(detectLaser);
     return;
 }
@@ -4072,61 +4071,25 @@ else if(targetSelectionMode === "CONSECUTIVE"){
 }
 
 //------------------------------------------------
-// DRAW HITS -->
+// DRAW HITS FUNCTION
 //------------------------------------------------
-
 function drawHits(maxTime = Infinity){
-
     if(hits.length > 0){
-
-console.log(
-    "DRAW HITS:",
-    "overlay:",
-    overlay.width,
-    overlay.height,
-    "hits:",
-    hits.length
-);
-
 }
-
 
     //----------------------------------------
     // Draw every saved hit up to maxTime
     //----------------------------------------
-
    for(const hit of hits){
-
         if(hit.time > maxTime){
             continue;
         }
-
     const drawX =
     normToOverlayX(hit.x);
-
     const drawY =
     normToOverlayY(hit.y);
-
-
         ctx.beginPath();
-
-       console.log(
-    "DRAW MARKER:",
-    drawX,
-    drawY
-);
-
        if(hit.time === hits[hits.length-1].time){
-
-console.log(
-    "DRAW MARKER:",
-    drawX,
-    drawY,
-    "NORMALIZED:",
-    hit.x,
-    hit.y
-);
-
 } 
        
        ctx.arc(
@@ -4147,15 +4110,13 @@ console.log(
 }
     
 //------------------------------------------------
-// CALCULATE GROUP CENTER -->
+// CALCULATE GROUP CENTER FUNCTION
 //------------------------------------------------
-
 function calculateGroupCenter(){
 
     //----------------------------------------
     // No shots recorded
     //----------------------------------------
-
     if(hits.length === 0){
         return null;
     }
@@ -4163,10 +4124,8 @@ function calculateGroupCenter(){
     //----------------------------------------
     // Add all shot locations
     //----------------------------------------
-
     let totalX = 0;
     let totalY = 0;
-
     for(const hit of hits){
         totalX += hit.x;
         totalY += hit.y;
@@ -4175,7 +4134,6 @@ function calculateGroupCenter(){
     //----------------------------------------
     // Return average location
     //----------------------------------------
-
     return{
         x: totalX / hits.length,
         y: totalY / hits.length
@@ -4183,70 +4141,47 @@ function calculateGroupCenter(){
 }
 
 //------------------------------------------------
-// REDRAW OVERLAY -->
+// REDRAW OVERLAY FUNCTION
 //------------------------------------------------
-
 function redrawOverlay({
-
     maxTime = Infinity
 } = {}){
-
-    //----------------------------------------
-    // Clear everything
-    //----------------------------------------
-
     clearOverlay();
 
 //----------------------------------------
 // Playback active target
 //----------------------------------------
-
 let savedActiveTarget = activeTarget;
-
 if(maxTime !== Infinity){
-
     const playbackTarget =
-
         getPlaybackActiveTarget(
-
             maxTime
-
         );
-
     if(playbackTarget){
-
         activeTarget = playbackTarget;
-
     }
-
 }
     
     //----------------------------------------
     // Draw all targets
     //----------------------------------------
+    drawGreenBoxes();
 
-drawGreenBoxes();
-
-//----------------------------------------
-// Draw recorded hits
-//----------------------------------------
-
-if(showRecordedHits){
-
-    drawHits(maxTime);
-
+    //----------------------------------------
+    // Draw recorded hits
+    //----------------------------------------
+    if(showRecordedHits){
+        drawHits(maxTime);
 }
 
-//----------------------------------------
-// Restore live active target
-//----------------------------------------
-
-activeTarget = savedActiveTarget;
+    //----------------------------------------
+    // Restore live active target
+    //----------------------------------------
+    activeTarget = savedActiveTarget;
     
     //----------------------------------------
     // Draw countdown if active
     //----------------------------------------
-
     if(countdownValue !== null){
         ctx.save();
        ctx.font =
@@ -4275,11 +4210,10 @@ activeTarget = savedActiveTarget;
     // Draw current laser
     //----------------------------------------
 
-if(currentLaserVisible){
-    ctx.beginPath();
-   const laserRadius =
-    overlay.width * .006;
-
+    if(currentLaserVisible){
+        ctx.beginPath();
+    const laserRadius =
+        overlay.width * .006;
 
 ctx.arc(
     normToOverlayX(currentLaserX),
@@ -4301,7 +4235,6 @@ overlay.width * .002
     //----------------------------------------
     // Draw group center
     //----------------------------------------
-
 if(
     analysisEnabled &&
     groupCenter &&
@@ -4309,21 +4242,18 @@ if(
 ){
     const centerX =
     normToOverlayX(groupCenter.x);
-
     const centerY =
     normToOverlayY(groupCenter.y);
-    
+   
     ctx.strokeStyle = "red";
     ctx.lineWidth = 2;
 
     //----------------------------------------
     // Horizontal line
     //----------------------------------------
-
 ctx.beginPath();
 const crossSize =
 overlay.width * .025;
-
 
 ctx.moveTo(
 centerX - crossSize,
@@ -4339,7 +4269,6 @@ ctx.stroke();
     //----------------------------------------
     // Vertical line
     //----------------------------------------
-
 ctx.beginPath();
 ctx.moveTo(
 centerX,
@@ -4355,7 +4284,6 @@ ctx.stroke();
     //----------------------------------------
     // White center dot
     //----------------------------------------
-
     ctx.beginPath();
     ctx.arc(
         centerX,
@@ -4370,48 +4298,35 @@ ctx.stroke();
 }
 }
 
-
 //------------------------------------------------
-// UPDATE CURRENT LASER
+// UPDATE CURRENT LASER FUNCTION
 //------------------------------------------------
-
 function drawCurrentLaser(hitX, hitY){
 
     //----------------------------------------
     // Store normalized detector coordinates
     //----------------------------------------
-
     currentLaserX =
         hitX / detectCanvas.width;
-
     currentLaserY =
         hitY / detectCanvas.height;
-
     currentLaserVisible = true;
 }
 
 drawTargetBtn.onclick = () => {
-
     continuousTargetDrawing = true;
-
     settingsPanel.style.display = "none";
-
     calibrateTarget();
-
 };
 
 drillDrawTargetBtn.onclick = () => {
-
     continuousTargetDrawing = true;
-
     drillsPanel.style.display = "none";
-
     calibrateTarget();
-
 };
 
 //------------------------------------------------
-// LIVE OVERLAY LOOP -->
+// LIVE OVERLAY LOOP FUNCTION
 //------------------------------------------------
 
 function liveOverlayLoop(){
@@ -4423,6 +4338,10 @@ function liveOverlayLoop(){
     requestAnimationFrame(liveOverlayLoop);
 }
 
+
+//------------------------------------------------
+// SYNC PLAYBACK FUNCTION
+//------------------------------------------------
 function syncPlayback(){
 
 if(
@@ -4469,7 +4388,7 @@ syncPlayback
 
 
 //--------------------------
-// ENTER RECORDING MODE
+// ENTER RECORDING MODE FUNCTION
 //--------------------------
 
 function enterRecordingMode(){
@@ -4494,7 +4413,7 @@ function enterRecordingMode(){
 }
 
 //--------------------------
-// EXIT RECORDING MODE
+// EXIT RECORDING MODE FUNCTION
 //--------------------------
 
 function exitRecordingMode(){
@@ -4517,7 +4436,7 @@ function exitRecordingMode(){
 }
 
 //--------------------------
-// CREATE PDF SUMMARY
+// CREATE PDF SUMMARY FUNCTION
 //--------------------------
 
 function createPDFSummary(logo){
