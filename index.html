@@ -601,6 +601,7 @@ Drills Panel
         <video
         id="playback"
         playsinline
+        muted
         style="display:none;">
         </video>
 
@@ -5339,11 +5340,13 @@ playLastBtn.onclick = ()=>{
     closeSettingsPanel();
     // Nothing to play yet
     if(!playback.src){
-
         console.log("No recording available.");
-
         return;
     }
+
+     // Mute replay audio
+    playback.muted = true;
+    playback.volume = 0;
 
     //----------------------------------------
     // Switch to playback video
