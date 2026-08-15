@@ -6,11 +6,12 @@ const APP_SHELL = [
   "./styles.css",
   "./app.js",
   "./manifest.json",
+  "./service-worker.js",
+  "./Logo High Res.png",
   "./Logo Sharp 260x260 png.png",
   "./SI Logo Border.png",
-  "./SI Logo Sharp.png",
-  "./Shot Sound.mp3",
-  "./Target Sound.mp3"
+  "./pistol-shot.mp3",
+  "./shot-beep.mp3"
 ];
 
 self.addEventListener("install", event => {
