@@ -26,48 +26,36 @@ jobs:
           index = Path('index.html')
           text = index.read_text(encoding='utf-8')
 
-          # Collect every inline style block. This keeps the current CSS intact
-          # instead of manually rewriting a large, working stylesheet.
-          styles = re.findall(r'<style(?:\\s[^>]*)?>(.*?)</style>', text, re.I | re.S)
+          style_pattern = re.compile(r'<style[^>]*>(.*?)</style>', re.I | re.S)
+          styles = style_pattern.findall(text)
           if not styles:
-              raise SystemExit('No inline <style> blocks found.')
+              raise SystemExit('No inline style blocks found.')
 
           Path('styles.css').write_text(
               '\n\n/* ======================================== */\n\n'.join(s.strip() for s in styles) + '\n',
               encoding='utf-8'
           )
 
-          # Collect inline scripts while leaving external library scripts alone.
-          inline_scripts = []
-          pattern = re.compile(r'<script(?![^>]*\\bsrc\\s*=)[^>]*>(.*?)</script>', re.I | re.S)
-          for match in pattern.finditer(text):
-              inline_scripts.append(match.group(1).strip())
-
+          script_pattern = re.compile(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', re.I | re.S)
+          inline_scripts = [s.strip() for s in script_pattern.findall(text) if s.strip()]
           if not inline_scripts:
-              raise SystemExit('No inline <script> blocks found.')
+              raise SystemExit('No inline script blocks found.')
 
           pwa_app = Path('app.js').read_text(encoding='utf-8') if Path('app.js').exists() else ''
           legacy = '\n\n/* ======================================== */\n\n'.join(inline_scripts)
-          Path('app.js').write_text(
-              pwa_app.rstrip() + '\n\n' +
-              '/* ========================================\\n' +
-              '   EXISTING LASER TARGET APPLICATION\\n' +
-              '   Extracted from index.html without functional changes.\\n' +
-              '   ======================================== */\\n\\n'.replace('\\n', '\n') +
-              legacy + '\n',
-              encoding='utf-8'
+          app_text = (
+              pwa_app.rstrip()
+              + '\n\n/* ========================================\n'
+              + '   EXISTING LASER TARGET APPLICATION\n'
+              + '   Extracted from index.html without functional changes.\n'
+              + '   ======================================== */\n\n'
+              + legacy
+              + '\n'
           )
+          Path('app.js').write_text(app_text, encoding='utf-8')
 
-          # Replace inline styles with the external stylesheet.
-          text = re.sub(
-              r'<style(?:\\s[^>]*)?>.*?</style>',
-              '<link rel="stylesheet" href="styles.css">',
-              text,
-              flags=re.I | re.S
-          )
+          text = style_pattern.sub('<link rel="stylesheet" href="styles.css">', text)
 
-          # Keep external scripts exactly where they are. Replace all inline
-          # scripts with one app.js reference at the position of the first one.
           first_script = True
           def replace_script(match):
               nonlocal first_script
@@ -76,9 +64,8 @@ jobs:
                   return '<script src="app.js"></script>'
               return ''
 
-          text = pattern.sub(replace_script, text)
+          text = script_pattern.sub(replace_script, text)
 
-          # Add manifest metadata.
           if 'rel="manifest"' not in text:
               text = text.replace(
                   '</head>',
