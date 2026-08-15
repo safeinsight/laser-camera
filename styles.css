@@ -1,48 +1,692 @@
-/*
- * PWA-specific styles.
- *
- * Existing application styles are still inline in index.html on the
- * conversion branch until the application stylesheet can be moved without
- * altering the detector's current behavior.
- */
+html,
+body{
+margin:0;
+display:flex;
+flex-direction:column;
 
-#connectionStatus {
-  position: fixed;
-  top: 48px;
-  right: 12px;
-  z-index: 200;
-  padding: 4px 9px;
-  border-radius: 999px;
-  font: 700 12px Arial, sans-serif;
-  color: #fff;
-  background: rgba(0, 0, 0, .65);
-  pointer-events: none;
+width:100vw;
+height:100dvh;
+
+overflow:hidden;
+background:#111;
+font-family:Arial,sans-serif;
+color:white;
 }
 
-#connectionStatus[data-online="false"] {
-  background: #8b0000;
+h2{
+margin:10px 0;
+text-align:center;
+flex:0 0 auto;
 }
 
-#connectionStatus[data-online="true"] {
-  background: #006b35;
+.app{
+flex:1;
+display:flex;
+flex-direction:column;
+min-height:0;
 }
 
-#installAppBtn {
-  position: fixed;
-  right: 12px;
-  bottom: 74px;
-  z-index: 210;
-  min-width: 0;
-  margin: 0;
+.videoContainer{
+position:relative;
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+background:black;
+min-height:0;
+}
+
+video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    background:black;
+}
+
+.downloadVideoBtn{
+    background:#00a651;
+    color:white;
+    border:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+#downloadVideoBtn:hover{
+    background:#017d3d;
+}
+
+.downloadVideoBtn svg{
+    width:20px;
+    height:20px;
+    flex-shrink:0;
+}
+
+#summaryBtn,
+#downloadVideoBtn{
+    display:block;
+    width:100%;
+    max-width:300px;
+    margin-left:auto !important;
+    margin-right:auto !important;
+}
+    
+#overlay{
+position:absolute;
+pointer-events:auto;
+z-index:5;
+touch-action:none;
+}
+
+#videoHUD{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    background:rgba(0,0,0,.45);
+    box-sizing:border-box;
+    z-index:35;
+    pointer-events:none;
+}
+
+#logoOverlay{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+}
+
+#logoOverlay img{
+    height:24px;
+    width:auto;
+    display:block;
+}
+
+#hudCenter{
+    flex:1;
+}
+
+#timerOverlay{
+    position:static;
+    flex:0 0 auto;
+    background:none;
+    transform:none;
+    padding:0;
+    min-width:auto;
+    height:auto;
+    font-size:24px;
+    font-weight:bold;
+    color:#fff;
+    text-shadow:0 0 6px #000;
+}
+
+#shotsOverlay{
+position:absolute;
+bottom:15px;
+left:15px;
+background:
+rgba(0,0,0,.55);
+padding:
+6px 12px;
+border-radius:
+10px;
+font-size:
+18px;
+font-weight:
+bold;
+z-index:20;
+}
+
+#distanceOverlay{
+position:absolute;
+bottom:15px;
+right:15px;
+background:
+rgba(0,0,0,.55);
+padding:
+6px 12px;
+border-radius:
+10px;
+font-size:
+18px;
+font-weight:
+bold;
+z-index:20;
+cursor:pointer;
+}
+
+#distancePopup{
+display:none;
+position:absolute;
+bottom:60px;
+right:15px;
+background:#222;
+border-radius:12px;
+overflow:hidden;
+box-shadow:
+0 0 20px
+rgba(0,0,0,.7);
+z-index:50;
+}
+
+.distanceOption{
+padding:
+14px 25px;
+font-size:20px;
+cursor:pointer;
+border-bottom:
+1px solid #444;
+}
+
+.distanceOption:hover{
+background:#333;
+}
+
+.selected{
+background:#00a651;
+}
+
+button{
+padding:
+16px 30px;
+margin:
+10px;
+font-size:
+20px;
+font-weight:
+bold;
+border:none;
+border-radius:
+12px;
+cursor:pointer;
+min-width:
+220px;
+}
+
+select{
+    font-size:30px;
+    font-weight:bold;
+    padding:12px 18px;
+    border-radius:12px;
+    border:2px solid #555;
+    background:#333;
+    color:white;
+}
+
+#drawTargetBtn{
+background:#000000;
+color:white;
+}
+
+#drawTargetBtn:hover{
+    background:#545454;
+}
+
+#drillDrawTargetBtn{
+    background:#000000;
+    color:white;
+}
+
+#drillDrawTargetBtn:hover{
+    background:#545454;
+}
+
+#deleteTargetsBtn{
+background:#000000;
+color:white;
+}
+
+#deleteTargetsBtn:hover{
+    background:#545454;
+}
+
+#clearTargetBtn{
+background:#000000;
+color:white;
+}
+
+#clearTargetBtn:hover{
+    background:#545454;
+}
+
+#playLastBtn{
+    background:#00a651;
+    color:white;
+}
+
+#playLastBtn:hover{
+    background:#017d3d;
+}
+
+#drillsBtn{
+    background:#ff0000;
+    color:white;
+}
+
+#drillsBtn:hover{
+    background:#cc0000;
+}
+    
+    #stopBtn{
+    background:#ff0000;
+    color:white;
+}
+
+    #stopBtn .toolbarIcon{
+    fill:white;
+}
+
+#countdown{
+height:90px;
+font-size:72px;
+font-weight:bold;
+color:#ffcc00;
+}
+#timer{
+    ...
+}
+
+/*----------------------------------------
+  Analysis Toggle Switch
+----------------------------------------*/
+
+.switch{
+    position:relative;
+    display:inline-block !important;  
+    margin: 0 auto !important; 
+    width:60px;
+    height:34px;
+    vertical-align:middle;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    cursor:pointer;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#888;
+    transition:.25s;
+    border-radius:34px;
+}
+
+.slider:before{
+    position:absolute;
+    content:"";
+    height:26px;
+    width:26px;
+    left:4px;
+    bottom:4px;
+    background:white;
+    transition:.25s;
+    border-radius:50%;
+}
+
+input:checked + .slider{
+    background:#28a745;
+}
+
+input:checked + .slider:before{
+    transform:translateX(26px);
+}
+
+#analysisControl{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap:6px !important;
+
+    margin: 30px auto !important; 
+    width: 100% !important;
+    max-width: 300px !important;
+    text-align: center !important;
+}
+
+#analysisLabel{
+    color:black;
+    font-weight:bold;
+    text-align: center !important;
+    width: 100% !important;
+    user-select:none;
+}
+
+#summaryControl{
+    margin-top:20px;
+    display:flex;
+    justify-content:center;
+}
+
+#summaryBtn{
+    width:100%;
+    max-width:320px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:#ff0000;
+    color:#ffffff;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+#summaryBtn:hover{
+    background:#cc0000;
+}
+
+/*----------------------------------------
+Bottom Toolbar
+----------------------------------------*/
+
+#toolbar{
+height:60px;
+flex-shrink:0;
+background:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 5px;
+box-sizing:border-box;
+z-index:50;
+}
+
+.toolbar-section{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.toolbar-section.left{
+    justify-content:flex-start;
+}
+
+.toolbar-section.right{
+    justify-content:flex-end;
+}
+
+#toolbar button{
+    width:96px;
+    min-width:96px;
+    max-width:96px;
+    height:54px;
+    margin:0;
+    padding:4px;
+    font-size:18px;
+    box-sizing:border-box;
+}
+
+#toolbar button:not([hidden]){
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:3px;
+}
+
+.toolbarIcon{
+    width:22px;
+    height:22px;
+    fill:#ffffff;
+    stroke:#ffffff;
+    flex-shrink:0;
+}
+
+#settingsBtn{
+    background:#444;
+    color:white;
+}
+
+#settingsBtn:hover{
+    background:#545454;
+}
+
+#timerBtn{
+    background:#0d6efd;
+    color:white;
+}
+
+#startBtn{
+    background:#00a651;
+    color:white;
+}
+
+#startBtn:hover{
+    background:#017d3d;
+}
+
+#settingsBtn{
+    background:#000000;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+/*----------------------------------------
+Settings Panel
+----------------------------------------*/
+
+#settingsPanel{
+    display:none;
+    position:absolute;
+    top:10px;
+    left:10px;
+    right:10px;
+    bottom:80px;
+    overflow-y:auto;
+    background:rgba(255, 255, 255,.80);
+    border:2px solid #555;
+    border-radius:10px;
+    padding:20px;
+    color:white;
+    text-align:left;
+    z-index:100;
+}
+
+#settingsPanel h3{
+    margin-top:0;
+    text-align:center;
+}
+
+#settingsPanel h4{
+    margin-top:20px;
+    margin-bottom:10px;
+    color:#000000;
+    border-bottom:1px solid #555;
+    padding-bottom:5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+/*----------------------------------------
+Drills Panel
+----------------------------------------*/
+
+#drillsPanel{
+    display:none;
+    position:absolute;
+    top:10px;
+    left:10px;
+    right:10px;
+    bottom:80px;
+    overflow-y:auto;
+    background:rgba(255, 255, 255,.80);
+    border:2px solid #555;
+    border-radius:10px;
+    padding:20px;
+    color:white;
+    text-align:left;
+    z-index:100;
+}
+
+#drillsPanel h3{
+    margin-top:0;
+    text-align:center;
+}
+
+#drillsPanel h4{
+    margin-top:20px;
+    margin-bottom:10px;
+    color:#000000;
+    border-bottom:1px solid #555;
+    padding-bottom:5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+    
+#countdownOptions{
+    margin-left:15px;
+    line-height:1.8;
+}
+
+/* ======================================== */
+
+/* Container for the 2x2 grid layout */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 40px;
+    margin-bottom: 25px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+.settings-card h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  
+  /* Force these styles to override everything else on the site */
+  display: block !important;
+  background-color: #ff0000 !important;
+  color: #ffffff !important; /* Forces the text to stay white */
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  box-sizing: border-box !important;
+
+  /* Match dropdown trigger button width */
+  width: 100% !important;
+  max-width: 240px !important; 
+}
+
+  /* Custom dropdown wrapper structure */
+  .custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 240px;
+  }
+
+/* 1. Update your visible input trigger block */
+.select-trigger {
+  width: 100%;
   padding: 10px 14px;
-  border-radius: 8px;
-  border: 0;
-  background: #00a651;
-  color: #fff;
-  font: 700 14px Arial, sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  border: 1px solid #666;          /* Darker border for grey blending */
+  border-radius: 6px;
+  background-color: #000000;      /* Changed from white to Dark Grey */
+  color: #ffffff;                 /* Changed from dark text to White for visibility */
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  box-sizing: border-box;
 }
 
-#installAppBtn:hover {
-  background: #017d3d;
+/* 2. Change the downward indicator arrow to white so it stands out on grey */
+.select-trigger:after {
+  content: '';
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #ffffff; /* Changed from dark grey to White */
+  display: inline-block;
+  margin-left: 10px;
 }
+
+/* 3. Smooth out the visual behavior when you hover over the gray trigger box */
+.select-trigger:hover {
+  background-color: #737373;      /* Slightly darker gray highlight on hover */
+  border-color: #ff0000;          /* Adds your signature red outline indicator on hover */
+}
+
+    
+  .custom-select-wrapper.open .select-trigger {
+    border-color: #ff0000;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
+  }
+
+  /* Dropdown selection options box panel layout */
+  .custom-options-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #000000; /* Black background requested */
+    border: 1px solid #666;
+    border-radius: 6px;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .custom-select-wrapper.open .custom-options-panel {
+    display: block;
+  }
+
+  /* Individual Option Choice Line elements style rules */
+  .custom-option-item {
+    padding: 10px 14px;
+    font-size: 15px;
+    font-weight: bold; /* Bold text configuration option requested */
+    color: #ffffff;    /* Clear white text overlay */
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+  }
+
+  /* Custom Red Hover Selection Highlight requested (Replaces system blue bar) */
+  .custom-option-item:hover {
+    background-color: #ff0000 !important;
+    color: #ffffff;
+  }
+
+  /* Style for option when it's actively active */
+  .custom-option-item.selected-active {
+    background-color: #666;
+  }
+
+  @media (max-width: 600px) {
+    .settings-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .custom-select-wrapper {
+      max-width: 100%;
+    }
+  }
