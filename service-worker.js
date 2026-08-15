@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-v1";
+const CACHE_NAME = "safe-insight-laser-target-v2";
 
 const APP_SHELL = [
   "./",
