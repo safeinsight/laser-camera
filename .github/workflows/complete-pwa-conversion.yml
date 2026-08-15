@@ -56,11 +56,10 @@ jobs:
 
           text = style_pattern.sub('<link rel="stylesheet" href="styles.css">', text)
 
-          first_script = True
+          state = [True]
           def replace_script(match):
-              nonlocal first_script
-              if first_script:
-                  first_script = False
+              if state[0]:
+                  state[0] = False
                   return '<script src="app.js"></script>'
               return ''
 
