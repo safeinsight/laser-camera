@@ -1,0 +1,51 @@
+name: Fix settings and drills panel position
+
+on:
+  push:
+    branches:
+      - pwa-conversion
+
+permissions:
+  contents: write
+
+jobs:
+  fix-panel-position:
+    if: ${{ !contains(github.event.head_commit.message, 'Fix settings and drills panel position') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: pwa-conversion
+          fetch-depth: 0
+
+      - name: Add panel positioning override
+        shell: bash
+        run: |
+          cat >> styles.css <<'EOF'
+
+/*----------------------------------------
+PWA panel positioning regression fix
+Keep Settings and Drills above the bottom toolbar.
+----------------------------------------*/
+
+#settingsPanel,
+#drillsPanel{
+    bottom:60px !important;
+    z-index:40 !important;
+}
+
+#toolbar{
+    position:relative;
+    z-index:50;
+}
+EOF
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add styles.css
+          git commit -m "Fix settings and drills panel position"
+          git push origin pwa-conversion
