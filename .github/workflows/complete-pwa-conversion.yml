@@ -79,14 +79,18 @@ jobs:
 
       - name: Generate 192x192 and 512x512 PNG icons
         run: |
-          mkdir -p icons
-          if command -v magick >/dev/null 2>&1; then
-            magick "Logo Sharp 260x260 png.png" -resize 192x192 icons/icon-192.png
-            magick "Logo Sharp 260x260 png.png" -resize 512x512 icons/icon-512.png
-          else
-            convert "Logo Sharp 260x260 png.png" -resize 192x192 icons/icon-192.png
-            convert "Logo Sharp 260x260 png.png" -resize 512x512 icons/icon-512.png
-          fi
+          python3 -m pip install --quiet Pillow
+          python3 <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          source = Image.open('Logo Sharp 260x260 png.png').convert('RGBA')
+          Path('icons').mkdir(exist_ok=True)
+
+          for size, filename in [(192, 'icon-192.png'), (512, 'icon-512.png')]:
+              icon = source.resize((size, size), Image.Resampling.LANCZOS)
+              icon.save(Path('icons') / filename, format='PNG', optimize=True)
+          PY
 
       - name: Point manifest at generated icons
         run: |
