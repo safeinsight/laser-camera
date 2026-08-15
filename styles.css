@@ -1,0 +1,48 @@
+/*
+ * PWA-specific styles.
+ *
+ * Existing application styles are still inline in index.html on the
+ * conversion branch until the application stylesheet can be moved without
+ * altering the detector's current behavior.
+ */
+
+#connectionStatus {
+  position: fixed;
+  top: 48px;
+  right: 12px;
+  z-index: 200;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font: 700 12px Arial, sans-serif;
+  color: #fff;
+  background: rgba(0, 0, 0, .65);
+  pointer-events: none;
+}
+
+#connectionStatus[data-online="false"] {
+  background: #8b0000;
+}
+
+#connectionStatus[data-online="true"] {
+  background: #006b35;
+}
+
+#installAppBtn {
+  position: fixed;
+  right: 12px;
+  bottom: 74px;
+  z-index: 210;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 0;
+  background: #00a651;
+  color: #fff;
+  font: 700 14px Arial, sans-serif;
+  cursor: pointer;
+}
+
+#installAppBtn:hover {
+  background: #017d3d;
+}
