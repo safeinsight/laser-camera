@@ -1,0 +1,128 @@
+name: Complete PWA conversion
+
+on:
+  push:
+    branches:
+      - pwa-conversion
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    if: ${{ !contains(github.event.head_commit.message, '[pwa-conversion-complete]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Split inline CSS and JavaScript
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          index = Path('index.html')
+          text = index.read_text(encoding='utf-8')
+
+          # Collect every inline style block. This keeps the current CSS intact
+          # instead of manually rewriting a large, working stylesheet.
+          styles = re.findall(r'<style(?:\\s[^>]*)?>(.*?)</style>', text, re.I | re.S)
+          if not styles:
+              raise SystemExit('No inline <style> blocks found.')
+
+          Path('styles.css').write_text(
+              '\n\n/* ======================================== */\n\n'.join(s.strip() for s in styles) + '\n',
+              encoding='utf-8'
+          )
+
+          # Collect inline scripts while leaving external library scripts alone.
+          inline_scripts = []
+          pattern = re.compile(r'<script(?![^>]*\\bsrc\\s*=)[^>]*>(.*?)</script>', re.I | re.S)
+          for match in pattern.finditer(text):
+              inline_scripts.append(match.group(1).strip())
+
+          if not inline_scripts:
+              raise SystemExit('No inline <script> blocks found.')
+
+          pwa_app = Path('app.js').read_text(encoding='utf-8') if Path('app.js').exists() else ''
+          legacy = '\n\n/* ======================================== */\n\n'.join(inline_scripts)
+          Path('app.js').write_text(
+              pwa_app.rstrip() + '\n\n' +
+              '/* ========================================\\n' +
+              '   EXISTING LASER TARGET APPLICATION\\n' +
+              '   Extracted from index.html without functional changes.\\n' +
+              '   ======================================== */\\n\\n'.replace('\\n', '\n') +
+              legacy + '\n',
+              encoding='utf-8'
+          )
+
+          # Replace inline styles with the external stylesheet.
+          text = re.sub(
+              r'<style(?:\\s[^>]*)?>.*?</style>',
+              '<link rel="stylesheet" href="styles.css">',
+              text,
+              flags=re.I | re.S
+          )
+
+          # Keep external scripts exactly where they are. Replace all inline
+          # scripts with one app.js reference at the position of the first one.
+          first_script = True
+          def replace_script(match):
+              nonlocal first_script
+              if first_script:
+                  first_script = False
+                  return '<script src="app.js"></script>'
+              return ''
+
+          text = pattern.sub(replace_script, text)
+
+          # Add manifest metadata.
+          if 'rel="manifest"' not in text:
+              text = text.replace(
+                  '</head>',
+                  '    <link rel="manifest" href="manifest.json">\n'
+                  '    <meta name="theme-color" content="#111111">\n'
+                  '</head>',
+                  1
+              )
+
+          index.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Generate 192x192 and 512x512 PNG icons
+        run: |
+          mkdir -p icons
+          if command -v magick >/dev/null 2>&1; then
+            magick "Logo Sharp 260x260 png.png" -resize 192x192 icons/icon-192.png
+            magick "Logo Sharp 260x260 png.png" -resize 512x512 icons/icon-512.png
+          else
+            convert "Logo Sharp 260x260 png.png" -resize 192x192 icons/icon-192.png
+            convert "Logo Sharp 260x260 png.png" -resize 512x512 icons/icon-512.png
+          fi
+
+      - name: Point manifest at generated icons
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import json
+          p = Path('manifest.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          data['icons'] = [
+              {'src':'icons/icon-192.png','sizes':'192x192','type':'image/png','purpose':'any maskable'},
+              {'src':'icons/icon-512.png','sizes':'512x512','type':'image/png','purpose':'any maskable'}
+          ]
+          p.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Mark conversion complete
+        run: touch .pwa-converted
+
+      - name: Commit converted application
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html styles.css app.js manifest.json icons .pwa-converted
+          git commit -m "Complete PWA source conversion [pwa-conversion-complete]"
+          git push
