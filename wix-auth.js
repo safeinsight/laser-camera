@@ -1,13 +1,6 @@
 /*
  * Safe Insight Laser Target
  * Wix member authorization gate for the GitHub Pages PWA.
- *
- * Access is granted only when the current Wix member has an ACTIVE
- * Pricing Plan order named Laser App Annual or Laser App Monthly.
- *
- * This file is loaded by the service worker into index.html so the
- * production application markup remains unchanged while this test branch
- * is being evaluated.
  */
 
 (() => {
@@ -17,17 +10,13 @@
     const REDIRECT_URI = "https://safeinsight.github.io/laser-camera/";
     const TOKEN_STORAGE_KEY = "safeInsightWixTokens";
     const OAUTH_STORAGE_KEY = "safeInsightWixOAuthData";
-    const AUTH_CACHE_KEY = "safeInsightWixAuthorization";
 
     const ALLOWED_PLANS = new Set([
         "Laser App Annual",
         "Laser App Monthly"
     ]);
 
-    let wixClient = null;
-    let createClient = null;
-    let OAuthStrategy = null;
-    let pricingPlans = null;
+    let wixClient;
 
     document.documentElement.style.visibility = "hidden";
 
@@ -112,40 +101,31 @@
         document.documentElement.style.visibility = "visible";
     }
 
-    function saveTokens(tokens) {
-        localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(tokens));
-    }
-
     function loadTokens() {
         try {
             const raw = localStorage.getItem(TOKEN_STORAGE_KEY);
-            return raw ? JSON.parse(raw) : null;
+            return raw ? JSON.parse(raw) : undefined;
         } catch {
-            return null;
+            return undefined;
         }
     }
 
     function clearTokens() {
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         localStorage.removeItem(OAUTH_STORAGE_KEY);
-        localStorage.removeItem(AUTH_CACHE_KEY);
     }
 
-    async function loadWixSdk() {
+    async function loadWixClient() {
         const sdk = await import("https://esm.sh/@wix/sdk@latest");
         const plans = await import("https://esm.sh/@wix/pricing-plans@latest");
 
-        createClient = sdk.createClient;
-        OAuthStrategy = sdk.OAuthStrategy;
-        pricingPlans = plans;
-
-        wixClient = createClient({
-            auth: OAuthStrategy({
+        wixClient = sdk.createClient({
+            auth: sdk.OAuthStrategy({
                 clientId: WIX_CLIENT_ID,
-                tokens: loadTokens() || undefined
+                tokens: loadTokens()
             }),
             modules: {
-                pricingPlans: plans
+                orders: plans.orders
             }
         });
     }
@@ -176,7 +156,7 @@
         const returned = wixClient.auth.parseFromUrl();
 
         if (!returned || (!returned.code && !returned.error)) {
-            return false;
+            return;
         }
 
         if (returned.error) {
@@ -195,19 +175,22 @@
             oauthData
         );
 
-        saveTokens(tokens);
+        wixClient.auth.setTokens(tokens);
+        localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(tokens));
         localStorage.removeItem(OAUTH_STORAGE_KEY);
 
-        const cleanURL = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, document.title, cleanURL);
-
-        return true;
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.origin + window.location.pathname
+        );
     }
 
     async function verifyMembership() {
-        const orders = await wixClient.pricingPlans.listCurrentMemberOrders();
+        const response = await wixClient.orders.listCurrentMemberOrders();
+        const orders = Array.isArray(response) ? response : (response.orders || []);
 
-        const activeOrder = (orders || []).find(order =>
+        const activeOrder = orders.find(order =>
             order &&
             order.status === "ACTIVE" &&
             ALLOWED_PLANS.has(order.planName)
@@ -216,11 +199,6 @@
         if (!activeOrder) {
             throw new Error("NO_ACTIVE_LASER_PLAN");
         }
-
-        localStorage.setItem(AUTH_CACHE_KEY, JSON.stringify({
-            planName: activeOrder.planName,
-            verifiedAt: Date.now()
-        }));
 
         return activeOrder;
     }
@@ -233,12 +211,10 @@
         });
 
         try {
-            await loadWixSdk();
-            const completedLogin = await finishLoginIfNeeded();
+            await loadWixClient();
+            await finishLoginIfNeeded();
 
-            const loggedIn = await wixClient.auth.loggedIn();
-
-            if (!loggedIn) {
+            if (!wixClient.auth.loggedIn()) {
                 showGate(
                     "Safe Insight Laser Target",
                     "Please log in with your Safe Insight Wix account to continue."
@@ -253,7 +229,6 @@
             );
 
             const activeOrder = await verifyMembership();
-
             console.log("Safe Insight membership verified:", activeOrder.planName);
             openApp();
         } catch (error) {
