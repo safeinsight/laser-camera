@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-v2";
+const CACHE_NAME = "safe-insight-laser-target-wix-auth-v1";
 
 const APP_SHELL = [
   "./",
@@ -7,6 +7,7 @@ const APP_SHELL = [
   "./app.js",
   "./manifest.json",
   "./service-worker.js",
+  "./wix-auth.js",
   "./Logo High Res.png",
   "./Logo Sharp 260x260 png.png",
   "./SI Logo Border.png",
@@ -34,6 +35,34 @@ self.addEventListener("activate", event => {
   );
 });
 
+async function injectAuthScript(response) {
+  if (!response) return response;
+
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.includes("text/html")) return response;
+
+  const html = await response.text();
+
+  if (html.includes('src="./wix-auth.js"') || html.includes('src="wix-auth.js"')) {
+    return new Response(html, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers
+    });
+  }
+
+  const injected = html.replace(
+    /<\/body>/i,
+    '<script src="./wix-auth.js"></script>\n</body>'
+  );
+
+  return new Response(injected, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers
+  });
+}
+
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
@@ -42,33 +71,39 @@ self.addEventListener("fetch", event => {
   if (requestURL.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(event.request)
-      .then(cachedResponse => {
-        if (cachedResponse) return cachedResponse;
+    (async () => {
+      try {
+        const cachedResponse = await caches.match(event.request);
 
-        return fetch(event.request)
-          .then(response => {
-            if (!response || response.status !== 200 || response.type !== "basic") {
-              return response;
-            }
+        if (cachedResponse) {
+          return event.request.mode === "navigate"
+            ? await injectAuthScript(cachedResponse)
+            : cachedResponse;
+        }
 
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
+        const response = await fetch(event.request);
 
-            return response;
-          })
-          .catch(() => {
-            if (event.request.mode === "navigate") {
-              return caches.match("./index.html");
-            }
-
-            return new Response("Offline", {
-              status: 503,
-              statusText: "Offline"
-            });
+        if (response && response.status === 200 && response.type === "basic") {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
           });
-      })
+        }
+
+        return event.request.mode === "navigate"
+          ? await injectAuthScript(response)
+          : response;
+      } catch (error) {
+        if (event.request.mode === "navigate") {
+          const fallback = await caches.match("./index.html");
+          return await injectAuthScript(fallback);
+        }
+
+        return new Response("Offline", {
+          status: 503,
+          statusText: "Offline"
+        });
+      }
+    })()
   );
 });
