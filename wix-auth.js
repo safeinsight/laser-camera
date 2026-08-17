@@ -4,6 +4,9 @@
  *
  * Access is granted only when the logged-in Wix member has an ACTIVE
  * Laser App Annual or Laser App Monthly Pricing Plan order.
+ *
+ * This implementation follows Wix's documented self-managed Headless
+ * JavaScript SDK OAuth + PKCE flow.
  */
 
 (() => {
@@ -19,8 +22,9 @@
         "Laser App Monthly"
     ]);
 
-    let wixClient;
+    let wixClient = null;
 
+    // Keep the application hidden until authorization has completed.
     document.documentElement.style.visibility = "hidden";
 
     function createGate() {
@@ -119,6 +123,8 @@
     }
 
     async function loadWixClient() {
+        // GitHub Pages does not have npm/build tooling, so load the same Wix
+        // packages used by the documented JS SDK flow from a browser ESM CDN.
         const sdk = await import("https://esm.sh/@wix/sdk@latest");
         const sitePricingPlans = await import("https://esm.sh/@wix/site-pricing-plans@latest");
 
@@ -134,67 +140,90 @@
     }
 
     async function startLogin() {
+        loginButton.disabled = true;
+        loginButton.textContent = "Opening Wix Login...";
+
         try {
             const originalURI = window.location.href.split("#")[0];
+
+            // Wix requires the redirect URI here to exactly match the URI
+            // configured in Headless Settings.
             const oauthData = wixClient.auth.generateOAuthData(
                 REDIRECT_URI,
                 originalURI
             );
 
-            localStorage.setItem(OAUTH_STORAGE_KEY, JSON.stringify(oauthData));
+            localStorage.setItem(
+                OAUTH_STORAGE_KEY,
+                JSON.stringify(oauthData)
+            );
 
             const { authUrl } = await wixClient.auth.getAuthUrl(oauthData);
-            window.location.href = authUrl;
+            window.location.assign(authUrl);
         } catch (error) {
             console.error("Wix login start failed:", error);
             showGate(
                 "Unable to start login",
-                "Please try again. If the problem continues, check the Wix OAuth redirect settings."
+                "Wix could not start the login process. Please check the browser Console for the exact error."
             );
+            loginButton.disabled = false;
+            loginButton.textContent = "Log In With Wix";
             loginButton.hidden = false;
         }
     }
 
     async function finishLoginIfNeeded() {
-        const returned = wixClient.auth.parseFromUrl();
+        const returnedOAuthData = wixClient.auth.parseFromUrl();
 
-        if (!returned || (!returned.code && !returned.error)) {
-            return;
+        if (!returnedOAuthData || (!returnedOAuthData.code && !returnedOAuthData.error)) {
+            return false;
         }
 
-        if (returned.error) {
-            throw new Error(returned.errorDescription || returned.error);
+        if (returnedOAuthData.error) {
+            throw new Error(
+                returnedOAuthData.errorDescription || returnedOAuthData.error
+            );
         }
 
         const raw = localStorage.getItem(OAUTH_STORAGE_KEY);
+
         if (!raw) {
-            throw new Error("Wix login state is missing. Please start login again.");
+            throw new Error("WIX_OAUTH_STATE_MISSING");
         }
 
         const oauthData = JSON.parse(raw);
+
         const tokens = await wixClient.auth.getMemberTokens(
-            returned.code,
-            returned.state,
+            returnedOAuthData.code,
+            returnedOAuthData.state,
             oauthData
         );
 
         wixClient.auth.setTokens(tokens);
-        localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(tokens));
+
+        localStorage.setItem(
+            TOKEN_STORAGE_KEY,
+            JSON.stringify(tokens)
+        );
+
         localStorage.removeItem(OAUTH_STORAGE_KEY);
 
+        // Remove OAuth fragments from the visible browser URL.
         window.history.replaceState(
             {},
             document.title,
             window.location.origin + window.location.pathname
         );
+
+        return true;
     }
 
     async function verifyMembership() {
-        // Wix's current frontend Pricing Plans API returns the member's
-        // orders as an array, not as { orders: [...] }.
+        // Wix documents this frontend method as returning Promise<Array<Order>>.
         const orders = await wixClient.sitePricingPlans.listCurrentMemberOrders();
 
         if (!Array.isArray(orders)) {
+            console.error("Unexpected Wix Pricing Plans response:", orders);
             throw new Error("INVALID_PRICING_PLANS_RESPONSE");
         }
 
@@ -213,8 +242,30 @@
         return activeOrder;
     }
 
+    function showTechnicalError(error) {
+        console.error("Wix membership verification failed:", error);
+
+        let detail = "Please try again while connected to the internet.";
+
+        if (error && error.message === "WIX_OAUTH_STATE_MISSING") {
+            detail = "The Wix login session could not be completed. Please start the login again.";
+        } else if (error && error.message) {
+            detail = `Wix returned: ${error.message}`;
+        }
+
+        showGate(
+            "Membership Verification Failed",
+            detail
+        );
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Log In With Wix";
+        loginButton.hidden = false;
+    }
+
     async function run() {
         loginButton.addEventListener("click", startLogin);
+
         logoutButton.addEventListener("click", () => {
             clearTokens();
             window.location.reload();
@@ -222,6 +273,7 @@
 
         try {
             await loadWixClient();
+
             await finishLoginIfNeeded();
 
             if (!wixClient.auth.loggedIn()) {
@@ -239,12 +291,15 @@
             );
 
             const activeOrder = await verifyMembership();
-            console.log("Safe Insight membership verified:", activeOrder.planName);
+
+            console.log(
+                "Safe Insight membership verified:",
+                activeOrder.planName
+            );
+
             openApp();
         } catch (error) {
-            console.error("Wix membership verification failed:", error);
-
-            if (error.message === "NO_ACTIVE_LASER_PLAN") {
+            if (error && error.message === "NO_ACTIVE_LASER_PLAN") {
                 showGate(
                     "Laser Target Access Required",
                     "An active Laser App Annual or Laser App Monthly subscription is required to use Laser Target."
@@ -253,11 +308,7 @@
                 return;
             }
 
-            showGate(
-                "Membership Verification Failed",
-                "We could not verify your Safe Insight membership. Please try again while connected to the internet."
-            );
-            loginButton.hidden = false;
+            showTechnicalError(error);
         }
     }
 
