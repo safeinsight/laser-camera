@@ -5,8 +5,10 @@
  * Access is granted only when the logged-in Wix member has an ACTIVE
  * Laser App Annual or Laser App Monthly Pricing Plan order.
  *
- * This implementation follows Wix's documented self-managed Headless
- * JavaScript SDK OAuth + PKCE flow.
+ * Offline behavior:
+ * A member who has been successfully verified online may continue using
+ * the app offline for 24 hours. Once that grace period expires, an online
+ * membership verification is required again.
  */
 
 (() => {
@@ -16,6 +18,8 @@
     const REDIRECT_URI = "https://safeinsight.github.io/laser-camera/";
     const TOKEN_STORAGE_KEY = "safeInsightWixTokens";
     const OAUTH_STORAGE_KEY = "safeInsightWixOAuthData";
+    const AUTHORIZATION_CACHE_KEY = "safeInsightWixMembershipAuthorization";
+    const OFFLINE_GRACE_MS = 24 * 60 * 60 * 1000;
 
     const ALLOWED_PLANS = new Set([
         "Laser App Annual",
@@ -119,6 +123,46 @@
     function clearTokens() {
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         localStorage.removeItem(OAUTH_STORAGE_KEY);
+        localStorage.removeItem(AUTHORIZATION_CACHE_KEY);
+    }
+
+    function saveAuthorizationCache(planName) {
+        localStorage.setItem(
+            AUTHORIZATION_CACHE_KEY,
+            JSON.stringify({
+                planName,
+                verifiedAt: Date.now()
+            })
+        );
+    }
+
+    function loadAuthorizationCache() {
+        try {
+            const raw = localStorage.getItem(AUTHORIZATION_CACHE_KEY);
+            return raw ? JSON.parse(raw) : undefined;
+        } catch {
+            return undefined;
+        }
+    }
+
+    function getOfflineAuthorization() {
+        const cached = loadAuthorizationCache();
+
+        if (!cached || !ALLOWED_PLANS.has(cached.planName)) {
+            return null;
+        }
+
+        const verifiedAt = Number(cached.verifiedAt);
+
+        if (!Number.isFinite(verifiedAt)) {
+            return null;
+        }
+
+        if (Date.now() - verifiedAt > OFFLINE_GRACE_MS) {
+            return null;
+        }
+
+        return cached;
     }
 
     async function loadWixClient() {
@@ -213,8 +257,6 @@
     }
 
     async function verifyMembership() {
-        // Wix's current Pricing Plans SDK uses orders.memberListOrders().
-        // The response contains an "orders" array.
         const response = await wixClient.orders.memberListOrders();
 
         if (!response || !Array.isArray(response.orders)) {
@@ -233,6 +275,8 @@
         if (!activeOrder) {
             throw new Error("NO_ACTIVE_LASER_PLAN");
         }
+
+        saveAuthorizationCache(activeOrder.planName);
 
         return activeOrder;
     }
@@ -268,6 +312,28 @@
             window.location.reload();
         });
 
+        // If there is no Internet, use only a recent successful online
+        // authorization. A denied member never gets this cache.
+        if (!navigator.onLine) {
+            const offlineAuthorization = getOfflineAuthorization();
+
+            if (offlineAuthorization) {
+                console.log(
+                    "Offline membership authorization accepted:",
+                    offlineAuthorization.planName
+                );
+                openApp();
+                return;
+            }
+
+            showGate(
+                "Membership Verification Required",
+                "You need an active Laser App Annual or Laser App Monthly subscription that was verified online within the last 24 hours. Please reconnect to the Internet and try again."
+            );
+            loginButton.hidden = true;
+            return;
+        }
+
         try {
             await loadWixClient();
             await finishLoginIfNeeded();
@@ -296,6 +362,10 @@
             openApp();
         } catch (error) {
             if (error && error.message === "NO_ACTIVE_LASER_PLAN") {
+                // A successful online response with no qualifying plan must
+                // remove any previously cached authorization.
+                localStorage.removeItem(AUTHORIZATION_CACHE_KEY);
+
                 showGate(
                     "Laser Target Access Required",
                     "An active Laser App Annual or Laser App Monthly subscription is required to use Laser Target."
