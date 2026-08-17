@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-wix-auth-v1";
+const CACHE_NAME = "safe-insight-laser-target-wix-auth-v2";
 
 const APP_SHELL = [
   "./",
