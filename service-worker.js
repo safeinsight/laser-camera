@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-wix-auth-v4";
+const CACHE_NAME = "safe-insight-laser-target-wix-auth-v5";
 
 const APP_SHELL = [
   "./",
@@ -20,15 +20,32 @@ const OFFLINE_AUDIO = [
   "shot-beep.mp3"
 ];
 
+const OFFLINE_IMAGES = [
+  "Logo High Res.png"
+];
+
 function isOfflineAudioRequest(request) {
   const path = new URL(request.url).pathname.toLowerCase();
-  return OFFLINE_AUDIO.some(file => path.endsWith("/" + file));
+  return OFFLINE_AUDIO.some(file => path.endsWith("/" + file.toLowerCase()));
+}
+
+function isOfflineImageRequest(request) {
+  const path = new URL(request.url).pathname.toLowerCase();
+  return OFFLINE_IMAGES.some(file => path.endsWith("/" + file.toLowerCase()));
 }
 
 function audioCacheRequest(request) {
   // Audio elements can make Range requests. Store and retrieve the
   // complete audio file using a clean URL so those requests still work
   // offline instead of missing the cached response.
+  return new Request(new URL(request.url).href, {
+    method: "GET",
+    credentials: "same-origin"
+  });
+}
+
+function imageCacheRequest(request) {
+  // PDF/image loading should always use the complete cached image.
   return new Request(new URL(request.url).href, {
     method: "GET",
     credentials: "same-origin"
@@ -114,6 +131,33 @@ self.addEventListener("fetch", event => {
           return response;
         } catch (error) {
           return new Response("Offline audio unavailable", {
+            status: 503,
+            statusText: "Offline"
+          });
+        }
+      }
+
+      // Handle the PDF logo separately so jsPDF can always retrieve the
+      // complete image from the service-worker cache while offline.
+      if (isOfflineImageRequest(event.request)) {
+        const cacheRequest = imageCacheRequest(event.request);
+        const cache = await caches.open(CACHE_NAME);
+        const cachedImage = await cache.match(cacheRequest);
+
+        if (cachedImage) {
+          return cachedImage;
+        }
+
+        try {
+          const response = await fetch(cacheRequest);
+
+          if (response && response.ok) {
+            await cache.put(cacheRequest, response.clone());
+          }
+
+          return response;
+        } catch (error) {
+          return new Response("Offline image unavailable", {
             status: 503,
             statusText: "Offline"
           });
