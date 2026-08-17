@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-wix-auth-v2";
+const CACHE_NAME = "safe-insight-laser-target-wix-auth-v3";
 
 const APP_SHELL = [
   "./",
@@ -11,6 +11,11 @@ const APP_SHELL = [
   "./Logo High Res.png",
   "./Logo Sharp 260x260 png.png",
   "./SI Logo Border.png",
+  "./pistol-shot.mp3",
+  "./shot-beep.mp3"
+];
+
+const OFFLINE_AUDIO = [
   "./pistol-shot.mp3",
   "./shot-beep.mp3"
 ];
@@ -70,8 +75,31 @@ self.addEventListener("fetch", event => {
 
   if (requestURL.origin !== self.location.origin) return;
 
+  const isOfflineAudio = OFFLINE_AUDIO.some(path =>
+    requestURL.pathname.endsWith(path.replace("./", "/"))
+  );
+
   event.respondWith(
     (async () => {
+      if (isOfflineAudio) {
+        const cachedAudio = await caches.match(event.request);
+        if (cachedAudio) return cachedAudio;
+
+        try {
+          const response = await fetch(event.request);
+          if (response && response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(event.request, response.clone());
+          }
+          return response;
+        } catch (error) {
+          return new Response("Offline audio unavailable", {
+            status: 503,
+            statusText: "Offline"
+          });
+        }
+      }
+
       try {
         const cachedResponse = await caches.match(event.request);
 
