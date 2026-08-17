@@ -1,6 +1,9 @@
 /*
  * Safe Insight Laser Target
  * Wix member authorization gate for the GitHub Pages PWA.
+ *
+ * Access is granted only when the logged-in Wix member has an ACTIVE
+ * Laser App Annual or Laser App Monthly Pricing Plan order.
  */
 
 (() => {
@@ -117,7 +120,7 @@
 
     async function loadWixClient() {
         const sdk = await import("https://esm.sh/@wix/sdk@latest");
-        const plans = await import("https://esm.sh/@wix/pricing-plans@latest");
+        const sitePricingPlans = await import("https://esm.sh/@wix/site-pricing-plans@latest");
 
         wixClient = sdk.createClient({
             auth: sdk.OAuthStrategy({
@@ -125,7 +128,7 @@
                 tokens: loadTokens()
             }),
             modules: {
-                orders: plans.orders
+                sitePricingPlans
             }
         });
     }
@@ -187,8 +190,15 @@
     }
 
     async function verifyMembership() {
-        const response = await wixClient.orders.listCurrentMemberOrders();
-        const orders = Array.isArray(response) ? response : (response.orders || []);
+        // Wix's current frontend Pricing Plans API returns the member's
+        // orders as an array, not as { orders: [...] }.
+        const orders = await wixClient.sitePricingPlans.listCurrentMemberOrders();
+
+        if (!Array.isArray(orders)) {
+            throw new Error("INVALID_PRICING_PLANS_RESPONSE");
+        }
+
+        console.log("Wix current member orders:", orders);
 
         const activeOrder = orders.find(order =>
             order &&
