@@ -159,6 +159,7 @@
         }
 
         if (Date.now() - verifiedAt > OFFLINE_GRACE_MS) {
+            localStorage.removeItem(AUTHORIZATION_CACHE_KEY);
             return null;
         }
 
@@ -281,6 +282,42 @@
         return activeOrder;
     }
 
+    async function canReachWix() {
+        try {
+            await fetch(
+                "https://www.wix.com/favicon.ico?safeInsightConnectivityCheck=" + Date.now(),
+                {
+                    method: "GET",
+                    mode: "no-cors",
+                    cache: "no-store"
+                }
+            );
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async function tryOfflineFallback(error) {
+        const cached = getOfflineAuthorization();
+
+        if (!cached) return false;
+
+        // navigator.onLine can remain true on some desktop browsers even when
+        // Wi-Fi has lost Internet access. Confirm actual external connectivity
+        // before deciding that a Wix API failure is a network failure.
+        if (!navigator.onLine || !(await canReachWix())) {
+            console.log(
+                "Wix unavailable; using recent offline authorization:",
+                cached.planName
+            );
+            openApp();
+            return true;
+        }
+
+        return false;
+    }
+
     function showTechnicalError(error) {
         console.error("Wix membership verification failed:", error);
 
@@ -312,8 +349,8 @@
             window.location.reload();
         });
 
-        // If there is no Internet, use only a recent successful online
-        // authorization. A denied member never gets this cache.
+        // Fast path for an already-authorized member when the browser knows
+        // there is no network connection.
         if (!navigator.onLine) {
             const offlineAuthorization = getOfflineAuthorization();
 
@@ -371,6 +408,13 @@
                     "An active Laser App Annual or Laser App Monthly subscription is required to use Laser Target."
                 );
                 logoutButton.hidden = false;
+                return;
+            }
+
+            // If Wix cannot be reached, an authorization that was successfully
+            // verified online within the last 24 hours remains valid for offline
+            // PWA use. Other Wix errors are still shown normally.
+            if (await tryOfflineFallback(error)) {
                 return;
             }
 
