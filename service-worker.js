@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-wix-auth-v3";
+const CACHE_NAME = "safe-insight-laser-target-wix-auth-v4";
 
 const APP_SHELL = [
   "./",
@@ -16,14 +16,31 @@ const APP_SHELL = [
 ];
 
 const OFFLINE_AUDIO = [
-  "./pistol-shot.mp3",
-  "./shot-beep.mp3"
+  "pistol-shot.mp3",
+  "shot-beep.mp3"
 ];
+
+function isOfflineAudioRequest(request) {
+  const path = new URL(request.url).pathname.toLowerCase();
+  return OFFLINE_AUDIO.some(file => path.endsWith("/" + file));
+}
+
+function audioCacheRequest(request) {
+  // Audio elements can make Range requests. Store and retrieve the
+  // complete audio file using a clean URL so those requests still work
+  // offline instead of missing the cached response.
+  return new Request(new URL(request.url).href, {
+    method: "GET",
+    credentials: "same-origin"
+  });
+}
 
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
+      .then(async cache => {
+        await cache.addAll(APP_SHELL);
+      })
       .then(() => self.skipWaiting())
   );
 });
@@ -72,25 +89,28 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
   const requestURL = new URL(event.request.url);
-
   if (requestURL.origin !== self.location.origin) return;
-
-  const isOfflineAudio = OFFLINE_AUDIO.some(path =>
-    requestURL.pathname.endsWith(path.replace("./", "/"))
-  );
 
   event.respondWith(
     (async () => {
-      if (isOfflineAudio) {
-        const cachedAudio = await caches.match(event.request);
-        if (cachedAudio) return cachedAudio;
+      // Handle audio separately because browsers may request audio with
+      // Range headers. Always use the clean URL as the cache key.
+      if (isOfflineAudioRequest(event.request)) {
+        const cacheRequest = audioCacheRequest(event.request);
+        const cache = await caches.open(CACHE_NAME);
+        const cachedAudio = await cache.match(cacheRequest);
+
+        if (cachedAudio) {
+          return cachedAudio;
+        }
 
         try {
-          const response = await fetch(event.request);
+          const response = await fetch(cacheRequest);
+
           if (response && response.ok) {
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(event.request, response.clone());
+            await cache.put(cacheRequest, response.clone());
           }
+
           return response;
         } catch (error) {
           return new Response("Offline audio unavailable", {
