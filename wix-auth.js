@@ -24,7 +24,6 @@
 
     let wixClient = null;
 
-    // Keep the application hidden until authorization has completed.
     document.documentElement.style.visibility = "hidden";
 
     function createGate() {
@@ -123,10 +122,8 @@
     }
 
     async function loadWixClient() {
-        // GitHub Pages does not have npm/build tooling, so load the same Wix
-        // packages used by the documented JS SDK flow from a browser ESM CDN.
         const sdk = await import("https://esm.sh/@wix/sdk@latest");
-        const sitePricingPlans = await import("https://esm.sh/@wix/site-pricing-plans@latest");
+        const pricingPlans = await import("https://esm.sh/@wix/pricing-plans@latest");
 
         wixClient = sdk.createClient({
             auth: sdk.OAuthStrategy({
@@ -134,7 +131,7 @@
                 tokens: loadTokens()
             }),
             modules: {
-                sitePricingPlans
+                orders: pricingPlans.orders
             }
         });
     }
@@ -144,10 +141,11 @@
         loginButton.textContent = "Opening Wix Login...";
 
         try {
-            const originalURI = window.location.href.split("#")[0];
+            if (!wixClient) {
+                throw new Error("WIX_CLIENT_NOT_READY");
+            }
 
-            // Wix requires the redirect URI here to exactly match the URI
-            // configured in Headless Settings.
+            const originalURI = window.location.href.split("#")[0];
             const oauthData = wixClient.auth.generateOAuthData(
                 REDIRECT_URI,
                 originalURI
@@ -176,7 +174,7 @@
         const returnedOAuthData = wixClient.auth.parseFromUrl();
 
         if (!returnedOAuthData || (!returnedOAuthData.code && !returnedOAuthData.error)) {
-            return false;
+            return;
         }
 
         if (returnedOAuthData.error) {
@@ -192,7 +190,6 @@
         }
 
         const oauthData = JSON.parse(raw);
-
         const tokens = await wixClient.auth.getMemberTokens(
             returnedOAuthData.code,
             returnedOAuthData.state,
@@ -208,28 +205,26 @@
 
         localStorage.removeItem(OAUTH_STORAGE_KEY);
 
-        // Remove OAuth fragments from the visible browser URL.
         window.history.replaceState(
             {},
             document.title,
             window.location.origin + window.location.pathname
         );
-
-        return true;
     }
 
     async function verifyMembership() {
-        // Wix documents this frontend method as returning Promise<Array<Order>>.
-        const orders = await wixClient.sitePricingPlans.listCurrentMemberOrders();
+        // Wix's current Pricing Plans SDK uses orders.memberListOrders().
+        // The response contains an "orders" array.
+        const response = await wixClient.orders.memberListOrders();
 
-        if (!Array.isArray(orders)) {
-            console.error("Unexpected Wix Pricing Plans response:", orders);
+        if (!response || !Array.isArray(response.orders)) {
+            console.error("Unexpected Wix Pricing Plans response:", response);
             throw new Error("INVALID_PRICING_PLANS_RESPONSE");
         }
 
-        console.log("Wix current member orders:", orders);
+        console.log("Wix current member orders:", response.orders);
 
-        const activeOrder = orders.find(order =>
+        const activeOrder = response.orders.find(order =>
             order &&
             order.status === "ACTIVE" &&
             ALLOWED_PLANS.has(order.planName)
@@ -249,6 +244,8 @@
 
         if (error && error.message === "WIX_OAUTH_STATE_MISSING") {
             detail = "The Wix login session could not be completed. Please start the login again.";
+        } else if (error && error.message === "WIX_CLIENT_NOT_READY") {
+            detail = "The Wix login service is not ready yet. Please refresh and try again.";
         } else if (error && error.message) {
             detail = `Wix returned: ${error.message}`;
         }
@@ -273,7 +270,6 @@
 
         try {
             await loadWixClient();
-
             await finishLoginIfNeeded();
 
             if (!wixClient.auth.loggedIn()) {
