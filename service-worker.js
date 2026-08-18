@@ -1,4 +1,4 @@
-const CACHE_NAME = "safe-insight-laser-target-wix-auth-v5";
+const CACHE_NAME = "safe-insight-laser-target-wix-auth-v1.0.0";
 
 const APP_SHELL = [
   "./",
@@ -80,22 +80,23 @@ async function injectAuthScript(response) {
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.includes("text/html")) return response;
 
-  const html = await response.text();
+  let html = await response.text();
 
-  if (html.includes('src="./wix-auth.js"') || html.includes('src="wix-auth.js"')) {
-    return new Response(html, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers
-    });
+  if (!html.includes('src="./wix-auth.js"') && !html.includes('src="wix-auth.js"')) {
+    html = html.replace(
+      /<\/body>/i,
+      '<script src="./wix-auth.js"></script>\n</body>'
+    );
   }
 
-  const injected = html.replace(
-    /<\/body>/i,
-    '<script src="./wix-auth.js"></script>\n</body>'
-  );
+  if (!html.includes('id="appVersion"')) {
+    html = html.replace(
+      /(<div\s+id="settingsPanel">)/i,
+      `$1\n    <div id="appVersion" style="text-align:center; margin:20px 0 10px; color:#000000; font-family:system-ui,-apple-system,sans-serif; font-size:14px; line-height:1.5; opacity:0.75;">\n        <div>Safe Insight Laser Target</div>\n        <div>Version 1.0.0</div>\n    </div>`
+    );
+  }
 
-  return new Response(injected, {
+  return new Response(html, {
     status: response.status,
     statusText: response.statusText,
     headers: response.headers
