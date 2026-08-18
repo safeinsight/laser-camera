@@ -4223,23 +4223,45 @@ summaryBtn.onclick = () => {
 
     const logo = new Image();
 
-logo.onload = () => {
-    console.log("LOGO LOADED",
-        logo.width,
-        logo.height
-    );
-    createPDFSummary(logo);
-};
+    logo.onload = () => {
 
-logo.onerror = (e) => {
+        console.log(
+            "LOGO LOADED",
+            logo.width,
+            logo.height
+        );
 
-    console.error(
-        "LOGO FAILED TO LOAD",
-        e
-    );
+        const canvas =
+            document.createElement("canvas");
 
-};
-logo.src = "Logo High Res.png";
+        canvas.width = logo.naturalWidth;
+        canvas.height = logo.naturalHeight;
+
+        const ctx =
+            canvas.getContext("2d");
+
+        ctx.drawImage(
+            logo,
+            0,
+            0
+        );
+
+        const logoData =
+            canvas.toDataURL("image/png");
+
+        createPDFSummary(logoData);
+    };
+
+    logo.onerror = (e) => {
+
+        console.error(
+            "LOGO FAILED TO LOAD",
+            e
+        );
+
+    };
+
+    logo.src = "Logo High Res.png";
 };
 
 //------------------------------------------------
