@@ -1607,22 +1607,37 @@ const rect = overlay.getBoundingClientRect();
 // START DRAG CALIBRATION FUNCTION
 //------------------------------------------------
 function calibrateTarget(){
+
     showCustomAlert(
         "DRAW TARGET\n\n" +
         "Touch and drag to draw a box around your target."
     );
 
-    currentTarget = {
-        left:0,
-        right:0,
-        top:0,
-        bottom:0,
-        calibrated:false,
-        shape:targetShape,
-        id:targets.length + 1
+    customAlertOk.onclick = function(){
+
+        customAlertOverlay.classList.remove(
+            "show"
+        );
+
+        customAlertOverlay.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        currentTarget = {
+            left:0,
+            right:0,
+            top:0,
+            bottom:0,
+            calibrated:false,
+            shape:targetShape,
+            id:targets.length + 1
+        };
+
+        calibrationStep = 1;
+
     };
 
-    calibrationStep = 1;
 }
 
 //------------------------------------------------
