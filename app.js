@@ -179,25 +179,45 @@ const customAlertCancel =
 
 function showCustomAlert(message){
 
-    customAlertMessage.textContent =
-        message;
+    return new Promise(function(resolve){
 
-    customAlertCancel.style.display =
-        "none";
+        customAlertMessage.textContent =
+            message;
 
-    customAlertOk.textContent =
-        "OK";
+        customAlertCancel.style.display =
+            "none";
 
-    customAlertOverlay.classList.add(
-        "show"
-    );
+        customAlertOk.textContent =
+            "OK";
 
-    customAlertOverlay.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+        customAlertOverlay.classList.add(
+            "show"
+        );
 
-    customAlertOk.focus();
+        customAlertOverlay.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        function onOk(){
+
+            customAlertOk.removeEventListener(
+                "click",
+                onOk
+            );
+
+            resolve();
+
+        }
+
+        customAlertOk.addEventListener(
+            "click",
+            onOk
+        );
+
+        customAlertOk.focus();
+
+    });
 }
 
 
@@ -1606,38 +1626,24 @@ const rect = overlay.getBoundingClientRect();
 //------------------------------------------------
 // START DRAG CALIBRATION FUNCTION
 //------------------------------------------------
-function calibrateTarget(){
+async function calibrateTarget(){
 
-    showCustomAlert(
+    await showCustomAlert(
         "DRAW TARGET\n\n" +
         "Touch and drag to draw a box around your target."
     );
 
-    customAlertOk.onclick = function(){
-
-        customAlertOverlay.classList.remove(
-            "show"
-        );
-
-        customAlertOverlay.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        currentTarget = {
-            left:0,
-            right:0,
-            top:0,
-            bottom:0,
-            calibrated:false,
-            shape:targetShape,
-            id:targets.length + 1
-        };
-
-        calibrationStep = 1;
-
+    currentTarget = {
+        left:0,
+        right:0,
+        top:0,
+        bottom:0,
+        calibrated:false,
+        shape:targetShape,
+        id:targets.length + 1
     };
 
+    calibrationStep = 1;
 }
 
 //------------------------------------------------
