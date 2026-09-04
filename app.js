@@ -282,6 +282,33 @@ function showCustomConfirm(message){
     );
 }
 
+/*
+ * Normal alerts close with OK.
+ * Confirmations are handled by their own listeners above.
+ */
+customAlertOk.addEventListener(
+    "click",
+    function(){
+
+        if(
+            customAlertCancel.style.display ===
+            "none"
+        ){
+
+            customAlertOverlay.classList.remove(
+                "show"
+            );
+
+            customAlertOverlay.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+    }
+);
+
 /* ========================================
    EXISTING LASER TARGET APPLICATION
    Extracted from index.html without functional changes.
