@@ -775,7 +775,7 @@ preview.onloadedmetadata=()=>{
 };
 
 }catch(err){
-alert(
+showCustomAlert(
 "Unable to access camera"
 );
 
@@ -1200,7 +1200,9 @@ downloadVideoBtn.onclick = async function(){
         !recordedChunks ||
         recordedChunks.length === 0
     ){
-        alert("No recorded video is available.");
+        showCustomAlert(
+        "No recorded video is available."
+    );
         return;
     }
 
@@ -1452,7 +1454,7 @@ const rect = overlay.getBoundingClientRect();
 // START DRAG CALIBRATION FUNCTION
 //------------------------------------------------
 function calibrateTarget(){
-    alert(
+    showCustomAlert(
         "DRAW TARGET\n\n" +
         "Touch and drag to draw a box around your target."
     );
@@ -1529,9 +1531,9 @@ if(activeTarget === null){
     calibrationStep = 0;
     resizeEverything();
     redrawOverlay();
-    alert(
-        "CALIBRATION COMPLETE\n\n" +
-        "Your target has been added."
+    showCustomAlert(
+      "CALIBRATION COMPLETE\n\n" +
+      "Your target has been added."
     );
 
     //----------------------------------------
@@ -4275,10 +4277,19 @@ clearTargetBtn.onclick = () => {
 //------------------------------------------------
 // Delete Targets Button Click
 //------------------------------------------------
-deleteTargetsBtn.onclick = ()=>{
-    if(confirm("Delete ALL targets?")){
+deleteTargetsBtn.onclick = async ()=>{
+
+    const confirmed =
+        await showCustomConfirm(
+            "Delete ALL targets?"
+        );
+
+    if(confirmed){
+
         deleteAllTargets();
-        settingsPanel.style.display = "none";
+
+        settingsPanel.style.display =
+            "none";
     }
 };
 
