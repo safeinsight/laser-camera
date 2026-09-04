@@ -156,6 +156,132 @@
 
 })();
 
+/* =========================================================
+   CUSTOM ALERT / CONFIRM REFERENCES
+========================================================= */
+
+const customAlertOverlay =
+    document.getElementById("customAlertOverlay");
+
+const customAlertMessage =
+    document.getElementById("customAlertMessage");
+
+const customAlertOk =
+    document.getElementById("customAlertOk");
+
+const customAlertCancel =
+    document.getElementById("customAlertCancel");
+
+
+/* =========================================================
+   CUSTOM ALERT / CONFIRM FUNCTIONS
+========================================================= */
+
+function showCustomAlert(message){
+
+    customAlertMessage.textContent =
+        message;
+
+    customAlertCancel.style.display =
+        "none";
+
+    customAlertOk.textContent =
+        "OK";
+
+    customAlertOverlay.classList.add(
+        "show"
+    );
+
+    customAlertOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    customAlertOk.focus();
+}
+
+
+function showCustomConfirm(message){
+
+    return new Promise(
+        function(resolve){
+
+            customAlertMessage.textContent =
+                message;
+
+            customAlertCancel.style.display =
+                "inline-block";
+
+            customAlertOk.textContent =
+                "Continue";
+
+            customAlertOverlay.classList.add(
+                "show"
+            );
+
+            customAlertOverlay.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            function finish(result){
+
+                customAlertOverlay.classList.remove(
+                    "show"
+                );
+
+                customAlertOverlay.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+                customAlertCancel.style.display =
+                    "none";
+
+                customAlertOk.textContent =
+                    "OK";
+
+
+                customAlertOk.removeEventListener(
+                    "click",
+                    onConfirm
+                );
+
+                customAlertCancel.removeEventListener(
+                    "click",
+                    onCancel
+                );
+
+                resolve(result);
+            }
+
+
+            function onConfirm(){
+                finish(true);
+            }
+
+
+            function onCancel(){
+                finish(false);
+            }
+
+
+            customAlertOk.addEventListener(
+                "click",
+                onConfirm
+            );
+
+            customAlertCancel.addEventListener(
+                "click",
+                onCancel
+            );
+
+            customAlertOk.focus();
+        }
+    );
+}
+
 /* ========================================
    EXISTING LASER TARGET APPLICATION
    Extracted from index.html without functional changes.
